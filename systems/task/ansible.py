@@ -1,7 +1,7 @@
 from django.conf import settings
 
 from .base import BaseTaskProvider
-from utility.config import RuntimeConfig
+from utility.runtime import Runtime
 from utility.temp import temp_dir
 from utility.data import clean_dict
 
@@ -65,7 +65,7 @@ class AnsibleInventory(object):
                         }
                     if group.name not in self.groups[group.parent.name]['children']:
                         self.groups[group.parent.name]['children'].append(group.name)
-                    
+
                     group = group.parent
 
     def render(self):
@@ -85,13 +85,13 @@ class AnsibleInventory(object):
                 for child in info['children']:
                     data.append(child)
                 data.append('')
-            
+
             if len(info['servers']):
                 data.append("[{}]".format(name))
                 for server in info['servers']:
                     data.append(server)
                 data.append('')
-        
+
         return "\n".join(data)
 
 
@@ -103,7 +103,7 @@ class Ansible(BaseTaskProvider):
             'jinja2 >= 2.9.6',
             'netaddr == 0.7.19',
             'pbr >= 1.6',
-            'passlib == 1.7.1'            
+            'passlib == 1.7.1'
         ]
 
     def execute(self, results, servers, params):
@@ -116,9 +116,9 @@ class Ansible(BaseTaskProvider):
                 'gathering = smart'
             )
             inventory = AnsibleInventory(self, servers, temp)
-            
+
             if 'group_vars' in self.config:
-                temp.link(self.get_path(self.config['group_vars']), 
+                temp.link(self.get_path(self.config['group_vars']),
                     name = 'group_vars'
                 )
 
@@ -126,7 +126,7 @@ class Ansible(BaseTaskProvider):
                 'ansible-playbook',
                 '-i', temp.save(inventory.render())
             ]
-            #if RuntimeConfig.debug():
+            #if Runtime.debug():
             #    ansible_cmd.append('-vvv')
 
             if 'playbooks' in self.config:
@@ -142,12 +142,12 @@ class Ansible(BaseTaskProvider):
 
                 if params:
                     command.extend([
-                        "--extra-vars", 
+                        "--extra-vars",
                         "@{}".format(temp.save(json.dumps(params), extension = 'json'))
                     ])
             else:
                 self.command.error("Ansible task requires 'playbooks' list configuration")
-            
+
             success, stdout, stderr = self.command.sh(
                 command,
                 env = {
@@ -163,9 +163,9 @@ class Ansible(BaseTaskProvider):
     def merge_config(self, config_file_name, *core_config):
         if not config_file_name:
             return "\n".join(core_config)
-        
+
         config_contents = self.project.load_file(config_file_name)
-        
+
         if not config_contents:
             self.command.error("Could not load configuration from: {}".format(config_file_name))
 
