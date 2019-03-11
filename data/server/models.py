@@ -1,6 +1,6 @@
 from django.db import models as django
 
-from settings import Roles
+from settings.roles import Roles
 from systems.models import fields, environment, subnet, firewall, provider, group
 
 
@@ -11,13 +11,13 @@ class ServerFacade(
 ):
     def get_provider_name(self):
         return 'compute'
-    
+
     def get_scopes(self):
         return (
             'network',
             'subnet'
         )
-        
+
     def get_relations(self):
         return {
             'groups': ('group', 'Groups', '--groups'),
@@ -39,7 +39,7 @@ class ServerFacade(
             ('password', 'Password'),
             ('private_key', 'Private key')
         )
-    
+
     def get_display_fields(self):
         return (
             ('name', 'Name'),
@@ -63,29 +63,29 @@ class ServerFacade(
             ('created', 'Created'),
             ('updated', 'Updated')
         )
-    
+
     def get_field_public_ip_display(self, instance, value, short):
         return value
-    
+
     def get_field_private_ip_display(self, instance, value, short):
         return value
-    
+
     def get_field_user_display(self, instance, value, short):
         return value
-    
+
     def get_field_password_display(self, instance, value, short):
         if short:
             return '*****' if value else None
         return value
-    
+
     def get_field_private_key_display(self, instance, value, short):
         if short:
             return '*****' if value else None
         return value
-    
+
     def get_field_data_device_display(self, instance, value, short):
         return value
-    
+
     def get_field_backup_device_display(self, instance, value, short):
         return value
 
@@ -110,7 +110,7 @@ class Server(
     private_key = fields.EncryptedDataField(null=True)
     data_device = django.CharField(null=True, max_length=256)
     backup_device = django.CharField(null=True, max_length=256)
-   
+
     class Meta(environment.EnvironmentModel.Meta):
         facade_class = ServerFacade
 

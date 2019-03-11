@@ -1,4 +1,4 @@
-from settings import Roles
+from settings.roles import Roles
 from .storage import StorageActionCommand
 
 

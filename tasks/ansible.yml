@@ -1,0 +1,5 @@
+
+password:
+  provider: ansible
+  roles: server-admin
+  playbooks: playbooks/password.yml

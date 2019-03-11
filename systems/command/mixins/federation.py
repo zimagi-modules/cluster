@@ -1,5 +1,5 @@
 from data.federation.models import Federation
-from . import DataMixin
+from .base import DataMixin
 
 
 class FederationMixin(DataMixin):
@@ -7,14 +7,14 @@ class FederationMixin(DataMixin):
     schema = {
         'federation': {
             'model': Federation,
-            'provider': True,                       
+            'provider': True,
             'system_fields': (
                 'environment',
                 'type',
                 'config',
                 'variables',
                 'state_config',
-                'created', 
+                'created',
                 'updated'
             )
         }

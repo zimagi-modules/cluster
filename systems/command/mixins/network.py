@@ -2,7 +2,7 @@ from data.network.models import Network
 from data.subnet.models import Subnet
 from data.firewall.models import Firewall
 from data.firewall_rule.models import FirewallRule
-from . import DataMixin
+from .base import DataMixin
 
 
 class NetworkMixin(DataMixin):
@@ -17,7 +17,7 @@ class NetworkMixin(DataMixin):
                 'config',
                 'variables',
                 'state_config',
-                'created', 
+                'created',
                 'updated'
             )
         },
@@ -29,7 +29,7 @@ class NetworkMixin(DataMixin):
                 'config',
                 'variables',
                 'state_config',
-                'created', 
+                'created',
                 'updated'
             )
         },
@@ -41,7 +41,7 @@ class NetworkMixin(DataMixin):
                 'config',
                 'variables',
                 'state_config',
-                'created', 
+                'created',
                 'updated'
             )
         },
@@ -53,7 +53,7 @@ class NetworkMixin(DataMixin):
                 'config',
                 'variables',
                 'state_config',
-                'created', 
+                'created',
                 'updated'
             )
         }

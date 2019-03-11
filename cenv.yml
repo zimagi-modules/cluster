@@ -1,10 +1,4 @@
-profiles:
-    - profiles
-
-tasks:
-    password:
-        provider: ansible
-        roles:
-            - server-admin
-        playbooks:
-            - playbooks/password.yml
+module: cluster
+profiles: profiles
+tasks: tasks
+lib: .
