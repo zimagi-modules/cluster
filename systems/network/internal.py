@@ -1,4 +1,4 @@
-from .base import BaseNetworkProvider
+from .base import *
 
 
 class Internal(BaseNetworkProvider):

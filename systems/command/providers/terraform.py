@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from systems.command import providers
+from systems.command.providers import data
 from utility.terraform import Terraform
 
 import os
@@ -12,17 +12,17 @@ class TerraformWrapper(object):
     def __init__(self, provider):
         self.provider = provider
         self.terraform = Terraform(
-            provider.command, 
+            provider.command,
             provider.command.force
         )
-    
+
     def plan(self, type, instance, namespace = None):
         if type:
             manifest_path = self._get_manifest_path(type, instance.type)
             variables = self.provider.get_variables(instance, namespace)
             state = instance.state_config.get(namespace, {}) if namespace else instance.state_config
             self.terraform.plan(manifest_path, variables, state)
-    
+
     def apply(self, type, instance, namespace = None):
         if type:
             manifest_path = self._get_manifest_path(type, instance.type)
@@ -45,21 +45,21 @@ class TerraformWrapper(object):
         return os.path.join(settings.APP_DIR, 'terraform', type, "{}.tf".format(name))
 
 
-class TerraformState(providers.DataProviderState):
+class TerraformState(data.DataProviderState):
 
     @property
     def variables(self):
         variables = {}
         outputs = self.get('outputs')
-        
+
         if outputs:
             for key, info in outputs.items():
                 variables[key] = info['value']
-        
+
         return variables
 
 
-class TerraformProvider(providers.DataCommandProvider):
+class TerraformProvider(data.DataCommandProvider):
 
     def provider_state(self):
         return TerraformState
@@ -67,15 +67,15 @@ class TerraformProvider(providers.DataCommandProvider):
     def terraform_type(self):
         # Override in subclass
         return None
-   
+
 
     @property
     def terraform(self):
         if not getattr(self, '_terraform_cache', None):
             self._terraform_cache = TerraformWrapper(self)
         return self._terraform_cache
-    
-      
+
+
     def initialize_instance(self, instance, created):
         self.initialize_terraform(instance, created)
 
@@ -87,7 +87,7 @@ class TerraformProvider(providers.DataCommandProvider):
     def initialize_terraform(self, instance, created, object = None):
         # Override in subclass
         pass
-    
+
 
     def finalize_instance(self, instance):
         self.finalize_terraform(instance)

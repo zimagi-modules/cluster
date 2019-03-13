@@ -1,5 +1,5 @@
 from data.server.models import Server
-from . import NetworkMixin
+from .network import NetworkMixin
 
 
 class ServerMixin(NetworkMixin):
@@ -7,7 +7,7 @@ class ServerMixin(NetworkMixin):
     schema = {
         'server': {
             'model': Server,
-            'provider': True,                       
+            'provider': True,
             'system_fields': (
                 'environment',
                 'subnet',
@@ -15,7 +15,7 @@ class ServerMixin(NetworkMixin):
                 'config',
                 'variables',
                 'state_config',
-                'created', 
+                'created',
                 'updated'
             )
         }
@@ -25,14 +25,14 @@ class ServerMixin(NetworkMixin):
         super().__init__(*args, **kwargs)
         self.facade_index['03_server'] = self._server
 
-  
+
     def ssh(self, server, timeout = 10, port = 22):
         if isinstance(server, str):
             server = self.get_instance(self._server, server)
 
         if not server:
             return None
-        
+
         return super().ssh(
             "{}:{}".format(server.ip, port), server.user,
             password = server.password,

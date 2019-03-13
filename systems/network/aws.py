@@ -1,4 +1,4 @@
-from utility.cloud import AWSServiceMixin
+from utility.cloud.aws import AWSServiceMixin
 from .base import *
 
 

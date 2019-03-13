@@ -1,4 +1,4 @@
-from utility.cloud import AWSServiceMixin
+from utility.cloud.aws import AWSServiceMixin
 from .base import BaseComputeProvider, SSHAccessError
 
 import random
@@ -10,7 +10,7 @@ class AWSEC2(AWSServiceMixin, BaseComputeProvider):
         self.option(str, 'ami', 'ami-0d2505740b82f7948', help = 'AWS image name', config_name = 'aws_ec2_image') # Ubuntu 18.04LTS hvm:ebs-ssd us-east-1
         self.option(str, 'machine', 't2.micro', help = 'AWS instance type', config_name = 'aws_ec2_type')
         self.option(str, 'tenancy', 'default', help = 'AWS instance tenancy (default | dedicated)', config_name = 'aws_ec2_tenancy')
-        
+
         self.option(bool, 'use_public_ip', True, help = 'Enable public IP address for instance', config_name = 'aws_ec2_public_ip')
         self.option(bool, 'monitoring', False, help = 'AWS monitoring enabled?', config_name = 'aws_ec2_monitoring')
         self.option(bool, 'ebs_optimized', False, help = 'AWS EBS obtimized server?', config_name = 'aws_ec2_ebs_optimized')
@@ -20,7 +20,7 @@ class AWSEC2(AWSServiceMixin, BaseComputeProvider):
         self.option(str, 'ebs_type', 'gp2', help = 'AWS data drive EBS type', config_name = 'aws_ec2_ebs_type')
         self.option(int, 'ebs_size', 10, help = 'AWS data drive EBS volume size (GB)', config_name = 'aws_ec2_ebs_size')
         self.option(int, 'ebs_iops', None, help = 'AWS data drive EBS provisioned IOPS', config_name = 'aws_ec2_ebs_size')
-        
+
         self.option(str, 'user', 'ubuntu', help = 'Server SSH user', config_name = 'aws_ec2_user')
 
 
@@ -44,17 +44,17 @@ class AWSEC2(AWSServiceMixin, BaseComputeProvider):
         try:
             if instance.variables['public_ip_address']:
                 instance.public_ip = instance.variables['public_ip_address']
-            
+
             instance.private_ip = instance.variables['private_ip_address']
 
             super().prepare_instance(instance, created)
             self.clean_aws_credentials(instance.config)
-        
+
         except SSHAccessError as e:
             self.command.warning("SSH access failed, cleaning up...")
             self.finalize_instance(instance)
             raise e
-        
+
         finally:
             self._delete_keypair(self.ec2_conn, instance.config['key_name'])
 
@@ -79,7 +79,7 @@ class AWSEC2(AWSServiceMixin, BaseComputeProvider):
             key_name = "ce_{}".format(random.randint(1, 1000001))
             if key_name not in key_names:
                 break
-        
+
         keypair = ec2.create_key_pair(KeyName = key_name)
         return (key_name, keypair['KeyMaterial'])
 

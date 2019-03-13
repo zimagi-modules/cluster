@@ -1,6 +1,6 @@
 from data.storage.models import Storage
 from data.storage_mount.models import StorageMount
-from . import NetworkMixin
+from .network import NetworkMixin
 
 
 class StorageMixin(NetworkMixin):
@@ -9,14 +9,14 @@ class StorageMixin(NetworkMixin):
         'storage': {
             'plural': 'storage',
             'model': Storage,
-            'provider': True,                       
+            'provider': True,
             'system_fields': (
                 'network',
                 'type',
                 'config',
                 'variables',
                 'state_config',
-                'created', 
+                'created',
                 'updated'
             )
         },
@@ -30,7 +30,7 @@ class StorageMixin(NetworkMixin):
                 'config',
                 'variables',
                 'state_config',
-                'created', 
+                'created',
                 'updated'
             )
         }

@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from utility.temp import temp_dir
+from .temp import temp_dir
 
 import os
 import pathlib

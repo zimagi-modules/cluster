@@ -3,7 +3,7 @@ from io import StringIO
 from django.conf import settings
 from django.core.management.base import CommandError
 
-from systems.command import providers
+from systems.command.providers import terraform
 from utility import ssh as sshlib
 
 import threading
@@ -15,7 +15,7 @@ class SSHAccessError(CommandError):
     pass
 
 
-class BaseComputeProvider(providers.TerraformProvider):
+class BaseComputeProvider(terraform.TerraformProvider):
 
     def __init__(self, name, command, instance = None):
         super().__init__(name, command, instance)
@@ -43,7 +43,7 @@ class BaseComputeProvider(providers.TerraformProvider):
         ssh.exec('chmod 700 "$HOME/.ssh"')
         ssh.exec('echo "{}" > "$HOME/.ssh/authorized_keys"'.format(public_key))
         ssh.exec('chmod 600 "$HOME/.ssh/authorized_keys"')
-        
+
         instance.private_key = private_key
 
     def rotate_password(self):
@@ -54,7 +54,7 @@ class BaseComputeProvider(providers.TerraformProvider):
             'password',
             instance,
             {
-                "user": instance.user, 
+                "user": instance.user,
                 "password": password
             }
         )
@@ -79,17 +79,17 @@ class BaseComputeProvider(providers.TerraformProvider):
             try:
                 if not silent:
                     self.command.info("Checking {}@{} SSH connection".format(instance.user, host))
-                
-                sshlib.SSH(host, instance.user, instance.password, 
-                    key = instance.private_key, 
+
+                sshlib.SSH(host, instance.user, instance.password,
+                    key = instance.private_key,
                     timeout = timeout
                 )
                 return True
-            
+
             except Exception as e:
                 time.sleep(interval)
                 tries -= 1
-        
+
         return False
 
     def ping(self, port = 22):

@@ -2,7 +2,7 @@ from django.conf import settings
 
 from data.network.models import Network
 from data.subnet.models import Subnet
-from systems.command import providers
+from systems.command.providers import meta, terraform
 
 import netaddr
 import ipaddress
@@ -23,10 +23,10 @@ class AddressMap(object):
                 cidrs = [self.parse_cidr(config['cidr'])]
             else:
                 cidrs = self.parse_subnets(
-                    config['cidr_base'], 
+                    config['cidr_base'],
                     config['cidr_prefix']
                 )
-        
+
             for cidr in cidrs:
                 create = True
 
@@ -34,12 +34,12 @@ class AddressMap(object):
                     if self.overlapping_subnets(cidr, indexed_cidr):
                         create = False
                         break
-            
+
                 if create:
                     cidr = str(cidr)
                     self.cidr_index[cidr] = True
                     return cidr
-        
+
             return None
 
 
@@ -48,10 +48,10 @@ class AddressMap(object):
 
         if '*' in cidr or '-' in cidr:
             return netaddr.glob_to_cidrs(cidr)[0]
-        
+
         if '/' not in cidr:
             cidr = "{}/32".format(cidr)
-        
+
         return netaddr.IPNetwork(cidr, implicit_prefix = True)
 
     def parse_subnets(self, cidr, prefix_size):
@@ -64,7 +64,7 @@ class AddressMap(object):
 
 
 class NetworkAddressMap(AddressMap):
-    
+
     _instance = None
 
     def __new__(cls, *args, **kwargs):
@@ -79,12 +79,12 @@ class NetworkAddressMap(AddressMap):
             with self.thread_lock:
                 for network in Network.facade.all():
                     self.cidr_index[network.cidr] = True
-        
+
             self._initialized = True
 
 
 class SubnetAddressMap(AddressMap):
-    
+
     _instance = None
 
     def __new__(cls, *args, **kwargs):
@@ -99,47 +99,47 @@ class SubnetAddressMap(AddressMap):
             with self.thread_lock:
                 for subnet in Subnet.facade.all():
                     self.cidr_index[subnet.cidr] = True
-        
+
             self._initialized = True
 
 
 class NetworkMixin(object):
 
-    @property    
+    @property
     def address(self):
         return NetworkAddressMap()
 
 class SubnetMixin(object):
 
-    @property    
+    @property
     def address(self):
         return SubnetAddressMap()
 
 
-class NetworkProvider(NetworkMixin, providers.TerraformProvider):
-    
+class NetworkProvider(NetworkMixin, terraform.TerraformProvider):
+
     def provider_config(self, type = None):
         self.option(str, 'cidr', None, help = 'Network IPv4 CIDR address (between /16 and /28)')
         self.option(str, 'cidr_base', '10/8', help = 'Network IPv4 root CIDR address (not used if "cidr" option specified)')
         self.option(int, 'cidr_prefix', 16, help = 'Network IPv4 CIDR address prefix size (not used if "cidr" option specified)')
-    
+
     def terraform_type(self):
         return 'network'
 
     @property
     def facade(self):
         return self.command._network
-     
+
     def initialize_terraform(self, instance, created):
         if not instance.cidr:
             instance.cidr = self.address.cidr(self.config)
-        
+
         if not instance.cidr:
             self.command.error("No available network cidr matches. Try another cidr")
 
 
-class SubnetProvider(SubnetMixin, providers.TerraformProvider):
-    
+class SubnetProvider(SubnetMixin, terraform.TerraformProvider):
+
     def provider_config(self, type = None):
         self.option(str, 'cidr', None, help = 'Subnet IPv4 CIDR address (between /16 and /28)')
         self.option(int, 'cidr_prefix', 24, help = 'Subnet IPv4 CIDR address prefix size (not used if "cidr" option specified)')
@@ -150,7 +150,7 @@ class SubnetProvider(SubnetMixin, providers.TerraformProvider):
     @property
     def facade(self):
         return self.command._subnet
-     
+
     def initialize_terraform(self, instance, created):
         self.config['cidr_base'] = instance.network.cidr
 
@@ -161,7 +161,7 @@ class SubnetProvider(SubnetMixin, providers.TerraformProvider):
             self.command.error("No available subnet cidr matches. Try another cidr")
 
 
-class FirewallProvider(providers.TerraformProvider):
+class FirewallProvider(terraform.TerraformProvider):
 
     def terraform_type(self):
         return 'firewall'
@@ -171,8 +171,8 @@ class FirewallProvider(providers.TerraformProvider):
         return self.command._firewall
 
 
-class FirewallRuleProvider(NetworkMixin, providers.TerraformProvider):
-    
+class FirewallRuleProvider(NetworkMixin, terraform.TerraformProvider):
+
     def provider_config(self, type = None):
         self.option(str, 'mode', 'ingress', help = 'Firewall rule mode (ingress | egress)')
         self.option(str, 'protocol', 'tcp', help = 'Firewall rule protocol (tcp | udp | icmp | all)')
@@ -186,11 +186,11 @@ class FirewallRuleProvider(NetworkMixin, providers.TerraformProvider):
     @property
     def facade(self):
         return self.command._firewall_rule
-        
+
     def initialize_terraform(self, instance, created):
         if instance.mode not in ('ingress', 'egress'):
             self.command.error("Firewall rule mode {} is not supported".format(instance.type))
-        
+
         if instance.protocol not in ('tcp', 'udp', 'icmp', 'all'):
             self.command.error("Firewall rule protocol {} is not supported".format(instance.protocol))
 
@@ -200,13 +200,13 @@ class FirewallRuleProvider(NetworkMixin, providers.TerraformProvider):
             instance.cidrs = ['0.0.0.0/0']
 
 
-class BaseNetworkProvider(providers.MetaCommandProvider):
+class BaseNetworkProvider(meta.MetaCommandProvider):
 
     def __init__(self, name, command, instance = None):
         super().__init__(name, command, instance)
         self.provider_type = 'network'
         self.provider_options = settings.NETWORK_PROVIDERS
-    
+
     def register_types(self):
         self.set('network', NetworkProvider)
         self.set('subnet', SubnetProvider)

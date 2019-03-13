@@ -1,7 +1,7 @@
 from settings.roles import Roles
 from .router import RouterCommand
 from .action import ActionCommand
-from systems.command import mixins
+from systems.command.mixins import network, storage
 
 
 class StorageRouterCommand(RouterCommand):
@@ -11,8 +11,8 @@ class StorageRouterCommand(RouterCommand):
 
 
 class StorageActionCommand(
-    mixins.StorageMixin,
-    mixins.NetworkMixin,
+    storage.StorageMixin,
+    network.NetworkMixin,
     ActionCommand
 ):
     def groups_allowed(self):

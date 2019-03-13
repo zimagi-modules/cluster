@@ -2,13 +2,13 @@ from settings.roles import Roles
 from .network import NetworkRouterCommand, NetworkActionCommand
 
 
-class NetworkFirewallRouterCommand(NetworkRouterCommand):
+class FirewallRouterCommand(NetworkRouterCommand):
 
     def get_priority(self):
         return 50
 
 
-class NetworkFirewallActionCommand(NetworkActionCommand):
+class FirewallActionCommand(NetworkActionCommand):
 
     def get_priority(self):
         return 50

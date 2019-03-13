@@ -1,4 +1,4 @@
-from utility.cloud import AWSServiceMixin
+from utility.cloud.aws import AWSServiceMixin
 from .base import *
 
 
@@ -33,14 +33,14 @@ class EFSStorageMountProvider(AWSServiceMixin, StorageMountProvider):
 
         super().initialize_terraform(instance, created)
         self.aws_credentials(instance.config)
-        
+
         instance.config['security_groups'] = self.get_security_groups(relations.get('firewalls', []))
 
     def prepare_instance(self, instance, created):
         instance.remote_path = '/'
         instance.remote_host = instance.variables['mount_ip']
         super().prepare_instance(instance, created)
-        self.clean_aws_credentials(instance.config)    
+        self.clean_aws_credentials(instance.config)
 
     def finalize_terraform(self, instance):
         self.aws_credentials(instance.config)
@@ -48,7 +48,7 @@ class EFSStorageMountProvider(AWSServiceMixin, StorageMountProvider):
 
 
 class AWSEFS(BaseStorageProvider):
-    
+
     def register_types(self):
         super().register_types()
         self.set('storage', EFSStorageProvider)

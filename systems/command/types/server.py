@@ -1,7 +1,7 @@
 from settings.roles import Roles
 from .router import RouterCommand
 from .action import ActionCommand
-from systems.command import mixins
+from systems.command.mixins import network, server
 
 
 class ServerRouterCommand(RouterCommand):
@@ -11,8 +11,8 @@ class ServerRouterCommand(RouterCommand):
 
 
 class ServerActionCommand(
-    mixins.ServerMixin,
-    mixins.NetworkMixin,
+    server.ServerMixin,
+    network.NetworkMixin,
     ActionCommand
 ):
     def groups_allowed(self):
