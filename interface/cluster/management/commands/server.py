@@ -1,12 +1,13 @@
 from systems.command.base import command_list
-from systems.command import types, factory
+from systems.command.factory import resource
+from systems.command.types import server
 from utility.temp import temp_dir
 
 import subprocess
 
 
 class RotateCommand(
-    types.ServerActionCommand
+    server.ServerActionCommand
 ):
     def parse(self):
         self._server.parse_scopes(self)
@@ -25,7 +26,7 @@ class RotateCommand(
 
 
 class SSHCommand(
-    types.ServerActionCommand
+    server.ServerActionCommand
 ):
     def parse(self):
         self.parse_server_name()
@@ -60,7 +61,7 @@ class SSHCommand(
             subprocess.call(" ".join(ssh_command), shell = True)
 
 
-class Command(types.ServerRouterCommand):
+class Command(server.ServerRouterCommand):
 
     def get_command_name(self):
         return 'server'
@@ -68,7 +69,8 @@ class Command(types.ServerRouterCommand):
     def get_subcommands(self):
         base_name = self.get_command_name()
         return command_list(
-            factory.ResourceCommandSet(types.ServerActionCommand, base_name,
+            resource.ResourceCommandSet(
+                server.ServerActionCommand, base_name,
                 save_multiple = True
             ),
             ('rotate', RotateCommand),
