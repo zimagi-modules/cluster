@@ -1,4 +1,3 @@
-module: cluster
 profiles: profiles
 tasks: tasks
 lib: .
