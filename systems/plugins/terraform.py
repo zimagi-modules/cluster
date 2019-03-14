@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from systems.command.providers import data
+from .data import DataProviderState, DataCommandProvider
 from utility.terraform import Terraform
 
 import os
@@ -45,7 +45,7 @@ class TerraformWrapper(object):
         return os.path.join(settings.APP_DIR, 'terraform', type, "{}.tf".format(name))
 
 
-class TerraformState(data.DataProviderState):
+class TerraformState(DataProviderState):
 
     @property
     def variables(self):
@@ -59,7 +59,7 @@ class TerraformState(data.DataProviderState):
         return variables
 
 
-class TerraformProvider(data.DataCommandProvider):
+class TerraformProvider(DataCommandProvider):
 
     def provider_state(self):
         return TerraformState
