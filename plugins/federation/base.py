@@ -1,5 +1,7 @@
+from systems.plugins import terraform
 
-class BaseProvider(providers.TerraformProvider):
+
+class BaseProvider(terraform.TerraformProvider):
 
     def terraform_type(self):
         return 'federation'

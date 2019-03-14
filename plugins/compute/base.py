@@ -3,7 +3,7 @@ from io import StringIO
 from django.conf import settings
 from django.core.management.base import CommandError
 
-from systems.command.providers import terraform
+from systems.plugins import terraform
 from utility import ssh as sshlib
 
 import threading

@@ -2,7 +2,7 @@ from django.conf import settings
 
 from data.network.models import Network
 from data.subnet.models import Subnet
-from systems.command.providers import meta, terraform
+from systems.plugins import meta, terraform
 
 import netaddr
 import ipaddress

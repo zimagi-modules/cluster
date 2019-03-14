@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from systems.command.providers import meta, terraform
+from systems.plugins import meta, terraform
 
 
 class StorageProvider(terraform.TerraformProvider):
