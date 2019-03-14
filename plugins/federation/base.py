@@ -1,11 +1,5 @@
 
-class BaseFederationProvider(providers.TerraformProvider):
-
-    def __init__(self, name, command, instance = None):
-        super().__init__(name, command, instance)
-        self.provider_type = 'federation'
-        self.provider_options = settings.FEDERATION_PROVIDERS
-
+class BaseProvider(providers.TerraformProvider):
 
     def terraform_type(self):
         return 'federation'

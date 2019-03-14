@@ -81,7 +81,7 @@ class AWSFirewallRuleProvider(AWSServiceMixin, FirewallRuleProvider):
         self.clean_aws_credentials(instance.config)
 
 
-class AWS(BaseNetworkProvider):
+class Provider(BaseProvider):
 
     def register_types(self):
         super().register_types()

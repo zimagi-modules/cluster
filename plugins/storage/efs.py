@@ -47,7 +47,7 @@ class EFSStorageMountProvider(AWSServiceMixin, StorageMountProvider):
         super().finalize_terraform(instance)
 
 
-class AWSEFS(BaseStorageProvider):
+class Provider(BaseProvider):
 
     def register_types(self):
         super().register_types()

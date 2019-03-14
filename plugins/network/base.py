@@ -200,12 +200,7 @@ class FirewallRuleProvider(NetworkMixin, terraform.TerraformProvider):
             instance.cidrs = ['0.0.0.0/0']
 
 
-class BaseNetworkProvider(meta.MetaCommandProvider):
-
-    def __init__(self, name, command, instance = None):
-        super().__init__(name, command, instance)
-        self.provider_type = 'network'
-        self.provider_options = settings.NETWORK_PROVIDERS
+class BaseProvider(meta.MetaCommandProvider):
 
     def register_types(self):
         self.set('network', NetworkProvider)

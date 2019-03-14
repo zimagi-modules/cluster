@@ -26,12 +26,7 @@ class StorageMountProvider(terraform.TerraformProvider):
         return self.command._mount
 
 
-class BaseStorageProvider(meta.MetaCommandProvider):
-
-    def __init__(self, name, command, instance = None):
-        super().__init__(name, command, instance)
-        self.provider_type = 'storage'
-        self.provider_options = settings.STORAGE_PROVIDERS
+class BaseProvider(meta.MetaCommandProvider):
 
     def register_types(self):
         self.set('storage', StorageProvider)

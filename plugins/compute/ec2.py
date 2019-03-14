@@ -1,10 +1,10 @@
 from utility.cloud.aws import AWSServiceMixin
-from .base import BaseComputeProvider, SSHAccessError
+from .base import BaseProvider, SSHAccessError
 
 import random
 
 
-class AWSEC2(AWSServiceMixin, BaseComputeProvider):
+class Provider(AWSServiceMixin, BaseProvider):
 
     def provider_config(self, type = None):
         self.option(str, 'ami', 'ami-0d2505740b82f7948', help = 'AWS image name', config_name = 'aws_ec2_image') # Ubuntu 18.04LTS hvm:ebs-ssd us-east-1

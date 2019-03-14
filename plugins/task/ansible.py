@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from .base import BaseTaskProvider
+from .base import BaseProvider
 from utility.runtime import Runtime
 from utility.temp import temp_dir
 from utility.data import clean_dict
@@ -95,7 +95,7 @@ class AnsibleInventory(object):
         return "\n".join(data)
 
 
-class Ansible(BaseTaskProvider):
+class Provider(BaseProvider):
 
     def default_requirements(self):
         return [

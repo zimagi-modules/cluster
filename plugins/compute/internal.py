@@ -1,7 +1,7 @@
-from .base import BaseComputeProvider
+from .base import BaseProvider
 
 
-class Internal(BaseComputeProvider):
+class Provider(BaseProvider):
 
     def provider_config(self, type = None):
         self.requirement(str, 'public_ip', help = 'Public IP of server')

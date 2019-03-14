@@ -9,8 +9,8 @@ class InternalStorageMountProvider(StorageMountProvider):
         self.option(str, 'remote_path', '/', help = 'Remote path to mount locally', config_name = 'internal_remote_path')
 
 
-class Internal(BaseStorageProvider):
-    
+class Provider(BaseProvider):
+
     def register_types(self):
         super().register_types()
         self.set('mount', InternalStorageMountProvider)
