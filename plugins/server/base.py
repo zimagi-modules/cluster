@@ -18,7 +18,7 @@ class SSHAccessError(CommandError):
 class BaseProvider(terraform.TerraformProvider):
 
     def terraform_type(self):
-        return 'compute'
+        return 'server'
 
     @property
     def facade(self):
