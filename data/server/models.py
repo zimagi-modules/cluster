@@ -10,7 +10,7 @@ class ServerFacade(
     environment.EnvironmentModelFacadeMixin
 ):
     def get_provider_name(self):
-        return 'compute'
+        return 'server'
 
     def get_scopes(self):
         return (
