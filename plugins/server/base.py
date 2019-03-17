@@ -45,7 +45,7 @@ class BaseProvider(terraform.TerraformProvider):
         instance = self.check_instance('server rotate password')
         password = sshlib.SSH.create_password()
 
-        self.command.project.provider.exec(
+        self.command.module.provider.exec(
             'password',
             instance,
             {

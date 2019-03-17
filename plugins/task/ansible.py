@@ -153,7 +153,7 @@ class Provider(BaseProvider):
                 env = {
                     "ANSIBLE_CONFIG": temp.save(ansible_config, extension = 'cfg')
                 },
-                cwd = self.get_project_path(),
+                cwd = self.get_module_path(),
                 display = True
             )
             if not success:
@@ -164,7 +164,7 @@ class Provider(BaseProvider):
         if not config_file_name:
             return "\n".join(core_config)
 
-        config_contents = self.project.load_file(config_file_name)
+        config_contents = self.module.load_file(config_file_name)
 
         if not config_contents:
             self.command.error("Could not load configuration from: {}".format(config_file_name))

@@ -42,7 +42,7 @@ class TerraformWrapper(object):
             self.terraform.destroy(manifest_path, variables, state)
 
     def _get_manifest_path(self, type, name):
-        return settings.LOADER.project_file('terraform', type, "{}.tf".format(name))
+        return settings.LOADER.module_file('terraform', type, "{}.tf".format(name))
 
 
 class TerraformState(DataProviderState):
