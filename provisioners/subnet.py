@@ -1,9 +1,15 @@
+from systems.command import profile
 
-class SubnetMixin(object):
 
-    def ensure_subnet(self, name, config):
-        networks = self.pop_values('network', config)
-        groups = self.pop_values('group_names', config)
+class Provisioner(profile.BaseProvisioner):
+
+    def priority(self):
+        return 2
+
+
+    def ensure(self, name, config):
+        networks = self.profile.pop_values('network', config)
+        groups = self.profile.pop_values('group_names', config)
 
         def process(network):
             self.command.exec_local('subnet save', {
@@ -17,5 +23,6 @@ class SubnetMixin(object):
 
         self.command.run_list(networks, process)
 
-    def describe_subnet(self, subnet):
+
+    def describe(self, subnet):
         return { 'network': subnet.network.name }

@@ -1,10 +1,16 @@
+from systems.command import profile
 
-class FirewallMixin(object):
 
-    def ensure_firewall(self, name, config):
-        networks = self.pop_values('network', config)
-        rules = self.pop_info('rules', config)
-        groups = self.pop_values('group_names', config)
+class Provisioner(profile.BaseProvisioner):
+
+    def priority(self):
+        return 2
+
+
+    def ensure(self, name, config):
+        networks = self.profile.pop_values('network', config)
+        rules = self.profile.pop_info('rules', config)
+        groups = self.profile.pop_values('group_names', config)
 
         def process(network):
             self.command.exec_local('firewall save', {
@@ -31,5 +37,5 @@ class FirewallMixin(object):
         self.command.run_list(networks, process)
 
 
-    def describe_firewall(self, firewall):
+    def describe(self, firewall):
         return { 'network': firewall.network.name }
