@@ -1,6 +1,5 @@
 profiles: profiles
 tasks: tasks
-lib: .
 roles:
   network-admin: Network administrator (full privileges over all environment networks, subnets, and firewalls)
   security-admin: Network security administrator (full privileges over environment firewalls)
