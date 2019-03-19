@@ -48,6 +48,10 @@ config:
     aws-ap-southeast-1: ami-033a3bd1e8ea825a5
     aws-ap-southeast-2: ami-0626846f14dbd80e5
 
+group:
+  core:
+  cenv:
+
 network:
   aws-us-east-1:
     when_in: "@aws_networks"
