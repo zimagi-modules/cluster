@@ -4,7 +4,7 @@ from systems.command import profile
 class Provisioner(profile.BaseProvisioner):
 
     def priority(self):
-        return 1
+        return 2
 
 
     def ensure(self, name, config):
