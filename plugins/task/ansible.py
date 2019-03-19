@@ -148,7 +148,7 @@ class Provider(BaseProvider):
             else:
                 self.command.error("Ansible task requires 'playbooks' list configuration")
 
-            success, stdout, stderr = self.command.sh(
+            success = self.command.sh(
                 command,
                 env = {
                     "ANSIBLE_CONFIG": temp.save(ansible_config, extension = 'cfg')

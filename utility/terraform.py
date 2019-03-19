@@ -24,7 +24,7 @@ class Terraform(object):
             'init',
             '-force-copy'
         )
-        success, stdout, stderr = self.command.sh(
+        success = self.command.sh(
             terraform_command,
             cwd = temp.temp_path,
             display = display
@@ -48,7 +48,7 @@ class Terraform(object):
                 'plan',
                 "-var-file={}".format(self.save_variables(temp, variables))
             )
-            success, stdout, stderr = self.command.sh(
+            success = self.command.sh(
                 terraform_command,
                 cwd = temp.temp_path,
                 display = True
@@ -73,7 +73,7 @@ class Terraform(object):
                 '-auto-approve',
                 "-var-file={}".format(self.save_variables(temp, variables))
             )
-            success, stdout, stderr = self.command.sh(
+            success = self.command.sh(
                 terraform_command,
                 cwd = temp.temp_path,
                 display = True
@@ -101,7 +101,7 @@ class Terraform(object):
                 '-auto-approve',
                 "-var-file={}".format(self.save_variables(temp, variables))
             ]
-            success, stdout, stderr = self.command.sh(
+            success = self.command.sh(
                 terraform_command,
                 cwd = temp.temp_path,
                 display = True
