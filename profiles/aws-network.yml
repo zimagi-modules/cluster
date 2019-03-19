@@ -30,7 +30,17 @@ config:
     - aws-ap-southeast-1
     - aws-ap-southeast-2
 
+  aws_admin_subnets:
+    - admin-1
+    - admin-2
+
+  aws_admin_firewalls:
+    - internet
+    - ssh
+    - admin
+
   # Ubuntu 18.04LTS hvm:ebs-ssd
+  aws_ubuntu_user: ubuntu
   aws_ubuntu_image:
     aws-us-east-1: ami-07073342279f98d28
     aws-us-east-2: ami-02e1499f8253f416f
@@ -187,9 +197,6 @@ network:
     region: ap-southeast-2
     dns_support: "@network_dns_support"
     group_names: "@network_groups"
-
-federation:
-  aws: "@aws_networks"
 
 subnet:
   admin-1:
