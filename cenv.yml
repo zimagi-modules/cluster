@@ -1,3 +1,5 @@
+scripts: scripts/install.sh
+requirements: requirements.txt
 profiles: profiles
 tasks: tasks
 roles:
