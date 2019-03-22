@@ -97,15 +97,6 @@ class AnsibleInventory(object):
 
 class Provider(BaseProvider):
 
-    def default_requirements(self):
-        return [
-            'ansible >= 2.6.0',
-            'jinja2 >= 2.9.6',
-            'netaddr == 0.7.19',
-            'pbr >= 1.6',
-            'passlib == 1.7.1'
-        ]
-
     def execute(self, results, servers, params):
         with temp_dir() as temp:
             lock = self.config.get('lock', False)
