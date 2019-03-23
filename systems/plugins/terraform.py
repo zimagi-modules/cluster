@@ -11,6 +11,7 @@ class TerraformWrapper(object):
 
     def __init__(self, provider):
         self.provider = provider
+        self.manager = provider.command.manager
         self.terraform = Terraform(
             provider.command,
             provider.command.force
