@@ -25,7 +25,7 @@ class Provider(AWSServiceMixin, BaseProvider):
 
 
     def initialize_terraform(self, instance, created):
-        relations = instance.facade.get_relation_names()
+        relations = self.command.get_relations(instance.facade)
 
         if instance.subnet.network.type != 'aws':
             self.command.error("AWS VPC network needed to create AWS compute instances")

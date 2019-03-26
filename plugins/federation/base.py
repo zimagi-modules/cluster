@@ -17,7 +17,7 @@ class BaseProvider(terraform.TerraformProvider):
         return super().update({}, networks = network_names)
 
     def initialize_instance(self, instance, created):
-        relations = instance.facade.get_relation_names()
+        relations = self.command.get_relations(instance.facade)
 
         instance.save()
 

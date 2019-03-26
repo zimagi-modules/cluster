@@ -29,7 +29,7 @@ class EFSStorageProvider(AWSServiceMixin, StorageProvider):
 class EFSStorageMountProvider(AWSServiceMixin, StorageMountProvider):
 
     def initialize_terraform(self, instance, created):
-        relations = instance.facade.get_relation_names(self.command)
+        relations = self.command.get_relations(instance.facade)
 
         super().initialize_terraform(instance, created)
         self.aws_credentials(instance.config)
