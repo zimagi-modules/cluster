@@ -8,13 +8,6 @@ class SubnetFacade(
     group.GroupModelFacadeMixin,
     network.NetworkModelFacadeMixin
 ):
-    def get_relations(self):
-        return {
-            'groups': ('group', 'Groups', '--groups'),
-            'storagemount_relation': ('mount', 'Mounts'),
-            'server_relation': ('server', 'Servers')
-        }
-
     def get_list_fields(self):
         return (
             ('name', 'Name'),

@@ -8,10 +8,7 @@ class FederationFacade(
     group.GroupModelFacadeMixin,
     environment.EnvironmentModelFacadeMixin
 ):
-    def get_relations(self):
-        return {
-            'groups': ('group', 'Groups', '--groups')
-        }
+    pass
 
 
 class Federation(

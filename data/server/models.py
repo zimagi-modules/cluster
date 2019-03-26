@@ -9,12 +9,6 @@ class ServerFacade(
     group.GroupModelFacadeMixin,
     subnet.SubnetModelFacadeMixin
 ):
-    def get_relations(self):
-        return {
-            'groups': ('group', 'Groups', '--groups'),
-            'firewalls': ('firewall', 'Firewalls', '--firewalls')
-        }
-
     def get_list_fields(self):
         return (
             ('name', 'Name'),

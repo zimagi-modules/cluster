@@ -8,12 +8,6 @@ class StorageFacade(
     group.GroupModelFacadeMixin,
     network.NetworkModelFacadeMixin
 ):
-    def get_relations(self):
-        return {
-            'groups': ('group', 'Groups', '--groups'),
-            'storagemount_relation': ('mount', 'Mounts')
-        }
-
     def get_list_fields(self):
         return (
             ('name', 'Name'),

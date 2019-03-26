@@ -8,12 +8,6 @@ class FirewallFacade(
     group.GroupModelFacadeMixin,
     network.NetworkModelFacadeMixin
 ):
-    def get_relations(self):
-        return {
-            'groups': ('group', 'Groups', '--groups'),
-            'firewallrule_relation': ('firewall_rule', 'Rules')
-        }
-
     def get_list_fields(self):
         return (
             ('name', 'Name'),

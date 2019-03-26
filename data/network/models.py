@@ -8,14 +8,6 @@ class NetworkFacade(
     group.GroupModelFacadeMixin,
     environment.EnvironmentModelFacadeMixin
 ):
-    def get_relations(self):
-        return {
-            'groups': ('group', 'Groups', '--groups'),
-            'subnet_relation': ('subnet', 'Subnets'),
-            'firewall_relation': ('firewall', 'Firewalls'),
-            'storage_relation': ('storage', 'Storage')
-        }
-
     def get_list_fields(self):
         return (
             ('name', 'Name'),
