@@ -8,7 +8,7 @@ class StorageModelFacadeMixin(ResourceModelFacadeMixin):
 
     def get_field_storage_display(self, instance, value, short):
         return str(value)
- 
+
     def get_field_storage_sources_display(self, instance, value, short):
         storage = [ str(x) for x in value.all() ]
         return "\n".join(storage)
@@ -16,18 +16,18 @@ class StorageModelFacadeMixin(ResourceModelFacadeMixin):
 
 class StorageMixin(django.Model):
 
-    storage = django.ForeignKey(Storage, 
-        on_delete = django.PROTECT, 
+    storage = django.ForeignKey(Storage,
+        on_delete = django.PROTECT,
         related_name = "%(class)s_relation"
     )
     class Meta:
         abstract = True
 
 class StorageRelationMixin(django.Model):
- 
-    storage = django.ManyToManyField(Storage, 
+
+    storage = django.ManyToManyField(Storage,
         related_name = "%(class)s_relation"
-    ) 
+    )
     class Meta:
         abstract = True
 
@@ -37,6 +37,7 @@ class StorageModel(StorageMixin, ResourceModel):
     class Meta(ResourceModel.Meta):
         abstract = True
         unique_together = ('storage', 'name')
+        scope = 'storage'
 
     def __str__(self):
         return "{}:{}".format(self.storage.name, self.name)
