@@ -8,27 +8,11 @@ class StorageFacade(
     group.GroupModelFacadeMixin,
     network.NetworkModelFacadeMixin
 ):
-    def get_provider_name(self):
-        return 'storage:storage'
-    
-    def get_children(self):
-        return (
-            'mount',
-        )
-    
-    def get_scopes(self):
-        return (
-            'network',
-        )
-    
     def get_relations(self):
         return {
             'groups': ('group', 'Groups', '--groups'),
             'storagemount_relation': ('mount', 'Mounts')
         }
-
-    def default_order(self):
-        return 'name'
 
     def get_list_fields(self):
         return (
@@ -37,7 +21,7 @@ class StorageFacade(
             ('type', 'Type'),
             ('config', 'Configuration')
         )
-    
+
     def get_display_fields(self):
         return (
             ('name', 'Name'),
@@ -60,7 +44,11 @@ class Storage(
     network.NetworkModel
 ):
     class Meta(network.NetworkModel.Meta):
+        verbose_name = "storage"
+        verbose_name_plural = "storage"
         facade_class = StorageFacade
+        ordering = ['name']
+        provider_name = 'storage:storage'
 
     def __str__(self):
         return "{}".format(self.name)

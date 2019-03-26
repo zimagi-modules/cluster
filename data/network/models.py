@@ -8,16 +8,6 @@ class NetworkFacade(
     group.GroupModelFacadeMixin,
     environment.EnvironmentModelFacadeMixin
 ):
-    def get_provider_name(self):
-        return 'network:network'
-
-    def get_children(self):
-        return (
-            'subnet',
-            'firewall',
-            'storage'
-        )
-
     def get_relations(self):
         return {
             'groups': ('group', 'Groups', '--groups'),
@@ -25,9 +15,6 @@ class NetworkFacade(
             'firewall_relation': ('firewall', 'Firewalls'),
             'storage_relation': ('storage', 'Storage')
         }
-
-    def default_order(self):
-        return 'cidr'
 
     def get_list_fields(self):
         return (
@@ -66,4 +53,8 @@ class Network(
     cidr = django.CharField(null=True, max_length=128)
 
     class Meta(environment.EnvironmentModel.Meta):
+        verbose_name = "network"
+        verbose_name_plural = "networks"
         facade_class = NetworkFacade
+        ordering = ['cidr']
+        provider_name = 'network:network'

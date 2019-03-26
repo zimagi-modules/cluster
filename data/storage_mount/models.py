@@ -1,46 +1,29 @@
 from django.db import models as django
 
-from systems.models import environment, subnet, storage, firewall, provider
+from systems.models import subnet, storage, firewall, provider
 
 
 class StorageMountFacade(
     provider.ProviderModelFacadeMixin,
-    subnet.SubnetModelFacadeMixin,
-    storage.StorageModelFacadeMixin,
     firewall.FirewallModelFacadeMixin,
-    environment.EnvironmentModelFacadeMixin
+    subnet.SubnetModelFacadeMixin,
+    storage.StorageModelFacadeMixin
 ):
-    def get_provider_name(self):
-        return 'storage:mount'
-    
-    def get_provider_relation(self):
-        return 'storage'
-    
-    def get_scopes(self):
-        return (
-            'network',
-            'subnet',
-            'storage'
-        )
-    
     def get_relations(self):
         return {
             'firewalls': ('firewall', 'Firewalls', '--firewalls')
         }
-
-    def default_order(self):
-        return 'name'
 
     def get_list_fields(self):
         return (
             ('name', 'Name'),
             ('subnet', 'Subnet'),
             ('storage', 'Storage'),
-            ('type', 'Type'),            
+            ('type', 'Type'),
             ('remote_host', 'Remote host'),
             ('remote_path', 'Remote path'),
         )
-    
+
     def get_display_fields(self):
         return (
             ('name', 'Name'),
@@ -60,30 +43,42 @@ class StorageMountFacade(
             ('created', 'Created'),
             ('updated', 'Updated')
         )
-    
+
     def get_field_remote_host_display(self, instance, value, short):
         return value
-    
+
     def get_field_remote_path_display(self, instance, value, short):
         return value
-    
+
     def get_field_mount_options_display(self, instance, value, short):
         return value
 
 
 class StorageMount(
     provider.ProviderMixin,
-    subnet.SubnetMixin,
-    storage.StorageMixin,
     firewall.FirewallRelationMixin,
-    environment.EnvironmentModel  
-):    
+    subnet.SubnetMixin,
+    storage.StorageModel
+):
     remote_host = django.CharField(null=True, max_length=128)
     remote_path = django.CharField(null=True, max_length=256)
     mount_options = django.TextField(null=True)
-    
-    class Meta(environment.EnvironmentModel.Meta):
+
+    class Meta(storage.StorageModel.Meta):
+        verbose_name = "mount"
+        verbose_name_plural = "mounts"
         facade_class = StorageMountFacade
+        unique_together = (
+            ('storage', 'name'),
+            ('subnet', 'name')
+        )
+        scope = ('storage', 'subnet')
+        ordering = ['name']
+        provider_name = 'storage:mount'
+        provider_relation = 'storage'
 
     def __str__(self):
         return "{} ({}:{})".format(self.name, self.remote_host, self.remote_path)
+
+    def get_id_fields(self):
+        return ('name', 'storage_id', 'subnet_id')

@@ -1,31 +1,19 @@
 from django.db import models as django
 
 from settings.roles import Roles
-from systems.models import fields, environment, subnet, firewall, provider, group
+from systems.models import fields, subnet, firewall, provider, group
 
 
 class ServerFacade(
     provider.ProviderModelFacadeMixin,
     group.GroupModelFacadeMixin,
-    environment.EnvironmentModelFacadeMixin
+    subnet.SubnetModelFacadeMixin
 ):
-    def get_provider_name(self):
-        return 'server'
-
-    def get_scopes(self):
-        return (
-            'network',
-            'subnet'
-        )
-
     def get_relations(self):
         return {
             'groups': ('group', 'Groups', '--groups'),
             'firewalls': ('firewall', 'Firewalls', '--firewalls')
         }
-
-    def default_order(self):
-        return 'name'
 
     def get_list_fields(self):
         return (
@@ -99,9 +87,8 @@ class ServerFacade(
 class Server(
     provider.ProviderMixin,
     group.GroupMixin,
-    subnet.SubnetMixin,
     firewall.FirewallRelationMixin,
-    environment.EnvironmentModel
+    subnet.SubnetModel
 ):
     public_ip = django.CharField(null=True, max_length=128)
     private_ip = django.CharField(null=True, max_length=128)
@@ -111,8 +98,12 @@ class Server(
     data_device = django.CharField(null=True, max_length=256)
     backup_device = django.CharField(null=True, max_length=256)
 
-    class Meta(environment.EnvironmentModel.Meta):
+    class Meta(subnet.SubnetModel.Meta):
+        verbose_name = "server"
+        verbose_name_plural = "servers"
         facade_class = ServerFacade
+        ordering = ['name']
+        provider_name = 'server'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

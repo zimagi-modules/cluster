@@ -7,21 +7,6 @@ class FirewallRuleFacade(
     provider.ProviderModelFacadeMixin,
     firewall.FirewallModelFacadeMixin
 ):
-    def get_provider_name(self):
-        return 'network:firewall_rule'
-
-    def get_provider_relation(self):
-        return 'firewall'
-
-    def get_scopes(self):
-        return (
-            'network',
-            'firewall'
-        )
-
-    def default_order(self):
-        return 'name'
-
     def get_list_fields(self):
         return (
             ('name', 'Name'),
@@ -88,7 +73,12 @@ class FirewallRule(
     cidrs = fields.CSVField(null=True)
 
     class Meta(firewall.FirewallModel.Meta):
+        verbose_name = "firewall rule"
+        verbose_name_plural = "firewall rules"
         facade_class = FirewallRuleFacade
+        ordering = ['name']
+        provider_name = 'network:firewall_rule'
+        provider_relation = 'firewall'
 
     def __str__(self):
         return "{}".format(self.name)

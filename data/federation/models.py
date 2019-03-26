@@ -8,9 +8,6 @@ class FederationFacade(
     group.GroupModelFacadeMixin,
     environment.EnvironmentModelFacadeMixin
 ):
-    def get_provider_name(self):
-        return 'federation'
-    
     def get_relations(self):
         return {
             'groups': ('group', 'Groups', '--groups')
@@ -24,4 +21,7 @@ class Federation(
     environment.EnvironmentModel
 ):
     class Meta(environment.EnvironmentModel.Meta):
+        verbose_name = "federation"
+        verbose_name_plural = "federations"
         facade_class = FederationFacade
+        provider_name = 'federation'

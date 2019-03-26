@@ -8,32 +8,12 @@ class SubnetFacade(
     group.GroupModelFacadeMixin,
     network.NetworkModelFacadeMixin
 ):
-    def get_provider_name(self):
-        return 'network:subnet'
-
-    def get_provider_relation(self):
-        return 'network'
-
-    def get_children(self):
-        return (
-            'server',
-            'mount'
-        )
-
-    def get_scopes(self):
-        return (
-            'network',
-        )
-
     def get_relations(self):
         return {
             'groups': ('group', 'Groups', '--groups'),
             'storagemount_relation': ('mount', 'Mounts'),
             'server_relation': ('server', 'Servers')
         }
-
-    def default_order(self):
-        return 'cidr'
 
     def get_list_fields(self):
         return (
@@ -73,7 +53,12 @@ class Subnet(
     cidr = django.CharField(null=True, max_length=128)
 
     class Meta(network.NetworkModel.Meta):
+        verbose_name = "subnet"
+        verbose_name_plural = "subnets"
         facade_class = SubnetFacade
+        ordering = ['cidr']
+        provider_name = 'network:subnet'
+        provider_relation = 'network'
 
     def __str__(self):
         return "{} ({})".format(self.name, self.cidr)
