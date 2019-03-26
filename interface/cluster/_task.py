@@ -4,9 +4,6 @@ from systems.command.types import module
 class Command(
     module.ModuleActionCommand
 ):
-    def get_command_name(self):
-        return 'task'
-
     def get_priority(self):
         return -100
 

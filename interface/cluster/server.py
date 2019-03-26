@@ -10,12 +10,9 @@ class RotateCommand(
     server.ServerActionCommand
 ):
     def parse(self):
-        self._server.parse_scopes(self)
         self.parse_server_search(True)
 
     def exec(self):
-        self._server.set_scopes(self)
-
         def rotate_server(server):
             self.data("Rotating SSH keypair for", str(server))
             server.provider.rotate_password()
@@ -63,14 +60,10 @@ class SSHCommand(
 
 class Command(server.ServerRouterCommand):
 
-    def get_command_name(self):
-        return 'server'
-
     def get_subcommands(self):
-        base_name = self.get_command_name()
         return command_list(
             resource.ResourceCommandSet(
-                server.ServerActionCommand, base_name,
+                server.ServerActionCommand, self.name,
                 save_multiple = True
             ),
             ('rotate', RotateCommand),
