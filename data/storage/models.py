@@ -8,28 +8,7 @@ class StorageFacade(
     group.GroupModelFacadeMixin,
     network.NetworkModelFacadeMixin
 ):
-    def get_list_fields(self):
-        return (
-            ('name', 'Name'),
-            ('network', 'Network'),
-            ('type', 'Type'),
-            ('config', 'Configuration')
-        )
-
-    def get_display_fields(self):
-        return (
-            ('name', 'Name'),
-            ('network', 'Network'),
-            ('type', 'Type'),
-            '---',
-            ('config', 'Configuration'),
-            '---',
-            ('variables', 'Variables'),
-            ('state_config', 'State'),
-            '---',
-            ('created', 'Created'),
-            ('updated', 'Updated')
-        )
+    pass
 
 
 class Storage(

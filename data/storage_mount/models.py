@@ -9,36 +9,6 @@ class StorageMountFacade(
     subnet.SubnetModelFacadeMixin,
     storage.StorageModelFacadeMixin
 ):
-    def get_list_fields(self):
-        return (
-            ('name', 'Name'),
-            ('subnet', 'Subnet'),
-            ('storage', 'Storage'),
-            ('type', 'Type'),
-            ('remote_host', 'Remote host'),
-            ('remote_path', 'Remote path'),
-        )
-
-    def get_display_fields(self):
-        return (
-            ('name', 'Name'),
-            ('subnet', 'Subnet'),
-            ('storage', 'Storage'),
-            ('type', 'Type'),
-            '---',
-            ('remote_host', 'Remote host'),
-            ('remote_path', 'Remote path'),
-            ('mount_options', 'Mount options'),
-            '---',
-            ('config', 'Configuration'),
-            '---',
-            ('variables', 'Variables'),
-            ('state_config', 'State'),
-            '---',
-            ('created', 'Created'),
-            ('updated', 'Updated')
-        )
-
     def get_field_remote_host_display(self, instance, value, short):
         return value
 

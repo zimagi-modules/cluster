@@ -8,31 +8,6 @@ class NetworkFacade(
     group.GroupModelFacadeMixin,
     environment.EnvironmentModelFacadeMixin
 ):
-    def get_list_fields(self):
-        return (
-            ('name', 'Name'),
-            ('type', 'Type'),
-            ('cidr', 'CIDR'),
-            ('config', 'Configuration'),
-            ('variables', 'Resources')
-        )
-
-    def get_display_fields(self):
-        return (
-            ('name', 'Name'),
-            ('environment', 'Environment'),
-            ('type', 'Type'),
-            ('cidr', 'CIDR'),
-            '---',
-            ('config', 'Configuration'),
-            '---',
-            ('variables', 'Resources'),
-            ('state_config', 'State'),
-            '---',
-            ('created', 'Created'),
-            ('updated', 'Updated')
-        )
-
     def get_field_cidr_display(self, instance, value, short):
         return value
 

@@ -7,42 +7,6 @@ class FirewallRuleFacade(
     provider.ProviderModelFacadeMixin,
     firewall.FirewallModelFacadeMixin
 ):
-    def get_list_fields(self):
-        return (
-            ('name', 'Name'),
-            ('network', 'Network'),
-            ('firewall', 'Firewall'),
-            ('type', 'Type'),
-            ('mode', 'Mode'),
-            ('protocol', 'Protocol'),
-            ('from_port', 'From port'),
-            ('to_port', 'To port'),
-            ('cidrs', 'CIDRs'),
-            ('config', 'Configuration'),
-            ('variables', 'Variables')
-        )
-
-    def get_display_fields(self):
-        return (
-            ('name', 'Name'),
-            ('firewall', 'Firewall'),
-            ('type', 'Type'),
-            '---',
-            ('config', 'Configuration'),
-            '---',
-            ('mode', 'Mode'),
-            ('protocol', 'Protocol'),
-            ('from_port', 'From port'),
-            ('to_port', 'To port'),
-            ('cidrs', 'CIDRs'),
-            '---',
-            ('variables', 'Variables'),
-            ('state_config', 'State'),
-            '---',
-            ('created', 'Created'),
-            ('updated', 'Updated')
-        )
-
     def get_field_network_display(self, instance, value, short):
         return str(instance.firewall.network)
 

@@ -8,29 +8,7 @@ class FirewallFacade(
     group.GroupModelFacadeMixin,
     network.NetworkModelFacadeMixin
 ):
-    def get_list_fields(self):
-        return (
-            ('name', 'Name'),
-            ('network', 'Network'),
-            ('type', 'Type'),
-            ('config', 'Configuration'),
-            ('variables', 'Resources')
-        )
-
-    def get_display_fields(self):
-        return (
-            ('name', 'Name'),
-            ('network', 'Network'),
-            ('type', 'Type'),
-            '---',
-            ('config', 'Configuration'),
-            '---',
-            ('variables', 'Resources'),
-            ('state_config', 'State'),
-            '---',
-            ('created', 'Created'),
-            ('updated', 'Updated')
-        )
+    pass
 
 
 class Firewall(

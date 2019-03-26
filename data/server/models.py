@@ -9,43 +9,6 @@ class ServerFacade(
     group.GroupModelFacadeMixin,
     subnet.SubnetModelFacadeMixin
 ):
-    def get_list_fields(self):
-        return (
-            ('name', 'Name'),
-            ('subnet', 'Subnet'),
-            ('type', 'Type'),
-            ('status', 'Status'),
-            ('public_ip', 'Public IP'),
-            ('private_ip', 'Private IP'),
-            ('user', 'User'),
-            ('password', 'Password'),
-            ('private_key', 'Private key')
-        )
-
-    def get_display_fields(self):
-        return (
-            ('name', 'Name'),
-            ('subnet', 'Subnet'),
-            ('type', 'Type'),
-            ('status', 'Status'),
-            '---',
-            ('public_ip', 'Public IP'),
-            ('private_ip', 'Private IP'),
-            ('user', 'User'),
-            ('password', 'Password'),
-            ('private_key', 'Private key'),
-            ('data_device', 'Data device'),
-            ('backup_device', 'Backup device'),
-            '---',
-            ('config', 'Configuration'),
-            '---',
-            ('variables', 'Variables'),
-            ('state_config', 'State'),
-            '---',
-            ('created', 'Created'),
-            ('updated', 'Updated')
-        )
-
     def get_field_public_ip_display(self, instance, value, short):
         return value
 
