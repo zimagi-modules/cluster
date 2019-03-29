@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from .data import DataProviderState, DataCommandProvider
+from .data import DataProviderState, DataPluginProvider
 from utility.terraform import Terraform
 
 import os
@@ -60,7 +60,7 @@ class TerraformState(DataProviderState):
         return variables
 
 
-class TerraformProvider(DataCommandProvider):
+class TerraformPluginProvider(DataPluginProvider):
 
     def provider_state(self):
         return TerraformState

@@ -3,7 +3,7 @@ from django.conf import settings
 from systems.plugins import meta, terraform
 
 
-class StorageProvider(terraform.TerraformProvider):
+class StorageProvider(terraform.TerraformPluginProvider):
 
     def terraform_type(self):
         return 'storage'
@@ -13,7 +13,7 @@ class StorageProvider(terraform.TerraformProvider):
         return self.command._storage
 
 
-class StorageMountProvider(terraform.TerraformProvider):
+class StorageMountProvider(terraform.TerraformPluginProvider):
 
     def provider_config(self, type = None):
         self.option(str, 'mount_options', 'nfs4 rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 0 0', help = 'Mount options', config_name = 'manual_mount_options')
@@ -26,7 +26,7 @@ class StorageMountProvider(terraform.TerraformProvider):
         return self.command._mount
 
 
-class BaseProvider(meta.MetaCommandProvider):
+class BaseProvider(meta.MetaPluginProvider):
 
     def register_types(self):
         self.set('storage', StorageProvider)

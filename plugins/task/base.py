@@ -18,7 +18,7 @@ class TaskResult(object):
         return "[{}]".format(self.type)
 
 
-class BaseProvider(data.BaseCommandProvider):
+class BaseProvider(data.BasePluginProvider):
 
     def __init__(self, type, name, command, module, config):
         super().__init__(type, name, command)

@@ -116,7 +116,7 @@ class SubnetMixin(object):
         return SubnetAddressMap()
 
 
-class NetworkProvider(NetworkMixin, terraform.TerraformProvider):
+class NetworkProvider(NetworkMixin, terraform.TerraformPluginProvider):
 
     def provider_config(self, type = None):
         self.option(str, 'cidr', None, help = 'Network IPv4 CIDR address (between /16 and /28)')
@@ -138,7 +138,7 @@ class NetworkProvider(NetworkMixin, terraform.TerraformProvider):
             self.command.error("No available network cidr matches. Try another cidr")
 
 
-class SubnetProvider(SubnetMixin, terraform.TerraformProvider):
+class SubnetProvider(SubnetMixin, terraform.TerraformPluginProvider):
 
     def provider_config(self, type = None):
         self.option(str, 'cidr', None, help = 'Subnet IPv4 CIDR address (between /16 and /28)')
@@ -161,7 +161,7 @@ class SubnetProvider(SubnetMixin, terraform.TerraformProvider):
             self.command.error("No available subnet cidr matches. Try another cidr")
 
 
-class FirewallProvider(terraform.TerraformProvider):
+class FirewallProvider(terraform.TerraformPluginProvider):
 
     def terraform_type(self):
         return 'firewall'
@@ -171,7 +171,7 @@ class FirewallProvider(terraform.TerraformProvider):
         return self.command._firewall
 
 
-class FirewallRuleProvider(NetworkMixin, terraform.TerraformProvider):
+class FirewallRuleProvider(NetworkMixin, terraform.TerraformPluginProvider):
 
     def provider_config(self, type = None):
         self.option(str, 'mode', 'ingress', help = 'Firewall rule mode (ingress | egress)')
@@ -200,7 +200,7 @@ class FirewallRuleProvider(NetworkMixin, terraform.TerraformProvider):
             instance.cidrs = ['0.0.0.0/0']
 
 
-class BaseProvider(meta.MetaCommandProvider):
+class BaseProvider(meta.MetaPluginProvider):
 
     def register_types(self):
         self.set('network', NetworkProvider)
