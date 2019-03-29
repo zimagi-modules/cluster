@@ -7,16 +7,7 @@ class FederationMixin(DataMixin):
     schema = {
         'federation': {
             'model': Federation,
-            'provider': True,
-            'system_fields': (
-                'environment',
-                'type',
-                'config',
-                'variables',
-                'state_config',
-                'created',
-                'updated'
-            )
+            'provider': True
         }
     }
 

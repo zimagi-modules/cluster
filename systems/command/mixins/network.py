@@ -10,52 +10,16 @@ class NetworkMixin(DataMixin):
     schema = {
         'network': {
             'model': Network,
-            'provider': True,
-            'system_fields': (
-                'environment',
-                'type',
-                'config',
-                'variables',
-                'state_config',
-                'created',
-                'updated'
-            )
+            'provider': True
         },
         'subnet': {
-            'model': Subnet,
-            'system_fields': (
-                'network',
-                'type',
-                'config',
-                'variables',
-                'state_config',
-                'created',
-                'updated'
-            )
+            'model': Subnet
         },
         'firewall': {
-            'model': Firewall,
-            'system_fields': (
-                'network',
-                'type',
-                'config',
-                'variables',
-                'state_config',
-                'created',
-                'updated'
-            )
+            'model': Firewall
         },
         'firewall_rule': {
-            'model': FirewallRule,
-            'system_fields': (
-                'firewall',
-                'type',
-                'config',
-                'variables',
-                'state_config',
-                'created',
-                'updated'
-            )
+            'model': FirewallRule
         }
     }
 
