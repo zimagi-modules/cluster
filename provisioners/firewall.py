@@ -6,7 +6,6 @@ class Provisioner(profile.BaseProvisioner):
     def priority(self):
         return 3
 
-
     def ensure(self, name, config):
         networks = self.profile.pop_values('network', config)
         rules = self.profile.pop_info('rules', config)
@@ -36,6 +35,15 @@ class Provisioner(profile.BaseProvisioner):
 
         self.command.run_list(networks, process)
 
+    def scope(self, instance):
+        return { 'network': instance.network.name }
 
-    def describe(self, firewall):
-        return { 'network': firewall.network.name }
+    def variables(self, instance):
+        variables = {
+            'group_names': [ x.name for x in instance.groups.all() ],
+            'rules': {}
+        }
+        for rule in instance.firewallrule_relation.all():
+            variables['rules'][rule.name] = self.profile.get_variables(rule)
+
+        return variables
