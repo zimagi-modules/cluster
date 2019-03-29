@@ -17,7 +17,7 @@ class Subnet(
     group.GroupMixin,
     network.NetworkModel
 ):
-    cidr = django.CharField(null=True, max_length=128)
+    cidr = django.CharField(null = True, max_length = 128)
 
     class Meta(network.NetworkModel.Meta):
         verbose_name = "subnet"

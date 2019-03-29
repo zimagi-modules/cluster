@@ -30,11 +30,11 @@ class FirewallRule(
     provider.ProviderMixin,
     firewall.FirewallModel
 ):
-    mode = django.CharField(max_length=10, default='ingress', choices=[(i, i) for i in ('ingress', 'egress')])
-    from_port = django.IntegerField(null=True)
-    to_port = django.IntegerField(null=True)
-    protocol = django.CharField(max_length=10, default='tcp', choices=[(i, i) for i in ('tcp', 'udp', 'icmp')])
-    cidrs = fields.CSVField(null=True)
+    mode = django.CharField(max_length = 10, default = 'ingress', choices = [(i, i) for i in ('ingress', 'egress')])
+    from_port = django.IntegerField(null = True)
+    to_port = django.IntegerField(null = True)
+    protocol = django.CharField(max_length = 10, default = 'tcp', choices = [(i, i) for i in ('tcp', 'udp', 'icmp')])
+    cidrs = fields.CSVField(null = True)
 
     class Meta(firewall.FirewallModel.Meta):
         verbose_name = "firewall rule"

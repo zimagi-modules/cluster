@@ -47,13 +47,13 @@ class Server(
     firewall.FirewallRelationMixin,
     subnet.SubnetModel
 ):
-    public_ip = django.CharField(null=True, max_length=128)
-    private_ip = django.CharField(null=True, max_length=128)
-    user = django.CharField(null=True, max_length=128)
-    password = fields.EncryptedCharField(null=True, max_length=1096)
-    private_key = fields.EncryptedDataField(null=True)
-    data_device = django.CharField(null=True, max_length=256)
-    backup_device = django.CharField(null=True, max_length=256)
+    public_ip = django.CharField(null = True, max_length = 128)
+    private_ip = django.CharField(null = True, max_length = 128)
+    user = django.CharField(null = True, max_length = 128)
+    password = fields.EncryptedCharField(null = True, max_length = 1096)
+    private_key = fields.EncryptedDataField(null = True)
+    data_device = django.CharField(null = True, max_length = 256)
+    backup_device = django.CharField(null = True, max_length = 256)
 
     class Meta(subnet.SubnetModel.Meta):
         verbose_name = "server"

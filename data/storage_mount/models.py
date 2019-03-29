@@ -25,9 +25,9 @@ class StorageMount(
     subnet.SubnetMixin,
     storage.StorageModel
 ):
-    remote_host = django.CharField(null=True, max_length=128)
-    remote_path = django.CharField(null=True, max_length=256)
-    mount_options = django.TextField(null=True)
+    remote_host = django.CharField(null = True, max_length = 128)
+    remote_path = django.CharField(null = True, max_length = 256)
+    mount_options = django.TextField(null = True)
 
     class Meta(storage.StorageModel.Meta):
         verbose_name = "mount"

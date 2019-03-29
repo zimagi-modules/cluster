@@ -17,7 +17,7 @@ class Network(
     group.GroupMixin,
     environment.EnvironmentModel
 ):
-    cidr = django.CharField(null=True, max_length=128)
+    cidr = django.CharField(null = True, max_length = 128)
 
     class Meta(environment.EnvironmentModel.Meta):
         verbose_name = "network"
