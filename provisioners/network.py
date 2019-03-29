@@ -6,7 +6,6 @@ class Provisioner(profile.BaseProvisioner):
     def priority(self):
         return 2
 
-
     def ensure(self, name, config):
         provider = self.profile.pop_value('provider', config)
         groups = self.profile.pop_values('group_names', config)
@@ -21,10 +20,11 @@ class Provisioner(profile.BaseProvisioner):
             'group_names': groups
         })
 
-
-    def describe(self, network):
-        return { 'provider': network.type }
-
+    def variables(self, instance):
+        return {
+            'provider': instance.type,
+            'group_names': [ x.name for x in instance.groups.all() ]
+        }
 
     def destroy(self, name, config):
         self.command.exec_local('network rm', {
