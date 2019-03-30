@@ -7,43 +7,44 @@ class Provisioner(profile.BaseProvisioner):
         return 3
 
     def ensure(self, name, config):
-        networks = self.profile.pop_values('network', config)
-        rules = self.profile.pop_info('rules', config)
-        groups = self.profile.pop_values('group_names', config)
+        networks = self.pop_values('network', config)
+        rules = self.pop_info('rules', config)
+        groups = self.pop_values('groups', config)
 
-        def process(network):
-            self.command.exec_local('firewall save', {
-                'network_name': network,
-                'firewall_name': name,
-                'firewall_fields': config,
-                'group_names': groups
-            })
+        if not networks or not rules:
+            self.command.error("Firewall {} requires 'network' and 'rules' fields".format(name))
+
+        def process_network(network):
+            self.exec('firewall save',
+                firewall_name = name,
+                firewall_fields = self.interpolate(config,
+                    network = network
+                ),
+                network_name = network,
+                group_names = groups
+            )
             def process_rule(rule):
-                self.command.exec_local('firewall rule save', {
-                    'network_name': network,
-                    'firewall_name': name,
-                    'firewall_rule_name': rule,
-                    'firewall_rule_fields': rules[rule]
-                })
-            self.command.run_list(rules.keys(), process_rule)
-
-        if not networks:
-            self.command.error("Firewall {} requires 'network' field".format(name))
-
-        if not rules:
-            self.command.error("Firewall {} requires 'rules' field defined".format(name))
-
-        self.command.run_list(networks, process)
+                self.exec('firewall rule save',
+                    firewall_rule_name = rule,
+                    firewall_rule_fields = self.interpolate(rules[rule],
+                        network = network,
+                        firewall = name
+                    ),
+                    network_name = network,
+                    firewall_name = name,
+                )
+            self.run_list(rules.keys(), process_rule)
+        self.run_list(networks, process_network)
 
     def scope(self, instance):
         return { 'network': instance.network.name }
 
     def variables(self, instance):
         variables = {
-            'group_names': [ x.name for x in instance.groups.all() ],
+            'groups': self.get_names(instance.groups),
             'rules': {}
         }
         for rule in instance.firewallrule_relation.all():
-            variables['rules'][rule.name] = self.profile.get_variables(rule)
+            variables['rules'][rule.name] = self.get_variables(rule)
 
         return variables

@@ -7,25 +7,27 @@ class Provisioner(profile.BaseProvisioner):
         return 3
 
     def ensure(self, name, config):
-        networks = self.profile.pop_values('network', config)
-        groups = self.profile.pop_values('group_names', config)
+        networks = self.pop_values('network', config)
+        groups = self.pop_values('groups', config)
 
-        def process(network):
-            self.command.exec_local('subnet save', {
-                'network_name': network,
-                'subnet_name': name,
-                'subnet_fields': config,
-                'group_names': groups
-            })
         if not networks:
             self.command.error("Subnet {} requires 'network' field".format(name))
 
-        self.command.run_list(networks, process)
+        def process(network):
+            self.exec('subnet save',
+                subnet_name = name,
+                subnet_fields = self.interpolate(config,
+                    network = network
+                ),
+                network_name = network,
+                group_names = groups
+            )
+        self.run_list(networks, process)
 
     def scope(self, instance):
         return { 'network': instance.network.name }
 
     def variables(self, instance):
         return {
-            'group_names': [ x.name for x in instance.groups.all() ]
+            'groups': self.get_names(instance.groups)
         }
