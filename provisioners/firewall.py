@@ -50,3 +50,14 @@ class Provisioner(profile.BaseProvisioner):
             variables['rules'][rule.name] = self.get_variables(rule)
 
         return variables
+
+    def destroy(self, name, config):
+        networks = self.pop_values('network', config)
+
+        def process_network(network):
+            self.exec('firewall rm',
+                server_name = name,
+                network_name = network,
+                force = True
+            )
+        self.run_list(networks, process_network)

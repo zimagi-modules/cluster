@@ -32,3 +32,14 @@ class Provisioner(profile.BaseProvisioner):
         return {
             'groups': self.get_names(instance.groups)
         }
+
+    def destroy(self, name, config):
+        networks = self.pop_values('network', config)
+
+        def process_network(network):
+            self.exec('subnet rm',
+                subnet_name = name,
+                network_name = network,
+                force = True
+            )
+        self.run_list(networks, process_network)
