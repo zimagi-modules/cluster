@@ -37,7 +37,7 @@ resource "aws_ebs_volume" "data" {
   type = "${var.ebs_type}"
   iops = "${var.ebs_iops}"
   encrypted = "${var.ebs_encrypted}"
-  
+
   tags = {
     Name = "cenv-compute"
   }
