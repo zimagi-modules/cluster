@@ -8,6 +8,7 @@ class Provisioner(profile.BaseProvisioner):
 
     def ensure(self, name, config):
         provider = self.pop_value('provider', config)
+        count = self.pop_value('count', config)
         networks = self.pop_values('network', config)
         subnets = self.pop_values('subnet', config)
         groups = self.pop_values('groups', config)
@@ -16,9 +17,13 @@ class Provisioner(profile.BaseProvisioner):
         if not provider or not networks or not subnets:
             self.command.error("Server {} requires 'provider', 'network', and 'subnet' fields".format(name))
 
+        if not count:
+            count = 1
+
         def process_network(network):
             def process_subnet(subnet):
                 self.exec('server save',
+                    count = count,
                     server_provider_name = provider,
                     server_name = name,
                     server_fields = self.interpolate(config,
