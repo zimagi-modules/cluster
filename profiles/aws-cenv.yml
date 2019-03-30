@@ -17,7 +17,6 @@ server:
     provider: ec2
     network: "@aws_networks"
     subnet: "@aws_admin_subnets"
-    firewalls: "@aws_admin_firewalls"
     image: "@aws_ubuntu_image[network]"
     user: "@aws_ubuntu_user"
     machine: "@aws_admin_machine"
@@ -29,4 +28,5 @@ server:
     ebs_iops: "@aws_admin_ebs_iops"
     ebs_optimized: "@aws_admin_ebs_optimized"
     ebs_encrypted: "@aws_admin_ebs_encrypted"
+    firewall_names: "@aws_admin_firewalls"
     group_names: "@admin_groups"
