@@ -19,7 +19,8 @@ class SubnetMixin(django.Model):
     subnet = django.ForeignKey(Subnet,
         null = True,
         on_delete = django.PROTECT,
-        related_name = "%(class)s_relation"
+        related_name = "%(class)s_relation",
+        editable = False
     )
     class Meta:
         abstract = True
@@ -27,7 +28,8 @@ class SubnetMixin(django.Model):
 class SubnetRelationMixin(django.Model):
 
     subnets = django.ManyToManyField(Subnet,
-        related_name = "%(class)s_relation"
+        related_name = "%(class)s_relation",
+        editable = False
     )
     class Meta:
         abstract = True

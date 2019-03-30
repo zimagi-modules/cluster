@@ -19,7 +19,8 @@ class FirewallMixin(django.Model):
     firewall = django.ForeignKey(Firewall,
         null = True,
         on_delete = django.PROTECT,
-        related_name = "%(class)s_relation"
+        related_name = "%(class)s_relation",
+        editable = False
     )
     class Meta:
         abstract = True
@@ -28,7 +29,8 @@ class FirewallMixin(django.Model):
 class FirewallRelationMixin(django.Model):
 
     firewalls = django.ManyToManyField(Firewall,
-        related_name = "%(class)s_relation"
+        related_name = "%(class)s_relation",
+        editable = False
     )
     class Meta:
         abstract = True

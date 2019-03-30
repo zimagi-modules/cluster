@@ -18,7 +18,8 @@ class StorageMixin(django.Model):
 
     storage = django.ForeignKey(Storage,
         on_delete = django.PROTECT,
-        related_name = "%(class)s_relation"
+        related_name = "%(class)s_relation",
+        editable = False
     )
     class Meta:
         abstract = True
@@ -26,7 +27,8 @@ class StorageMixin(django.Model):
 class StorageRelationMixin(django.Model):
 
     storage = django.ManyToManyField(Storage,
-        related_name = "%(class)s_relation"
+        related_name = "%(class)s_relation",
+        editable = False
     )
     class Meta:
         abstract = True

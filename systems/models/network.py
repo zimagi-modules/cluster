@@ -19,7 +19,8 @@ class NetworkMixin(django.Model):
     network = django.ForeignKey(Network,
         null = True,
         on_delete = django.PROTECT,
-        related_name = "%(class)s_relation"
+        related_name = "%(class)s_relation",
+        editable = False
     )
     class Meta:
         abstract = True
@@ -27,7 +28,8 @@ class NetworkMixin(django.Model):
 class NetworkRelationMixin(django.Model):
 
     networks = django.ManyToManyField(Network,
-        related_name = "%(class)s_relation"
+        related_name = "%(class)s_relation",
+        editable = False
     )
     class Meta:
         abstract = True
