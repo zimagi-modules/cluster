@@ -21,7 +21,8 @@ class Provisioner(profile.BaseProvisioner):
                     network = network
                 ),
                 network_name = network,
-                group_names = groups
+                group_names = groups,
+                test = self.test
             )
             def process_rule(rule):
                 self.exec('firewall rule save',
@@ -32,6 +33,7 @@ class Provisioner(profile.BaseProvisioner):
                     ),
                     network_name = network,
                     firewall_name = name,
+                    test = self.test
                 )
             self.run_list(rules.keys(), process_rule)
         self.run_list(networks, process_network)

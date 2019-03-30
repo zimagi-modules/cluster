@@ -34,7 +34,8 @@ class Provisioner(profile.BaseProvisioner):
                     network_name = network,
                     subnet_name = subnet,
                     group_names = groups,
-                    firewall_names = firewalls
+                    firewall_names = firewalls,
+                    test = self.test
                 )
             self.run_list(subnets, process_subnet)
         self.run_list(networks, process_network)

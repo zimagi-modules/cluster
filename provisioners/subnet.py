@@ -20,7 +20,8 @@ class Provisioner(profile.BaseProvisioner):
                     network = network
                 ),
                 network_name = network,
-                group_names = groups
+                group_names = groups,
+                test = self.test
             )
         self.run_list(networks, process)
 

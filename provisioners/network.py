@@ -19,7 +19,8 @@ class Provisioner(profile.BaseProvisioner):
             network_fields = self.interpolate(config,
                 provider = provider
             ),
-            group_names = groups
+            group_names = groups,
+            test = self.test
         )
 
     def variables(self, instance):
