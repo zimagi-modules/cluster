@@ -14,9 +14,10 @@ config:
 
 server:
   cenv:
+    count: 1
     provider: ec2
-    network: "@aws_networks[0]"
-    subnet: "@aws_admin_subnets[1]"
+    network: "@aws_networks"
+    subnet: "@aws_admin_subnets"
     image: "@aws_ubuntu_image[network]"
     user: "@aws_ubuntu_user"
     machine: "@aws_admin_machine"
