@@ -15,7 +15,13 @@ resource "aws_instance" "server" {
   associate_public_ip_address = "${var.use_public_ip}"
 
   key_name = "${var.key_name}"
-  security_groups = "${var.security_groups}"
+  vpc_security_group_ids = "${var.security_groups}"
+
+  root_block_device {
+    delete_on_termination = "true"
+    volume_size = 10
+    volume_type = "${var.ebs_type}"
+  }
 
   tags = {
     Name = "cenv-compute"
