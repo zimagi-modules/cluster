@@ -31,11 +31,12 @@ class Provider(AWSServiceMixin, BaseProvider):
             self.command.error("AWS VPC network needed to create AWS compute instances")
 
         self.aws_credentials(instance.config)
-        self.ec2_conn = self.ec2(instance.subnet.network)
-        key_name, private_key = self._create_keypair(self.ec2_conn)
+        if 'key_name' not in instance.config:
+            self.ec2_conn = self.ec2(instance.subnet.network)
+            key_name, private_key = self._create_keypair(self.ec2_conn)
 
-        instance.config['key_name'] = key_name
-        instance.private_key = private_key
+            instance.config['key_name'] = key_name
+            instance.private_key = private_key
 
         super().initialize_terraform(instance, created)
         instance.config['security_groups'] = self.get_security_groups(relations['firewalls'])
@@ -55,13 +56,13 @@ class Provider(AWSServiceMixin, BaseProvider):
             self.finalize_instance(instance)
             raise e
 
-        finally:
-            self._delete_keypair(self.ec2_conn, instance.config['key_name'])
-
 
     def finalize_terraform(self, instance):
         self.aws_credentials(instance.config)
         super().finalize_terraform(instance)
+
+        self.ec2_conn = self.ec2(instance.subnet.network)
+        self._delete_keypair(self.ec2_conn, instance.config['key_name'])
 
 
     def _get_keynames(self, ec2):
