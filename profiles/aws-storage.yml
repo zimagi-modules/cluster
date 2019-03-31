@@ -8,8 +8,6 @@ config:
   aws_storage_provisioned_throughput: null
   aws_storage_encrypted: false
 
-  main_storage_networks: "@aws_networks"
-  main_storage_subnets: "@aws_subnets"
   main_storage_groups: main
   main_storage_firewalls:
     - internet
@@ -47,8 +45,8 @@ storage:
 
 mount:
   main:
-    storage: "&storage.main[network]"
+    storage: main
     network: "@aws_networks"
-    subnet: "@aws_subnets"
+    subnet: "@aws_admin_subnets"
     firewalls: "@main_storage_firewalls"
     groups: "@main_storage_groups"
