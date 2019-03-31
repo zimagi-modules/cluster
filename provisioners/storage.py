@@ -11,7 +11,7 @@ class Provisioner(profile.BaseProvisioner):
         networks = self.pop_values('network', config)
         groups = self.pop_values('groups', config)
 
-        if not providers or not networks:
+        if not provider or not networks:
             self.command.error("Storage {} requires 'provider' and 'network' fields".format(name))
 
         def process(network):
