@@ -35,6 +35,7 @@ class Provisioner(profile.BaseProvisioner):
                     subnet_name = subnet,
                     group_names = groups,
                     firewall_names = firewalls,
+                    remove = True,
                     test = self.test
                 )
             self.run_list(subnets, process_subnet)
