@@ -7,7 +7,7 @@ provider "aws" {
 
 resource "aws_instance" "server" {
   subnet_id = "${var.subnet.subnet_id}"
-  ami = "${var.ami}"
+  ami = "${var.image}"
   instance_type = "${var.machine}"
   tenancy = "${var.tenancy}"
   ebs_optimized = "${var.ebs_optimized}"
