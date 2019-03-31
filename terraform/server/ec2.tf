@@ -19,8 +19,9 @@ resource "aws_instance" "server" {
 
   root_block_device {
     delete_on_termination = "true"
-    volume_size = 10
+    volume_size = 8
     volume_type = "${var.ebs_type}"
+    iops = "${var.ebs_iops}"
   }
 
   tags = {
