@@ -1,0 +1,54 @@
+parents:
+  - module: cluster
+    profile: aws-network
+
+config:
+  aws_storage_performance_mode: generalPurpose
+  aws_storage_throughput_mode: bursting
+  aws_storage_provisioned_throughput: null
+  aws_storage_encrypted: false
+
+  main_storage_networks: "@aws_networks"
+  main_storage_subnets: "@aws_subnets"
+  main_storage_groups: main
+  main_storage_firewalls:
+    - internet
+    - nfs
+  main_storage_access_cidrs:
+    - 0.0.0.0/0
+
+firewall:
+  nfs:
+    network: "@aws_networks"
+    rules:
+      tcp_in:
+        mode: ingress
+        protocol: tcp
+        from_port: 2049
+        to_port: 2049
+        cidrs: "@main_storage_access_cidrs"
+      udp_in:
+        mode: ingress
+        protocol: udp
+        from_port: 2049
+        to_port: 2049
+        cidrs: "@main_storage_access_cidrs"
+    groups: "@main_storage_groups"
+
+storage:
+  main:
+    provider: efs
+    network: "@aws_networks"
+    performance_mode: "@aws_storage_performance_mode"
+    throughput_mode:  "@aws_storage_throughput_mode"
+    provisioned_throughput: "@aws_storage_provisioned_throughput"
+    encrypted: "@aws_storage_encrypted"
+    groups: "@main_storage_groups"
+
+mount:
+  main:
+    storage: "&storage.main[network]"
+    network: "@aws_networks"
+    subnet: "@aws_subnets"
+    firewalls: "@main_storage_firewalls"
+    groups: "@main_storage_groups"
