@@ -13,7 +13,7 @@ class Provisioner(profile.BaseProvisioner):
         groups = self.pop_values('groups', config)
         firewalls = self.pop_values('firewalls', config)
 
-        if not storage or not networks or not subnets:
+        if not storage_sources or not networks or not subnets:
             self.command.error("Storage mount {} requires 'storage', 'network', and 'subnet' fields".format(name))
 
         def process_storage(storage):
@@ -26,6 +26,7 @@ class Provisioner(profile.BaseProvisioner):
                             network = network,
                             subnet = subnet
                         ),
+                        storage_name = storage,
                         network_name = network,
                         subnet_name = subnet,
                         group_names = groups,
