@@ -11,7 +11,7 @@ class BaseProvider(terraform.TerraformPluginProvider):
         return self.command._federation
 
     def create(self, name, network_names):
-        return super().create(name, { 'type': self.name }, networks = network_names)
+        return super().create(name, { 'provider_type': self.name }, networks = network_names)
 
     def update(self, network_names):
         return super().update({}, networks = network_names)
