@@ -1,0 +1,4 @@
+
+parents:
+  - module: core
+    profile: display
