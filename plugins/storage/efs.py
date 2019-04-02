@@ -11,7 +11,7 @@ class EFSStorageProvider(AWSServiceMixin, StorageProvider):
         self.option(bool, 'encrypted', False, help = 'AWS EFS encrypted filesystem?', config_name = 'aws_efs_encrypted')
 
     def initialize_terraform(self, instance, created):
-        if instance.network.type != 'aws':
+        if instance.network.provider_type != 'aws':
             self.command.error("AWS VPC network needed to create AWS EFS storage filesystems")
 
         self.aws_credentials(instance.config)

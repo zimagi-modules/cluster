@@ -189,7 +189,7 @@ class FirewallRuleProvider(NetworkMixin, terraform.TerraformPluginProvider):
 
     def initialize_terraform(self, instance, created):
         if instance.mode not in ('ingress', 'egress'):
-            self.command.error("Firewall rule mode {} is not supported".format(instance.type))
+            self.command.error("Firewall rule mode {} is not supported".format(instance.provider_type))
 
         if instance.protocol not in ('tcp', 'udp', 'icmp', 'all'):
             self.command.error("Firewall rule protocol {} is not supported".format(instance.protocol))

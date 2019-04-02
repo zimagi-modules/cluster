@@ -49,7 +49,7 @@ class Provisioner(profile.BaseProvisioner):
 
     def variables(self, instance):
         return {
-            'provider': instance.type,
+            'provider': instance.provider_type,
             'groups': self.get_names(instance.groups),
             'firewalls': self.get_names(instance.firewalls)
         }

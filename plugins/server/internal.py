@@ -13,7 +13,7 @@ class Provider(BaseProvider):
 
 
     def initialize_instance(self, instance, created):
-        if instance.subnet.network.type != 'internal':
+        if instance.subnet.network.provider_type != 'internal':
             self.command.error("Internally defined network needed to create manual server entries")
 
         super().initialize_instance(instance, created)
