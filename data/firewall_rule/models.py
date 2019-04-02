@@ -1,15 +1,12 @@
 from django.db import models as django
 
-from systems.models import fields, firewall, provider
+from systems.models import base, fields, firewall, provider
 
 
 class FirewallRuleFacade(
     provider.ProviderModelFacadeMixin,
     firewall.FirewallModelFacadeMixin
 ):
-    def get_field_network_display(self, instance, value, short):
-        return str(instance.firewall.network)
-
     def get_field_mode_display(self, instance, value, short):
         return value
 
@@ -30,10 +27,10 @@ class FirewallRule(
     provider.ProviderMixin,
     firewall.FirewallModel
 ):
-    mode = django.CharField(max_length = 10, default = 'ingress', choices = [(i, i) for i in ('ingress', 'egress')])
+    mode = django.CharField(max_length = 10, default = 'ingress', choices = base.format_choices('ingress', 'egress'))
     from_port = django.IntegerField(null = True)
     to_port = django.IntegerField(null = True)
-    protocol = django.CharField(max_length = 10, default = 'tcp', choices = [(i, i) for i in ('tcp', 'udp', 'icmp')])
+    protocol = django.CharField(max_length = 10, default = 'tcp', choices = base.format_choices('tcp', 'udp', 'icmp'))
     cidrs = fields.CSVField(null = True)
 
     class Meta(firewall.FirewallModel.Meta):
