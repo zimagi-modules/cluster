@@ -35,10 +35,9 @@ class ServerFacade(
         return value
 
     def get_field_status_display(self, instance, value, short):
-        return self.model.STATUS_RUNNING if self.ping() else self.model.STATUS_UNREACHABLE
-
-    def ping(self, port = 22):
-        return self.model.provider.ping(port = port)
+        if value == self.model.STATUS_RUNNING:
+            return self.success_color(value)
+        return self.error_color(value)
 
 
 class Server(
@@ -47,6 +46,9 @@ class Server(
     firewall.FirewallRelationMixin,
     subnet.SubnetModel
 ):
+    STATUS_RUNNING = 'running'
+    STATUS_UNREACHABLE = 'unreachable'
+
     public_ip = django.CharField(null = True, max_length = 128)
     private_ip = django.CharField(null = True, max_length = 128)
     user = django.CharField(null = True, max_length = 128)
@@ -59,13 +61,9 @@ class Server(
         verbose_name = "server"
         verbose_name_plural = "servers"
         facade_class = ServerFacade
+        dynamic_fields = ['status']
         ordering = ['name']
         provider_name = 'server'
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.STATUS_RUNNING = 'running'
-        self.STATUS_UNREACHABLE = 'unreachable'
 
     def __str__(self):
         return "{} ({})".format(self.name, self.ip)
@@ -73,6 +71,10 @@ class Server(
     @property
     def ip(self):
         return self.public_ip if self.public_ip else self.private_ip
+
+    @property
+    def status(self):
+        return self.STATUS_RUNNING if self.ping() else self.STATUS_UNREACHABLE
 
 
     def allowed_groups(self):
@@ -82,3 +84,7 @@ class Server(
         if self.status == self.STATUS_RUNNING:
             return True
         return False
+
+
+    def ping(self, port = 22):
+        return self.provider.ping(port = port)
