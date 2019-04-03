@@ -2,7 +2,7 @@ from systems.command.factory import resource
 from systems.command.types import certificate
 
 
-class Command(domain.DomainRouterCommand):
+class Command(certificate.CertificateRouterCommand):
 
     def get_subcommands(self):
         name = 'certificate'
