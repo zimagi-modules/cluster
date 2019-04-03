@@ -1,10 +1,9 @@
 from settings.roles import Roles
-from .router import RouterCommand
-from .action import ActionCommand
+from .network import NetworkRouterCommand, NetworkActionCommand
 from systems.command.mixins import certificate
 
 
-class CertificateRouterCommand(RouterCommand):
+class CertificateRouterCommand(NetworkRouterCommand):
 
     def get_priority(self):
         return 65
@@ -12,7 +11,7 @@ class CertificateRouterCommand(RouterCommand):
 
 class CertificateActionCommand(
     certificate.CertificateMixin,
-    ActionCommand
+    NetworkActionCommand
 ):
     def get_priority(self):
         return 65
