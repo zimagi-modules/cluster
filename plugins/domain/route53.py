@@ -4,6 +4,9 @@ from .base import *
 
 class AWSDomainProvider(AWSServiceMixin, DomainProvider):
 
+    def provider_config(self, type = None):
+        self.option(str, 'region', 'us-east-1', help = 'AWS service region')
+
     def initialize_terraform(self, instance, created):
         self.aws_credentials(instance.config)
         super().initialize_terraform(instance, created)

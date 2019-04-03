@@ -5,9 +5,6 @@ from systems.plugins import meta, terraform
 
 class DomainProvider(terraform.TerraformPluginProvider):
 
-    def provider_config(self, type = None):
-        self.option(str, 'region', 'us-east-1', help = 'AWS service region')
-
     def terraform_type(self):
         return 'domain'
 
