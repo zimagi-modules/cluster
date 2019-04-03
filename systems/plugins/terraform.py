@@ -20,30 +20,37 @@ class TerraformWrapper(object):
     def plan(self, type, instance, namespace = None):
         if type:
             manifest_path = self._get_manifest_path(type, instance.provider_type)
-            variables = self.provider.get_variables(instance, namespace)
-            state = instance.state_config.get(namespace, {}) if namespace else instance.state_config
-            self.terraform.plan(manifest_path, variables, state)
+            if manifest_path:
+                variables = self.provider.get_variables(instance, namespace)
+                self.provider.command.data('variables', json.dumps(variables, indent=2))
+                state = instance.state_config.get(namespace, {}) if namespace else instance.state_config
+                self.terraform.plan(manifest_path, variables, state)
 
     def apply(self, type, instance, namespace = None):
         if type:
             manifest_path = self._get_manifest_path(type, instance.provider_type)
-            variables = self.provider.get_variables(instance, namespace)
-            state = instance.state_config.get(namespace, {}) if namespace else instance.state_config
-            state = self.terraform.apply(manifest_path, variables, state)
-            if namespace:
-                instance.state_config[namespace] = state
-            else:
-                instance.state_config = state
+            if manifest_path:
+                variables = self.provider.get_variables(instance, namespace)
+                state = instance.state_config.get(namespace, {}) if namespace else instance.state_config
+                state = self.terraform.apply(manifest_path, variables, state)
+                if namespace:
+                    instance.state_config[namespace] = state
+                else:
+                    instance.state_config = state
 
     def destroy(self, type, instance, namespace = None):
         if type:
             manifest_path = self._get_manifest_path(type, instance.provider_type)
-            variables = self.provider.get_variables(instance, namespace)
-            state = instance.state_config.get(namespace, {}) if namespace else instance.state_config
-            self.terraform.destroy(manifest_path, variables, state)
+            if manifest_path:
+                variables = self.provider.get_variables(instance, namespace)
+                state = instance.state_config.get(namespace, {}) if namespace else instance.state_config
+                self.terraform.destroy(manifest_path, variables, state)
 
     def _get_manifest_path(self, type, name):
-        return self.manager.module_file('terraform', type, "{}.tf".format(name))
+        try:
+            return self.manager.module_file('terraform', type, "{}.tf".format(name))
+        except Exception as e:
+            return None
 
 
 class TerraformState(DataProviderState):
