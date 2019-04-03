@@ -2,3 +2,39 @@
 parents:
   - module: core
     profile: display
+
+config:
+  domain_list_fields:
+    - provider_type
+    - groups
+    - domainrecord_relation
+  domain_display_fields:
+    - id
+    - provider_type
+    - config
+    - variables
+    - state_config
+    - created
+    - updated
+    - groups
+    - domainrecord_relation
+
+  domain_record_list_fields:
+    - target
+    - type
+    - ttl
+    - values
+    - domain
+  domain_record_display_fields:
+    - id
+    - provider_type
+    - target
+    - type
+    - ttl
+    - values
+    - config
+    - variables
+    - state_config
+    - created
+    - updated
+    - domain
