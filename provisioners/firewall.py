@@ -35,7 +35,8 @@ class Provisioner(profile.BaseProvisioner):
                     firewall_name = name,
                     test = self.test
                 )
-            self.run_list(rules.keys(), process_rule)
+            if self.profile.include_inner('firewall_rule'):
+                self.run_list(rules.keys(), process_rule)
         self.run_list(networks, process_network)
 
     def scope(self, instance):
@@ -56,7 +57,7 @@ class Provisioner(profile.BaseProvisioner):
 
         def process_network(network):
             self.exec('firewall rm',
-                server_name = name,
+                firewall_name = name,
                 network_name = network,
                 force = True
             )
