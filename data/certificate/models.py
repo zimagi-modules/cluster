@@ -9,13 +9,13 @@ class CertificateFacade(
     network.NetworkModelFacadeMixin
 ):
     def get_field_private_key_display(self, instance, value, short):
-        return str(value)
+        return self.encrypted_color(value)
 
     def get_field_certificate_display(self, instance, value, short):
-        return str(value)
+        return self.encrypted_color(value)
 
     def get_field_chain_display(self, instance, value, short):
-        return str(value)
+        return self.encrypted_color(value)
 
 
 class Certificate(
