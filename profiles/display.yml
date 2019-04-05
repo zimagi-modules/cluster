@@ -6,12 +6,22 @@ parents:
 config:
   domain_list_fields:
     - provider_type
+    - email
+    - certificate_authority
+    - certificate_updated
     - groups
     - domainrecord_relation
   domain_display_fields:
     - id
     - provider_type
     - config
+    - email
+    - certificate_authority
+    - certificate_updated
+    - private_key
+    - certificate
+    - chain
+    - fullchain
     - variables
     - state_config
     - created
