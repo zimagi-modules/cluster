@@ -8,6 +8,7 @@ class Provisioner(profile.BaseProvisioner):
 
     def ensure(self, name, config):
         networks = self.pop_values('network', config)
+        domain = self.pop_value('domain', config)
         provider = self.pop_value('provider', config)
         groups = self.pop_values('groups', config)
 
@@ -20,9 +21,11 @@ class Provisioner(profile.BaseProvisioner):
                 certificate_name = name,
                 certificate_fields = self.interpolate(config,
                     network = network,
+                    domain = domain,
                     provider = provider
                 ),
                 network_name = network,
+                domain_name = domain,
                 group_names = groups,
                 test = self.test
             )
@@ -34,6 +37,7 @@ class Provisioner(profile.BaseProvisioner):
     def variables(self, instance):
         return {
             'provider': instance.provider_type,
+            'domain': instance.domain.name if instance.domain else None,
             'groups': self.get_names(instance.groups)
         }
 
