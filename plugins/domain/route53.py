@@ -11,13 +11,24 @@ class AWSDomainProvider(AWSServiceMixin, DomainProvider):
         self.aws_credentials(instance.config)
         super().initialize_terraform(instance, created)
 
-    def finalize_terraform(self, instance):
-        self.aws_credentials(instance.config)
-        super().finalize_terraform(instance)
-
     def prepare_instance(self, instance, created):
         super().prepare_instance(instance, created)
+        ca = self.get_certificate_authority(instance)
+        if ca:
+            if created or not instance.certificate_updated:
+                ca.request()
+            else:
+                ca.renew()
+
         self.clean_aws_credentials(instance.config)
+
+    def finalize_instance(self, instance):
+        self.aws_credentials(instance.config)
+        super().finalize_instance(instance)
+        if not self.test:
+            ca = self.get_certificate_authority(instance)
+            if ca:
+                ca.revoke()
 
 
 class AWSDomainRecordProvider(AWSServiceMixin, DomainRecordProvider):
