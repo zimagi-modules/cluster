@@ -30,6 +30,7 @@ class Domain(
 
     certificate_authority = django.CharField(null = True, max_length = 255)
     certificate_updated = django.DateTimeField(null = True, editable = False)
+    valid_days = django.IntegerField(default = 60)
 
     private_key = fields.EncryptedDataField(null = True)
     certificate = fields.EncryptedDataField(null = True)
