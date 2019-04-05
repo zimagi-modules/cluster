@@ -13,4 +13,4 @@ class CertificateMixin(DataMixin):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.facade_index['01_certificate'] = self._certificate
+        self.facade_index['02_certificate'] = self._certificate
