@@ -1,3 +1,4 @@
+import os
 import boto3
 
 
@@ -6,7 +7,10 @@ class AWSServiceMixin(object):
     def aws_credentials(self, config = {}):
         try:
             config['access_key'] = self.command.get_config('aws_access_key', required = True).strip()
+            os.environ['AWS_ACCESS_KEY_ID'] = config['access_key']
+
             config['secret_key'] = self.command.get_config('aws_secret_key', required = True).strip()
+            os.environ['AWS_SECRET_ACCESS_KEY'] = config['secret_key']
 
         except Exception:
             self.command.error("To use AWS provider you must have 'aws_access_key' and 'aws_secret_key' environment configurations; see: config set")
@@ -15,7 +19,10 @@ class AWSServiceMixin(object):
 
     def clean_aws_credentials(self, config):
         config.pop('access_key', None)
+        os.environ.pop('AWS_ACCESS_KEY_ID')
+
         config.pop('secret_key', None)
+        os.environ.pop('AWS_SECRET_ACCESS_KEY')
 
 
     def _init_session(self):
@@ -38,6 +45,14 @@ class AWSServiceMixin(object):
             region_name = network.config['region']
         )
 
+
+    def get_subnets(self, network):
+        sgroups = []
+
+        for subnet in network.subnet_relation.all():
+            sgroups.append(subnet.variables['subnet_id'])
+
+        return sgroups
 
     def get_security_groups(self, names):
         firewalls = self.command.get_instances(self.command._firewall, names = names)
