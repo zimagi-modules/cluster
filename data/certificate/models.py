@@ -1,11 +1,12 @@
 from django.db import models as django
 
-from systems.models import network, group, provider, fields
+from systems.models import network, domain, group, provider, fields
 
 
 class CertificateFacade(
     provider.ProviderModelFacadeMixin,
     group.GroupModelFacadeMixin,
+    domain.DomainModelFacadeMixin,
     network.NetworkModelFacadeMixin
 ):
     def get_field_private_key_display(self, instance, value, short):
@@ -21,6 +22,7 @@ class CertificateFacade(
 class Certificate(
     provider.ProviderMixin,
     group.GroupMixin,
+    domain.DomainMixin,
     network.NetworkModel
 ):
     private_key = fields.EncryptedDataField(null = True)
@@ -31,6 +33,7 @@ class Certificate(
         verbose_name = "certificate"
         verbose_name_plural = "certificates"
         facade_class = CertificateFacade
+        relation = 'domain'
         provider_name = 'certificate'
 
     def __str__(self):
