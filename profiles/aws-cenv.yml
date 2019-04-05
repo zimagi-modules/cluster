@@ -2,7 +2,18 @@ parents:
   - module: cluster
     profile: aws-network
 
+  - module: cluster
+    profile: aws-domain
+
 config:
+  aws_load_balancer_timeout: 60
+  aws_load_balancer_health_path: /
+  aws_load_balancer_healthy_status: 200
+  aws_load_balancer_health_check_interval: 30
+  aws_load_balancer_health_timeout: 10
+  aws_load_balancer_healthy_threshold: 3
+  aws_load_balancer_unhealthy_threshold: 3
+
   aws_admin_machine: t2.micro
   aws_admin_tenancy: default
   aws_admin_monitoring: false
@@ -11,6 +22,51 @@ config:
   aws_admin_ebs_iops: null
   aws_admin_ebs_optimized: false
   aws_admin_ebs_encrypted: false
+
+domain:
+  "@root_domain":
+    certificate_authority: letsencrypt
+
+certificate:
+  cenv:
+    provider: aws
+    network: "@aws_networks"
+    parent: "@root_domain"
+    groups: "@admin_groups"
+
+load_balancer:
+  cenv:
+    provider: aws_application
+    network: "@aws_networks"
+    internal: false
+    idle_timeout: "@aws_load_balancer_timeout"
+    port: "@admin_port"
+    protocol: HTTPS
+    target_port: "@admin_port"
+    target_protocol: HTTPS
+    health_path: "@aws_load_balancer_health_path"
+    health_check_interval: "@aws_load_balancer_health_check_interval"
+    health_timeout: "@aws_load_balancer_health_timeout"
+    healthy_status: "@aws_load_balancer_healthy_status"
+    healthy_threshold: "@aws_load_balancer_healthy_threshold"
+    unhealthy_threshold: "@aws_load_balancer_unhealthy_threshold"
+    firewalls: "@aws_admin_firewalls"
+    domain: "@root_domain"
+    domain_record: cenv_lb
+    certificate: cenv
+    groups: "@admin_groups"
+
+firewall:
+  admin_internal:
+    network: "@aws_networks"
+    rules:
+      tcp_in:
+        mode: ingress
+        protocol: tcp
+        from_port: "@admin_port"
+        to_port: "@admin_port"
+        firewalls: "@aws_admin_firewalls"
+    groups: "@admin_groups"
 
 server:
   cenv:
@@ -21,7 +77,7 @@ server:
     image: "@aws_ubuntu_image[network]"
     user: "@aws_ubuntu_user"
     machine: "@aws_admin_machine"
-    use_public_ip: true
+    use_public_ip: false
     tenancy: "@aws_admin_tenancy"
     monitoring: "@aws_admin_monitoring"
     ebs_type: "@aws_admin_ebs_type"
@@ -29,5 +85,6 @@ server:
     ebs_iops: "@aws_admin_ebs_iops"
     ebs_optimized: "@aws_admin_ebs_optimized"
     ebs_encrypted: "@aws_admin_ebs_encrypted"
-    firewalls: "@aws_admin_firewalls"
+    firewalls: admin_internal
+    load_balancer: cenv
     groups: "@admin_groups"
