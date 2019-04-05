@@ -12,6 +12,15 @@ class DomainProvider(terraform.TerraformPluginProvider):
     def facade(self):
         return self.command._domain
 
+    def get_certificate_authority(self, instance):
+        if instance.certificate_authority:
+            return self.command.get_provider(
+                'certificate_authority',
+                instance.certificate_authority,
+                instance
+            )
+        return None
+
 
 class DomainRecordProvider(terraform.TerraformPluginProvider):
 
