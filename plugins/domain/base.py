@@ -37,12 +37,13 @@ class DomainProvider(terraform.TerraformPluginProvider):
                 if days >= instance.valid_days:
                     ca.renew()
 
-    def finalize_instance(self, instance):
-        super().finalize_instance(instance)
+    def finalize_terraform(self, instance):
         if not self.test:
             ca = self.get_certificate_authority(instance)
             if ca:
                 ca.revoke()
+
+        super().finalize_terraform(instance)
 
 
 class DomainRecordProvider(terraform.TerraformPluginProvider):
