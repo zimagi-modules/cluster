@@ -31,7 +31,7 @@ certificate:
   cenv:
     provider: aws
     network: "@aws_networks"
-    parent: "@root_domain"
+    domain: "@root_domain"
     groups: "@admin_groups"
 
 load_balancer:
