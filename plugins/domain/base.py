@@ -2,6 +2,8 @@ from django.conf import settings
 
 from systems.plugins import meta, terraform
 
+import datetime
+
 
 class DomainProvider(terraform.TerraformPluginProvider):
 
@@ -21,14 +23,29 @@ class DomainProvider(terraform.TerraformPluginProvider):
             )
         return None
 
+    def prepare_instance(self, instance, created):
+        super().prepare_instance(instance, created)
+        ca = self.get_certificate_authority(instance)
+        if ca:
+            if created or not instance.certificate_updated:
+                ca.request()
+            else:
+                start = instance.certificate_updated.date()
+                now = datetime.datetime.now().date()
+                days = (now - start).days
+
+                if days >= instance.valid_days:
+                    ca.renew()
+
+    def finalize_instance(self, instance):
+        super().finalize_instance(instance)
+        if not self.test:
+            ca = self.get_certificate_authority(instance)
+            if ca:
+                ca.revoke()
+
 
 class DomainRecordProvider(terraform.TerraformPluginProvider):
-
-    def provider_config(self, type = None):
-        self.option(str, 'target', None, help = 'DNS record target domain name')
-        self.option(str, 'type', 'A', help = 'DNS record type')
-        self.option(int, 'ttl', 300, help = 'DNS time to live (secs)')
-        self.option(list, 'values', [], help = 'DNS record values')
 
     def terraform_type(self):
         return 'domain_record'
