@@ -1,0 +1,17 @@
+parents:
+  - module: cluster
+    profile: aws-network
+
+config:
+  dns_timeout: 300
+
+domain:
+  "@root_domain":
+    provider: route53
+    email: "@root_domain_email"
+    records:
+      cenv_lb:
+        target: "cenv.@root_domain"
+        type: CNAME
+        ttl: "@dns_timeout"
+    groups: "@admin_groups"
