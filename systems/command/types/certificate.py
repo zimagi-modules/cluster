@@ -1,6 +1,6 @@
 from settings.roles import Roles
 from .network import NetworkRouterCommand, NetworkActionCommand
-from systems.command.mixins import certificate
+from systems.command.mixins import certificate, domain
 
 
 class CertificateRouterCommand(NetworkRouterCommand):
@@ -10,6 +10,7 @@ class CertificateRouterCommand(NetworkRouterCommand):
 
 
 class CertificateActionCommand(
+    domain.DomainMixin,
     certificate.CertificateMixin,
     NetworkActionCommand
 ):
