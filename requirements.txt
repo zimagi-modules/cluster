@@ -3,3 +3,4 @@ ansible >= 2.7.9
 jinja2 >= 2.10
 passlib == 1.7.1
 boto3 == 1.9.119
+certbot_dns_route53 == 0.33.0
