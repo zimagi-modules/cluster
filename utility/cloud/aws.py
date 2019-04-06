@@ -19,10 +19,10 @@ class AWSServiceMixin(object):
 
     def clean_aws_credentials(self, config):
         config.pop('access_key', None)
-        os.environ.pop('AWS_ACCESS_KEY_ID')
+        os.environ.pop('AWS_ACCESS_KEY_ID', None)
 
         config.pop('secret_key', None)
-        os.environ.pop('AWS_SECRET_ACCESS_KEY')
+        os.environ.pop('AWS_SECRET_ACCESS_KEY', None)
 
 
     def _init_session(self):
