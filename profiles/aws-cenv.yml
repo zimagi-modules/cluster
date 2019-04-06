@@ -40,21 +40,21 @@ load_balancer:
     network: "@aws_networks"
     internal: false
     idle_timeout: "@aws_load_balancer_timeout"
-    port: "@admin_port"
-    protocol: HTTPS
-    target_port: "@admin_port"
-    target_protocol: HTTPS
-    health_path: "@aws_load_balancer_health_path"
-    health_check_interval: "@aws_load_balancer_health_check_interval"
-    health_timeout: "@aws_load_balancer_health_timeout"
-    healthy_status: "@aws_load_balancer_healthy_status"
-    healthy_threshold: "@aws_load_balancer_healthy_threshold"
-    unhealthy_threshold: "@aws_load_balancer_unhealthy_threshold"
     firewalls: "@aws_admin_firewalls"
-    domain: "@root_domain"
-    domain_record: cenv_lb
-    certificate: cenv
     groups: "@admin_groups"
+    listeners:
+      https:
+        port: "@admin_port"
+        domain: "@root_domain"
+        certificate: cenv
+        target_port: "@admin_port"
+        target_protocol: https
+        health_check_path: "@aws_load_balancer_health_path"
+        health_check_interval: "@aws_load_balancer_health_check_interval"
+        health_check_timeout: "@aws_load_balancer_health_timeout"
+        healthy_status: "@aws_load_balancer_healthy_status"
+        healthy_threshold: "@aws_load_balancer_healthy_threshold"
+        unhealthy_threshold: "@aws_load_balancer_unhealthy_threshold"
 
 firewall:
   admin_internal:
