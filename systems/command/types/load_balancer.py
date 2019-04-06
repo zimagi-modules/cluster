@@ -1,6 +1,6 @@
 from settings.roles import Roles
 from .network import NetworkRouterCommand, NetworkActionCommand
-from systems.command.mixins import load_balancer, certificate
+from systems.command.mixins import load_balancer, certificate, domain
 
 
 class LoadBalancerRouterCommand(NetworkRouterCommand):
@@ -10,6 +10,7 @@ class LoadBalancerRouterCommand(NetworkRouterCommand):
 
 
 class LoadBalancerActionCommand(
+    domain.DomainMixin,
     certificate.CertificateMixin,
     load_balancer.LoadBalancerMixin,
     NetworkActionCommand
