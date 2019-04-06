@@ -25,7 +25,7 @@ class LoadBalancer(
         verbose_name = "load_balancer"
         verbose_name_plural = "load_balancers"
         facade_class = LoadBalancerFacade
-        provider_name = 'load_balancer'
+        provider_name = 'load_balancer:load_balancer'
 
     def __str__(self):
         return "{}".format(self.name)
