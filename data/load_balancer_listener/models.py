@@ -1,12 +1,11 @@
 from django.db import models as django
 
 from data.certificate.models import Certificate
-from systems.models import base, fields, load_balancer, domain, provider
+from systems.models import base, fields, load_balancer, provider
 
 
 class LoadBalancerListenerFacade(
     provider.ProviderModelFacadeMixin,
-    domain.DomainModelFacadeMixin,
     load_balancer.LoadBalancerModelFacadeMixin
 ):
     pass
@@ -14,7 +13,6 @@ class LoadBalancerListenerFacade(
 
 class LoadBalancerListener(
     provider.ProviderMixin,
-    domain.DomainMixin,
     load_balancer.LoadBalancerModel
 ):
     port = django.IntegerField(null = True)
@@ -38,7 +36,7 @@ class LoadBalancerListener(
         verbose_name = "load balancer listener"
         verbose_name_plural = "load balancer listeners"
         facade_class = LoadBalancerListenerFacade
-        relation = ['domain', 'certificate']
+        relation = 'certificate'
         ordering = ['name']
         provider_name = 'load_balancer:load_balancer_listener'
         provider_relation = 'load_balancer'
