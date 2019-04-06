@@ -30,14 +30,22 @@ class Provisioner(profile.BaseProvisioner):
                 test = self.test
             )
             def process_listener(listener):
+                listener_config = listeners[listener]
+
+                domain = self.pop_value('domain', listener_config)
+                certificate = self.pop_value('certificate', listener_config)
+
                 self.exec('lb listener save',
                     load_balancer_name = name,
                     load_balancer_listener_name = listener,
-                    load_balancer_listener_fields = self.interpolate(listeners[listener],
+                    load_balancer_listener_fields = self.interpolate(listener_config,
                         load_balancer = name,
                         network = network,
                         provider = provider
                     ),
+                    network_name = network,
+                    domain_name = domain,
+                    certificate_name = certificate,
                     test = self.test
                 )
             if self.profile.include_inner('load_balancer_listener'):
