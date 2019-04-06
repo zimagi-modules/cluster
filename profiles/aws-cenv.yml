@@ -38,6 +38,7 @@ load_balancer:
   cenv:
     provider: aws_application
     network: "@aws_networks"
+    domain: "@root_domain"
     internal: false
     idle_timeout: "@aws_load_balancer_timeout"
     firewalls: "@aws_admin_firewalls"
@@ -45,7 +46,6 @@ load_balancer:
     listeners:
       https:
         port: "@admin_port"
-        domain: "@root_domain"
         certificate: cenv
         target_port: "@admin_port"
         target_protocol: https

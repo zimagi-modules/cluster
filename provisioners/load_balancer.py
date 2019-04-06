@@ -9,6 +9,7 @@ class Provisioner(profile.BaseProvisioner):
     def ensure(self, name, config):
         networks = self.pop_values('network', config)
         provider = self.pop_value('provider', config)
+        domain = self.pop_value('domain', config)
         listeners = self.pop_info('listeners', config)
         groups = self.pop_values('groups', config)
         firewalls = self.pop_values('firewalls', config)
@@ -22,17 +23,17 @@ class Provisioner(profile.BaseProvisioner):
                 load_balancer_name = name,
                 load_balancer_fields = self.interpolate(config,
                     network = network,
-                    provider = provider
+                    provider = provider,
+                    domain = domain
                 ),
                 network_name = network,
+                domain_name = domain,
                 group_names = groups,
                 firewall_names = firewalls,
                 test = self.test
             )
             def process_listener(listener):
                 listener_config = listeners[listener]
-
-                domain = self.pop_value('domain', listener_config)
                 certificate = self.pop_value('certificate', listener_config)
 
                 self.exec('lb listener save',
@@ -41,10 +42,10 @@ class Provisioner(profile.BaseProvisioner):
                     load_balancer_listener_fields = self.interpolate(listener_config,
                         load_balancer = name,
                         network = network,
-                        provider = provider
+                        provider = provider,
+                        domain = domain
                     ),
                     network_name = network,
-                    domain_name = domain,
                     certificate_name = certificate,
                     test = self.test
                 )
@@ -59,6 +60,7 @@ class Provisioner(profile.BaseProvisioner):
     def variables(self, instance):
         variables = {
             'provider': instance.provider_type,
+            'domain': instance.domain.name,
             'groups': self.get_names(instance.groups),
             'firewalls': self.get_names(instance.firewalls),
             'listeners': {}
