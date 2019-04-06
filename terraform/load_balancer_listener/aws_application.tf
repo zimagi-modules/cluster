@@ -6,14 +6,15 @@ provider "aws" {
 }
 
 resource "aws_lb_target_group" "main" {
+  vpc_id = "${var.load_balancer.network.vpc_id}"
   port = "${var.target_port}"
   protocol = "${upper(var.target_protocol)}"
 
   health_check {
-    enabled = "${var.health_check_path ? true : false}"
+    protocol = "${upper(var.target_protocol)}"
     interval = "${var.health_check_interval}"
     path = "${var.health_check_path}"
-    matcher = "${join(",", var.healthy_status)}"
+    matcher = "${var.healthy_status}"
     timeout = "${var.health_check_timeout}"
     healthy_threshold = "${var.healthy_threshold}"
     unhealthy_threshold = "${var.unhealthy_threshold}"
@@ -30,10 +31,6 @@ resource "aws_lb_listener" "main" {
   default_action {
     type = "forward"
     target_group_arn = "${aws_lb_target_group.main.arn}"
-  }
-
-  tags = {
-    Name = "cenv-load-balancer"
   }
 }
 output "listener_id" {
