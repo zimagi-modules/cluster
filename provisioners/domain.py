@@ -11,8 +11,8 @@ class Provisioner(profile.BaseProvisioner):
         records = self.pop_info('records', config)
         groups = self.pop_values('groups', config)
 
-        if not provider or not records:
-            self.command.error("Domain {} requires 'provider' and 'records' fields".format(name))
+        if not provider:
+            self.command.error("Domain {} requires 'provider' field".format(name))
 
         self.exec('domain save',
             domain_provider_name =  provider,
@@ -32,7 +32,7 @@ class Provisioner(profile.BaseProvisioner):
                 ),
                 test = self.test
             )
-        if self.profile.include_inner('domain_record'):
+        if records and self.profile.include_inner('domain_record'):
             self.run_list(records.keys(), process_record)
 
     def variables(self, instance):
