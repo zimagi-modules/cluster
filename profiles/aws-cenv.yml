@@ -59,7 +59,7 @@ subnet:
     groups: "@admin_groups"
 
 firewall:
-  admin:
+  admin_external:
     network: "@aws_networks"
     rules:
       tcp_in:
@@ -90,7 +90,7 @@ load_balancer:
     internal: false
     idle_timeout: "@aws_load_balancer_timeout"
     firewalls:
-      - admin
+      - admin_external
       - admin_internal
     groups: "@admin_groups"
     listeners:
