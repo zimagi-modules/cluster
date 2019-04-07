@@ -40,6 +40,7 @@ class LoadBalancerListener(
         ordering = ['name']
         provider_name = 'load_balancer:load_balancer_listener'
         provider_relation = 'load_balancer'
+        command_base = 'lb listener'
 
     def __str__(self):
         return "{}".format(self.name)

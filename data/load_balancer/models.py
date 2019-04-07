@@ -29,6 +29,7 @@ class LoadBalancer(
         facade_class = LoadBalancerFacade
         relation = 'domain'
         provider_name = 'load_balancer:load_balancer'
+        command_base = 'lb'
 
     def __str__(self):
         return "{}".format(self.name)

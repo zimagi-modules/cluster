@@ -35,6 +35,7 @@ class Certificate(
         facade_class = CertificateFacade
         relation = 'domain'
         provider_name = 'certificate'
+        command_base = 'cert'
 
     def __str__(self):
         return "{}".format(self.name)
