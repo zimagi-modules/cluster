@@ -1,4 +1,5 @@
 from systems.plugins import meta, terraform
+from utility.data import ensure_list
 
 
 class LoadBalancerProvider(terraform.TerraformPluginProvider):
@@ -73,6 +74,10 @@ class LoadBalancerListenerProvider(terraform.TerraformPluginProvider):
     @property
     def facade(self):
         return self.command._load_balancer_listener
+
+    def initialize_terraform(self, instance, created):
+        super().initialize_terraform(instance, created)
+        instance.healthy_status = ensure_list(instance.healthy_status)
 
 
 class BaseProvider(meta.MetaPluginProvider):

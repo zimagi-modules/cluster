@@ -14,7 +14,7 @@ resource "aws_lb_target_group" "main" {
     protocol = "${upper(var.target_protocol)}"
     interval = "${var.health_check_interval}"
     path = "${var.health_check_path}"
-    matcher = "${var.healthy_status}"
+    matcher = "${join(",", var.healthy_status)}"
     timeout = "${var.health_check_timeout}"
     healthy_threshold = "${var.healthy_threshold}"
     unhealthy_threshold = "${var.unhealthy_threshold}"
