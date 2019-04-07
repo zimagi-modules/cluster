@@ -119,7 +119,6 @@ class SubnetMixin(object):
 class NetworkProvider(NetworkMixin, terraform.TerraformPluginProvider):
 
     def provider_config(self, type = None):
-        self.option(str, 'cidr', None, help = 'Network IPv4 CIDR address (between /16 and /28)')
         self.option(str, 'cidr_base', '10/8', help = 'Network IPv4 root CIDR address (not used if "cidr" option specified)')
         self.option(int, 'cidr_prefix', 16, help = 'Network IPv4 CIDR address prefix size (not used if "cidr" option specified)')
 
@@ -141,7 +140,6 @@ class NetworkProvider(NetworkMixin, terraform.TerraformPluginProvider):
 class SubnetProvider(SubnetMixin, terraform.TerraformPluginProvider):
 
     def provider_config(self, type = None):
-        self.option(str, 'cidr', None, help = 'Subnet IPv4 CIDR address (between /16 and /28)')
         self.option(int, 'cidr_prefix', 24, help = 'Subnet IPv4 CIDR address prefix size (not used if "cidr" option specified)')
 
     def terraform_type(self):
@@ -173,13 +171,6 @@ class FirewallProvider(terraform.TerraformPluginProvider):
 
 class FirewallRuleProvider(NetworkMixin, terraform.TerraformPluginProvider):
 
-    def provider_config(self, type = None):
-        self.option(str, 'mode', 'ingress', help = 'Firewall rule mode (ingress | egress)')
-        self.option(str, 'protocol', 'tcp', help = 'Firewall rule protocol (tcp | udp | icmp | all)')
-        self.option(int, 'from_port', 0, help = 'Firewall rule from port')
-        self.option(int, 'to_port', 65535, help = 'Firewall rule to port')
-        self.option(list, 'cidrs', [], help = 'Firewall rule applicable CIDRs')
-
     def terraform_type(self):
         return 'firewall_rule'
 
@@ -188,12 +179,6 @@ class FirewallRuleProvider(NetworkMixin, terraform.TerraformPluginProvider):
         return self.command._firewall_rule
 
     def initialize_terraform(self, instance, created):
-        if instance.mode not in ('ingress', 'egress'):
-            self.command.error("Firewall rule mode {} is not supported".format(instance.provider_type))
-
-        if instance.protocol not in ('tcp', 'udp', 'icmp', 'all'):
-            self.command.error("Firewall rule protocol {} is not supported".format(instance.protocol))
-
         if instance.cidrs:
             instance.cidrs = [str(self.address.parse_cidr(x.strip())) for x in instance.cidrs]
         else:
