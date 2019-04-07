@@ -6,6 +6,13 @@ parents:
     profile: aws-domain
 
 config:
+  admin_subnet_cidr_prefix: 28
+  admin_subnet_public_ip: True
+
+  aws_admin_subnets:
+    - admin-1
+    - admin-2
+
   aws_load_balancer_timeout: 60
   aws_load_balancer_health_path: /status
   aws_load_balancer_healthy_status: 200
@@ -23,6 +30,8 @@ config:
   aws_admin_ebs_optimized: false
   aws_admin_ebs_encrypted: false
 
+  admin_port: 5123
+
 domain:
   "@root_domain":
     certificate_authority: letsencrypt
@@ -34,7 +43,34 @@ certificate:
     domain: "@root_domain"
     groups: "@admin_groups"
 
+subnet:
+  admin-1:
+    network: "@aws_networks"
+    cidr_prefix: "@admin_subnet_cidr_prefix"
+    zone_suffix: a
+    use_public_ip: "@admin_subnet_public_ip"
+    groups: "@admin_groups"
+
+  admin-2:
+    network: "@aws_networks"
+    cidr_prefix: "@admin_subnet_cidr_prefix"
+    zone_suffix: b
+    use_public_ip: "@admin_subnet_public_ip"
+    groups: "@admin_groups"
+
 firewall:
+  admin:
+    network: "@aws_networks"
+    rules:
+      tcp_in:
+        mode: ingress
+        protocol: tcp
+        from_port: "@admin_port"
+        to_port: "@admin_port"
+        cidrs:
+          - 0.0.0.0/0
+    groups: "@admin_groups"
+
   admin_internal:
     network: "@aws_networks"
     rules:
@@ -87,6 +123,9 @@ server:
     ebs_iops: "@aws_admin_ebs_iops"
     ebs_optimized: "@aws_admin_ebs_optimized"
     ebs_encrypted: "@aws_admin_ebs_encrypted"
-    firewalls: admin_internal
+    firewalls:
+      - internet
+      - ssh
+      - admin_internal
     load_balancer: cenv
     groups: "@admin_groups"

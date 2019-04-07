@@ -5,6 +5,11 @@ parents:
 config:
   dns_timeout: 300
 
+  admin_groups: cenv
+
+group:
+  cenv:
+
 domain:
   "@root_domain":
     provider: route53
