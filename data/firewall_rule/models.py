@@ -13,7 +13,6 @@ class FirewallRuleFacade(
 
 class FirewallRule(
     provider.ProviderMixin,
-    firewall.FirewallRelationMixin,
     firewall.FirewallModel
 ):
     mode = django.CharField(
