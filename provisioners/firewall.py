@@ -11,8 +11,8 @@ class Provisioner(profile.BaseProvisioner):
         rules = self.pop_info('rules', config)
         groups = self.pop_values('groups', config)
 
-        if not networks or not rules:
-            self.command.error("Firewall {} requires 'network' and 'rules' fields".format(name))
+        if not networks:
+            self.command.error("Firewall {} requires 'network' field".format(name))
 
         def process_network(network):
             self.exec('firewall save',
@@ -35,7 +35,7 @@ class Provisioner(profile.BaseProvisioner):
                     firewall_name = name,
                     test = self.test
                 )
-            if self.profile.include_inner('firewall_rule'):
+            if rules and self.profile.include_inner('firewall_rule'):
                 self.run_list(rules.keys(), process_rule)
         self.run_list(networks, process_network)
 
@@ -48,7 +48,8 @@ class Provisioner(profile.BaseProvisioner):
             'rules': {}
         }
         for rule in instance.firewallrule_relation.all():
-            variables['rules'][rule.name] = self.get_variables(rule)
+            rule_config = self.get_variables(rule)
+            variables['rules'][rule.name] = rule_config
 
         return variables
 
