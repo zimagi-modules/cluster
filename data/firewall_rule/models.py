@@ -7,24 +7,13 @@ class FirewallRuleFacade(
     provider.ProviderModelFacadeMixin,
     firewall.FirewallModelFacadeMixin
 ):
-    def get_field_mode_display(self, instance, value, short):
-        return value
-
-    def get_field_protocol_display(self, instance, value, short):
-        return value
-
-    def get_field_from_port_display(self, instance, value, short):
-        return str(value)
-
-    def get_field_to_port_display(self, instance, value, short):
-        return str(value)
-
     def get_field_cidrs_display(self, instance, value, short):
         return "\n".join(value)
 
 
 class FirewallRule(
     provider.ProviderMixin,
+    firewall.FirewallRelationMixin,
     firewall.FirewallModel
 ):
     mode = django.CharField(max_length = 10, default = 'ingress', choices = base.format_choices('ingress', 'egress'))
