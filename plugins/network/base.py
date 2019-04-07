@@ -3,6 +3,7 @@ from django.conf import settings
 from data.network.models import Network
 from data.subnet.models import Subnet
 from systems.plugins import meta, terraform
+from utility.data import ensure_list
 
 import netaddr
 import ipaddress
@@ -179,9 +180,17 @@ class FirewallRuleProvider(NetworkMixin, terraform.TerraformPluginProvider):
         return self.command._firewall_rule
 
     def initialize_terraform(self, instance, created):
-        if instance.cidrs:
+        instance.cidrs = ensure_list(instance.cidrs)
+        instance.config.setdefault('self', False)
+
+        if 'self' in instance.cidrs:
+            instance.cidrs = []
+            instance.config['self'] = True
+
+        elif instance.cidrs:
             instance.cidrs = [str(self.address.parse_cidr(x.strip())) for x in instance.cidrs]
-        else:
+
+        elif not instance.config['self']:
             instance.cidrs = ['0.0.0.0/0']
 
 

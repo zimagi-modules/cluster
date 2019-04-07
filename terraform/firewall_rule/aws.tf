@@ -12,6 +12,7 @@ resource "aws_security_group_rule" "firewall" {
     to_port = "${var.to_port}"
     protocol = "${var.protocol == "all" ? "-1" : var.protocol}"
     cidr_blocks = "${var.cidrs}"
+    self = "${var.self}"
 }
 output "rule_id" {
   value = "${aws_security_group_rule.firewall.id}"
