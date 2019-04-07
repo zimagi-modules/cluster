@@ -16,10 +16,18 @@ class FirewallRule(
     firewall.FirewallRelationMixin,
     firewall.FirewallModel
 ):
-    mode = django.CharField(max_length = 10, default = 'ingress', choices = base.format_choices('ingress', 'egress'))
+    mode = django.CharField(
+        max_length = 10,
+        default = 'ingress',
+        choices = base.format_choices('ingress', 'egress'),
+    )
+    protocol = django.CharField(
+        max_length = 10,
+        default = 'tcp',
+        choices = base.format_choices('tcp', 'udp', 'icmp')
+    )
     from_port = django.IntegerField(null = True)
     to_port = django.IntegerField(null = True)
-    protocol = django.CharField(max_length = 10, default = 'tcp', choices = base.format_choices('tcp', 'udp', 'icmp'))
     cidrs = fields.CSVField(null = True)
 
     class Meta(firewall.FirewallModel.Meta):
