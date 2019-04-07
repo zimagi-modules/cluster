@@ -60,13 +60,20 @@ class Provisioner(profile.BaseProvisioner):
     def variables(self, instance):
         variables = {
             'provider': instance.provider_type,
-            'domain': instance.domain.name,
             'groups': self.get_names(instance.groups),
             'firewalls': self.get_names(instance.firewalls),
             'listeners': {}
         }
+        if instance.domain:
+            variables['domain'] = instance.domain.name
+
         for listener in instance.loadbalancerlistener_relation.all():
-            variables['listeners'][listener.name] = self.get_variables(listener)
+            listener_config = self.get_variables(listener)
+
+            if listener.certificate:
+                listener_config['certificate'] = listener.certificate.name
+
+            variables['listeners'][listener.name] = listener_config
 
         return variables
 
