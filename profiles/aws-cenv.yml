@@ -7,7 +7,7 @@ parents:
 
 config:
   aws_load_balancer_timeout: 60
-  aws_load_balancer_health_path: /
+  aws_load_balancer_health_path: /status
   aws_load_balancer_healthy_status: 200
   aws_load_balancer_health_check_interval: 30
   aws_load_balancer_health_timeout: 10
@@ -34,6 +34,18 @@ certificate:
     domain: "@root_domain"
     groups: "@admin_groups"
 
+firewall:
+  admin_internal:
+    network: "@aws_networks"
+    rules:
+      tcp_in:
+        mode: ingress
+        protocol: tcp
+        from_port: "@admin_port"
+        to_port: "@admin_port"
+        cidrs: self
+    groups: "@admin_groups"
+
 load_balancer:
   cenv:
     provider: aws_application
@@ -41,7 +53,9 @@ load_balancer:
     domain: "@root_domain"
     internal: false
     idle_timeout: "@aws_load_balancer_timeout"
-    firewalls: "@aws_admin_firewalls"
+    firewalls:
+      - admin
+      - admin_internal
     groups: "@admin_groups"
     listeners:
       https:
@@ -55,18 +69,6 @@ load_balancer:
         healthy_status: "@aws_load_balancer_healthy_status"
         healthy_threshold: "@aws_load_balancer_healthy_threshold"
         unhealthy_threshold: "@aws_load_balancer_unhealthy_threshold"
-
-firewall:
-  admin_internal:
-    network: "@aws_networks"
-    rules:
-      tcp_in:
-        mode: ingress
-        protocol: tcp
-        from_port: "@admin_port"
-        to_port: "@admin_port"
-        firewalls: "@aws_admin_firewalls"
-    groups: "@admin_groups"
 
 server:
   cenv:
