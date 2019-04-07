@@ -47,7 +47,7 @@ class LoadBalancerProvider(terraform.TerraformPluginProvider):
             else:
                 if dns_name not in record.values:
                     record.values.append(dns_name)
-                    record.save()
+                    record.provider.update()
 
     def remove_domain_reference(self, instance):
         if instance.domain:
@@ -63,7 +63,10 @@ class LoadBalancerProvider(terraform.TerraformPluginProvider):
             if record:
                 if dns_name in record.values:
                     record.values.remove(dns_name)
-                    record.save()
+                    if record.values:
+                        record.provider.update()
+                    else:
+                        record.provider.delete()
 
 
 class LoadBalancerListenerProvider(terraform.TerraformPluginProvider):
