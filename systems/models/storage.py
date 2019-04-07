@@ -27,7 +27,7 @@ class StorageMixin(django.Model):
 class StorageRelationMixin(django.Model):
 
     storage = django.ManyToManyField(Storage,
-        related_name = "%(class)s_relation",
+        related_name = "%(class)s_relations",
         editable = False
     )
     class Meta:

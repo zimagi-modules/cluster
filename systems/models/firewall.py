@@ -29,7 +29,7 @@ class FirewallMixin(django.Model):
 class FirewallRelationMixin(django.Model):
 
     firewalls = django.ManyToManyField(Firewall,
-        related_name = "%(class)s_relation",
+        related_name = "%(class)s_relations",
         editable = False
     )
     class Meta:

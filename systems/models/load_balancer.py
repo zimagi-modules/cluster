@@ -29,7 +29,7 @@ class LoadBalancerMixin(django.Model):
 class LoadBalancerRelationMixin(django.Model):
 
     load_balancers = django.ManyToManyField(LoadBalancer,
-        related_name = "%(class)s_relation",
+        related_name = "%(class)s_relations",
         editable = False
     )
     class Meta:

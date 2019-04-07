@@ -28,7 +28,7 @@ class NetworkMixin(django.Model):
 class NetworkRelationMixin(django.Model):
 
     networks = django.ManyToManyField(Network,
-        related_name = "%(class)s_relation",
+        related_name = "%(class)s_relations",
         editable = False
     )
     class Meta:

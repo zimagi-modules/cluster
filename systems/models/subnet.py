@@ -28,7 +28,7 @@ class SubnetMixin(django.Model):
 class SubnetRelationMixin(django.Model):
 
     subnets = django.ManyToManyField(Subnet,
-        related_name = "%(class)s_relation",
+        related_name = "%(class)s_relations",
         editable = False
     )
     class Meta:

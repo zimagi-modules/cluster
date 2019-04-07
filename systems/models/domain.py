@@ -28,7 +28,7 @@ class DomainMixin(django.Model):
 class DomainRelationMixin(django.Model):
 
     domains = django.ManyToManyField(Domain,
-        related_name = "%(class)s_relation",
+        related_name = "%(class)s_relations",
         editable = False
     )
     class Meta:
