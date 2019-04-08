@@ -127,4 +127,5 @@ server:
       - ssh_external
       - admin_internal
     load_balancer: cenv
+    load_balancer_listener: https
     groups: "@admin_groups"
