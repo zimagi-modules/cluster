@@ -11,11 +11,16 @@ class Provisioner(profile.BaseProvisioner):
         count = self.pop_value('count', config)
         networks = self.pop_values('network', config)
         subnets = self.pop_values('subnet', config)
+        load_balancer = self.pop_value('load_balancer', config)
+        load_balancer_listener = self.pop_value('load_balancer_listener', config)
         groups = self.pop_values('groups', config)
         firewalls = self.pop_values('firewalls', config)
 
         if not provider or not networks or not subnets:
             self.command.error("Server {} requires 'provider', 'network', and 'subnet' fields".format(name))
+
+        if load_balancer and not load_balancer_listener or not load_balancer and load_balancer_listener:
+            self.command.error("Server {} requires neither or both of 'load_balancer' and 'load_balancer_listener' fields".format(name))
 
         if not count:
             count = 1
@@ -29,10 +34,13 @@ class Provisioner(profile.BaseProvisioner):
                     server_fields = self.interpolate(config,
                         provider = provider,
                         network = network,
-                        subnet = subnet
+                        subnet = subnet,
+                        load_balancer = load_balancer
                     ),
                     network_name = network,
                     subnet_name = subnet,
+                    load_balancer_name = load_balancer,
+                    load_balancer_listener_name = load_balancer_listener,
                     group_names = groups,
                     firewall_names = firewalls,
                     remove = True,
@@ -48,11 +56,18 @@ class Provisioner(profile.BaseProvisioner):
         }
 
     def variables(self, instance):
-        return {
+        variables = {
             'provider': instance.provider_type,
             'groups': self.get_names(instance.groups),
             'firewalls': self.get_names(instance.firewalls)
         }
+        if instance.load_balancer:
+            variables['load_balancer'] = instance.load_balancer.name
+
+        if instance.load_balancer_listener:
+            variables['load_balancer_listener'] = instance.load_balancer_listener.name
+
+        return variables
 
     def destroy(self, name, config):
         networks = self.pop_values('network', config)
