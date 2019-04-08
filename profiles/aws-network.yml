@@ -203,7 +203,19 @@ firewall:
           - 0.0.0.0/0
     groups: "@core_firewall_groups"
 
-  ssh:
+  ssh_external:
+    network: "@aws_networks"
+    rules:
+      tcp_in:
+        mode: ingress
+        protocol: tcp
+        from_port: "@ssh_port"
+        to_port: "@ssh_port"
+        cidrs:
+          - 0.0.0.0/0
+    groups: "@core_firewall_groups"
+
+  ssh_internal:
     network: "@aws_networks"
     rules:
       tcp_in:

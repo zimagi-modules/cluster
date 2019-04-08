@@ -7,7 +7,7 @@ parents:
 
 config:
   admin_subnet_cidr_prefix: 28
-  admin_subnet_public_ip: True
+  admin_subnet_public_ip: true
 
   aws_admin_subnets:
     - admin-1
@@ -115,7 +115,6 @@ server:
     image: "@aws_ubuntu_image[network]"
     user: "@aws_ubuntu_user"
     machine: "@aws_admin_machine"
-    use_public_ip: false
     tenancy: "@aws_admin_tenancy"
     monitoring: "@aws_admin_monitoring"
     ebs_type: "@aws_admin_ebs_type"
@@ -125,7 +124,7 @@ server:
     ebs_encrypted: "@aws_admin_ebs_encrypted"
     firewalls:
       - internet
-      - ssh
+      - ssh_external
       - admin_internal
     load_balancer: cenv
     groups: "@admin_groups"
