@@ -1,9 +1,6 @@
 parents:
-  - module: cluster
-    profile: aws-network
-
-  - module: cluster
-    profile: aws-domain
+  - profile: aws-network
+  - profile: aws-domain
 
 config:
   admin_subnet_cidr_prefix: 28

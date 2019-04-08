@@ -1,6 +1,5 @@
 parents:
-  - module: cluster
-    profile: aws-network
+  - profile: aws-network
 
 config:
   aws_storage_performance_mode: generalPurpose
