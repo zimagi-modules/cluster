@@ -9,15 +9,6 @@ class ServerFacade(
     group.GroupModelFacadeMixin,
     subnet.SubnetModelFacadeMixin
 ):
-    def get_field_public_ip_display(self, instance, value, short):
-        return value
-
-    def get_field_private_ip_display(self, instance, value, short):
-        return value
-
-    def get_field_user_display(self, instance, value, short):
-        return value
-
     def get_field_password_display(self, instance, value, short):
         if short:
             return '*****' if value else None
@@ -26,12 +17,6 @@ class ServerFacade(
     def get_field_private_key_display(self, instance, value, short):
         if short:
             return '*****' if value else None
-        return value
-
-    def get_field_data_device_display(self, instance, value, short):
-        return value
-
-    def get_field_backup_device_display(self, instance, value, short):
         return value
 
     def get_field_status_display(self, instance, value, short):
