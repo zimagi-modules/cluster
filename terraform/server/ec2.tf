@@ -58,3 +58,9 @@ resource "aws_volume_attachment" "data" {
   volume_id = "${aws_ebs_volume.data.id}"
   instance_id = "${aws_instance.server.id}"
 }
+
+resource "aws_lb_target_group_attachment" "gateway" {
+  count = "${var.load_balancer_listener != null ? 1 : 0}"
+  target_group_arn = "${var.load_balancer_listener.target_group_arn}"
+  target_id = "${aws_instance.server.id}"
+}
