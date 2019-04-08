@@ -79,7 +79,7 @@ firewall:
         protocol: tcp
         from_port: "@admin_port"
         to_port: "@admin_port"
-        cidrs: self
+        self_only: true
     groups: "@admin_groups"
 
 load_balancer:

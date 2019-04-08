@@ -211,5 +211,5 @@ firewall:
         protocol: tcp
         from_port: "@ssh_port"
         to_port: "@ssh_port"
-        cidrs: self
+        self_only: true
     groups: "@core_firewall_groups"
