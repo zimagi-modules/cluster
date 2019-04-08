@@ -1,6 +1,6 @@
 parents:
-  - profile: aws-network
-  - profile: aws-domain
+  - aws-network
+  - aws-domain
 
 config:
   admin_subnet_cidr_prefix: 28

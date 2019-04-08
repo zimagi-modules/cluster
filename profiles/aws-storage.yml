@@ -1,5 +1,5 @@
 parents:
-  - profile: aws-network
+  - aws-network
 
 config:
   aws_storage_performance_mode: generalPurpose
