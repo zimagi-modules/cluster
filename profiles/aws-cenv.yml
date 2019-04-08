@@ -58,26 +58,24 @@ subnet:
 firewall:
   admin_external:
     network: "@aws_networks"
+    groups: "@admin_groups"
     rules:
       tcp_in:
         mode: ingress
         protocol: tcp
         from_port: "@admin_port"
         to_port: "@admin_port"
-        cidrs:
-          - 0.0.0.0/0
-    groups: "@admin_groups"
 
   admin_internal:
     network: "@aws_networks"
+    groups: "@admin_groups"
     rules:
       tcp_in:
         mode: ingress
         protocol: tcp
         from_port: "@admin_port"
         to_port: "@admin_port"
-        self_only: true
-    groups: "@admin_groups"
+        source_firewall: admin_external
 
 load_balancer:
   cenv:
@@ -88,7 +86,6 @@ load_balancer:
     idle_timeout: "@aws_load_balancer_timeout"
     firewalls:
       - admin_external
-      - admin_internal
     groups: "@admin_groups"
     listeners:
       https:
