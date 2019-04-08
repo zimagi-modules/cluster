@@ -1,12 +1,15 @@
 from django.db import models as django
 
 from settings.roles import Roles
-from systems.models import fields, subnet, firewall, provider, group
+from data.load_balancer_listener.models import LoadBalancerListener
+from systems.models import fields, subnet, firewall, provider, load_balancer, group
 
 
 class ServerFacade(
     provider.ProviderModelFacadeMixin,
     group.GroupModelFacadeMixin,
+    firewall.FirewallModelFacadeMixin,
+    load_balancer.LoadBalancerModelFacadeMixin,
     subnet.SubnetModelFacadeMixin
 ):
     def get_field_password_display(self, instance, value, short):
@@ -29,6 +32,7 @@ class Server(
     provider.ProviderMixin,
     group.GroupMixin,
     firewall.FirewallRelationMixin,
+    load_balancer.LoadBalancerMixin,
     subnet.SubnetModel
 ):
     STATUS_RUNNING = 'running'
@@ -42,10 +46,17 @@ class Server(
     data_device = django.CharField(null = True, max_length = 256)
     backup_device = django.CharField(null = True, max_length = 256)
 
+    load_balancer_listener = django.ForeignKey(LoadBalancerListener,
+        null = True,
+        on_delete = django.PROTECT,
+        related_name = "%(class)s_relation",
+        editable = False
+    )
     class Meta(subnet.SubnetModel.Meta):
         verbose_name = "server"
         verbose_name_plural = "servers"
         facade_class = ServerFacade
+        relation = ['load_balancer', 'load_balancer_listener']
         dynamic_fields = ['status']
         ordering = ['name']
         provider_name = 'server'
