@@ -11,7 +11,6 @@ class Provider(AWSServiceMixin, BaseProvider):
         self.option(str, 'machine', 't2.micro', help = 'AWS instance type', config_name = 'aws_ec2_type')
         self.option(str, 'tenancy', 'default', help = 'AWS instance tenancy (default | dedicated)', config_name = 'aws_ec2_tenancy')
 
-        self.option(bool, 'use_public_ip', True, help = 'Enable public IP address for instance', config_name = 'aws_ec2_public_ip')
         self.option(bool, 'monitoring', False, help = 'AWS monitoring enabled?', config_name = 'aws_ec2_monitoring')
         self.option(bool, 'ebs_optimized', False, help = 'AWS EBS obtimized server?', config_name = 'aws_ec2_ebs_optimized')
         self.option(bool, 'ebs_encrypted', False, help = 'AWS EBS encrypted volume?', config_name = 'aws_ec2_ebs_encrypted')
@@ -39,22 +38,17 @@ class Provider(AWSServiceMixin, BaseProvider):
             instance.private_key = private_key
 
         super().initialize_terraform(instance, created)
+        instance.config['use_public_ip'] = instance.subnet.config['use_public_ip']
         instance.config['security_groups'] = self.get_security_groups(relations['firewalls'])
 
     def prepare_instance(self, instance, created):
-        try:
-            if instance.variables['public_ip_address']:
-                instance.public_ip = instance.variables['public_ip_address']
+        if instance.variables['public_ip_address']:
+            instance.public_ip = instance.variables['public_ip_address']
 
-            instance.private_ip = instance.variables['private_ip_address']
+        instance.private_ip = instance.variables['private_ip_address']
 
-            super().prepare_instance(instance, created)
-            self.clean_aws_credentials(instance.config)
-
-        except SSHAccessError as e:
-            self.command.warning("SSH access failed, cleaning up...")
-            self.finalize_instance(instance)
-            raise e
+        super().prepare_instance(instance, created)
+        self.clean_aws_credentials(instance.config)
 
 
     def finalize_terraform(self, instance):
