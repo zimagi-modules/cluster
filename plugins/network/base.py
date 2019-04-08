@@ -172,6 +172,9 @@ class FirewallProvider(terraform.TerraformPluginProvider):
 
 class FirewallRuleProvider(NetworkMixin, terraform.TerraformPluginProvider):
 
+    def provider_config(self, type = None):
+        self.option(bool, 'self_only', False, help = 'Only allow access from other infrastructure resources attached to this firewall')
+
     def terraform_type(self):
         return 'firewall_rule'
 
@@ -181,16 +184,14 @@ class FirewallRuleProvider(NetworkMixin, terraform.TerraformPluginProvider):
 
     def initialize_terraform(self, instance, created):
         instance.cidrs = ensure_list(instance.cidrs)
-        instance.config.setdefault('self', False)
 
-        if 'self' in instance.cidrs:
+        if instance.config['self_only']:
             instance.cidrs = []
-            instance.config['self'] = True
 
         elif instance.cidrs:
             instance.cidrs = [str(self.address.parse_cidr(x.strip())) for x in instance.cidrs]
 
-        elif not instance.config['self']:
+        elif not instance.config['self_only']:
             instance.cidrs = ['0.0.0.0/0']
 
 
