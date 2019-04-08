@@ -65,6 +65,9 @@ class AWSFirewallProvider(AWSServiceMixin, FirewallProvider):
         super().prepare_instance(instance, created)
         self.clean_aws_credentials(instance.config)
 
+    def get_firewall_id(self):
+        return self.instance.variables['security_group_id']
+
 
 class AWSFirewallRuleProvider(AWSServiceMixin, FirewallRuleProvider):
 

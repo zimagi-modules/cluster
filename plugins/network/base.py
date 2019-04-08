@@ -9,6 +9,7 @@ import netaddr
 import ipaddress
 import itertools
 import threading
+import time
 
 
 class AddressMap(object):
@@ -169,11 +170,15 @@ class FirewallProvider(terraform.TerraformPluginProvider):
     def facade(self):
         return self.command._firewall
 
+    def get_firewall_id(self):
+        return self.instance.id
+
 
 class FirewallRuleProvider(NetworkMixin, terraform.TerraformPluginProvider):
 
     def provider_config(self, type = None):
         self.option(bool, 'self_only', False, help = 'Only allow access from other infrastructure resources attached to this firewall')
+        self.option(str, 'source_firewall', None, help = 'Only allow access from other infrastructure resources attached to another firewall')
 
     def terraform_type(self):
         return 'firewall_rule'
@@ -184,14 +189,34 @@ class FirewallRuleProvider(NetworkMixin, terraform.TerraformPluginProvider):
 
     def initialize_terraform(self, instance, created):
         instance.cidrs = ensure_list(instance.cidrs)
+        instance.config['rule_type'] = 'cidr'
+        instance.config['source_firewall_id'] = None
 
-        if instance.config['self_only']:
+        if instance.config['source_firewall']:
+            instance.config['rule_type'] = 'link'
+            instance.config['self_only'] = False
+            instance.cidrs = []
+            tries = 60
+
+            while True:
+                firewall = self.command._firewall.retrieve(instance.config['source_firewall'])
+                if firewall:
+                    firewall.initialize(self.command)
+                    instance.config['source_firewall_id'] = firewall.provider.get_firewall_id()
+                    break
+                time.sleep(2)
+                tries -= 2
+                if not tries:
+                    self.command.error("Source firewall {} could not be retrieved".format(instance.config['source_firewall']))
+
+        elif instance.config['self_only']:
+            instance.config['rule_type'] = 'link'
             instance.cidrs = []
 
         elif instance.cidrs:
             instance.cidrs = [str(self.address.parse_cidr(x.strip())) for x in instance.cidrs]
 
-        elif not instance.config['self_only']:
+        elif not instance.config['self_only'] and not instance.config['source_firewall']:
             instance.cidrs = ['0.0.0.0/0']
 
 
