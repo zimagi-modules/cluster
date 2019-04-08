@@ -1,7 +1,3 @@
-parents:
-  - module: cluster
-    profile: aws-network
-
 config:
   admin_groups: cenv
 
