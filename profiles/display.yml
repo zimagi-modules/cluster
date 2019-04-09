@@ -22,7 +22,6 @@ config:
     - chain
     - fullchain
     - variables
-    - state_config
     - created
     - updated
     - groups
@@ -43,10 +42,50 @@ config:
     - values
     - config
     - variables
-    - state_config
     - created
     - updated
     - domain
+
+  network_list_fields:
+    - provider_type
+    - cidr
+    - subnet_relation
+    - firewall_relation
+    - groups
+  network_display_fields:
+    - id
+    - provider_type
+    - cidr
+    - config
+    - variables
+    - created
+    - updated
+    - storage_relation
+    - subnet_relation
+    - firewall_relation
+    - certificate_relation
+    - loadbalancer_relation
+    - groups
+
+  subnet_list_fields:
+    - provider_type
+    - cidr
+    - network
+    - storagemount_relation
+    - server_relation
+    - groups
+  subnet_display_fields:
+    - id
+    - provider_type
+    - cidr
+    - config
+    - variables
+    - created
+    - updated
+    - network
+    - storagemount_relation
+    - server_relation
+    - groups
 
   certificate_list_fields:
     - provider_type
@@ -63,13 +102,90 @@ config:
     - chain
     - config
     - variables
-    - state_config
     - created
     - updated
     - network
     - domain
     - groups
     - loadbalancerlistener_relation
+
+  firewall_list_fields:
+    - provider_type
+    - network
+    - firewallrule_relation
+    - groups
+  firewall_display_fields:
+    - id
+    - provider_type
+    - config
+    - variables
+    - created
+    - updated
+    - network
+    - firewallrule_relation
+    - loadbalancer_relations
+    - storagemount_relations
+    - server_relations
+    - groups
+
+  firewall_rule_list_fields:
+    - provider_type
+    - mode
+    - protocol
+    - from_port
+    - to_port
+    - cidrs
+    - firewall
+  firewall_rule_display_fields:
+    - id
+    - provider_type
+    - mode
+    - protocol
+    - from_port
+    - to_port
+    - cidrs
+    - config
+    - variables
+    - created
+    - updated
+    - firewall
+
+  storage_list_fields:
+    - provider_type
+    - network
+    - storagemount_relation
+    - groups
+  storage_display_fields:
+    - id
+    - provider_type
+    - config
+    - variables
+    - created
+    - updated
+    - network
+    - storagemount_relation
+    - groups
+
+  mount_list_fields:
+    - provider_type
+    - remote_host
+    - remote_path
+    - storage
+    - subnet
+    - firewalls
+  mount_display_fields:
+    - id
+    - provider_type
+    - remote_host
+    - remote_path
+    - mount_options
+    - config
+    - variables
+    - created
+    - updated
+    - storage
+    - subnet
+    - firewalls
 
   load_balancer_list_fields:
     - provider_type
@@ -84,7 +200,6 @@ config:
     - internal
     - config
     - variables
-    - state_config
     - created
     - updated
     - network
@@ -93,3 +208,58 @@ config:
     - groups
     - loadbalancerlistener_relation
     - server_relation
+
+  load_balancer_listener_list_fields:
+    - provider_type
+    - port
+    - target_port
+    - load_balancer
+    - certificate
+    - server_relation
+  load_balancer_listener_display_fields:
+    - id
+    - provider_type
+    - port
+    - target_port
+    - health_check_path
+    - health_check_interval
+    - health_check_timeout
+    - healthy_status
+    - healthy_threshold
+    - unhealthy_threshold
+    - config
+    - variables
+    - created
+    - updated
+    - load_balancer
+    - certificate
+    - server_relation
+
+  server_list_fields:
+    - provider_type
+    - status
+    - public_ip
+    - private_ip
+    - subnet
+    - firewalls
+    - groups
+  server_display_fields:
+    - id
+    - provider_type
+    - status
+    - public_ip
+    - private_ip
+    - user
+    - password
+    - private_key
+    - data_device
+    - backup_device
+    - config
+    - variables
+    - created
+    - updated
+    - subnet
+    - load_balancer
+    - load_balancer_listener
+    - firewalls
+    - groups
