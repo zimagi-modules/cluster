@@ -13,14 +13,20 @@ class ServerFacade(
     subnet.SubnetModelFacadeMixin
 ):
     def get_field_password_display(self, instance, value, short):
+        if not value:
+            return None
+
         if short:
-            return '*****' if value else None
-        return value
+            return self.encrypted_color('*****')
+        return self.encrypted_color(value)
 
     def get_field_private_key_display(self, instance, value, short):
+        if not value:
+            return None
+
         if short:
-            return '*****' if value else None
-        return value
+            return self.encrypted_color('*****')
+        return self.encrypted_color(value)
 
     def get_field_status_display(self, instance, value, short):
         if value == self.model.STATUS_RUNNING:
