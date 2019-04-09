@@ -47,3 +47,49 @@ config:
     - created
     - updated
     - domain
+
+  certificate_list_fields:
+    - provider_type
+    - created
+    - updated
+    - network
+    - domain
+    - groups
+  certificate_display_fields:
+    - id
+    - provider_type
+    - certificate
+    - private_key
+    - chain
+    - config
+    - variables
+    - state_config
+    - created
+    - updated
+    - network
+    - domain
+    - groups
+    - loadbalancerlistener_relation
+
+  load_balancer_list_fields:
+    - provider_type
+    - internal
+    - network
+    - domain
+    - firewalls
+    - groups
+  load_balancer_display_fields:
+    - id
+    - provider_type
+    - internal
+    - config
+    - variables
+    - state_config
+    - created
+    - updated
+    - network
+    - domain
+    - firewalls
+    - groups
+    - loadbalancerlistener_relation
+    - server_relation
