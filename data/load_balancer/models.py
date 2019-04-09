@@ -24,8 +24,8 @@ class LoadBalancer(
     internal = django.BooleanField(default = False)
 
     class Meta(network.NetworkModel.Meta):
-        verbose_name = "load_balancer"
-        verbose_name_plural = "load_balancers"
+        verbose_name = "load balancer"
+        verbose_name_plural = "load balancers"
         facade_class = LoadBalancerFacade
         relation = 'domain'
         provider_name = 'load_balancer:load_balancer'
