@@ -34,7 +34,7 @@ class EFSStorageMountProvider(AWSServiceMixin, StorageMountProvider):
         super().initialize_terraform(instance, created)
         self.aws_credentials(instance.config)
 
-        instance.config['security_groups'] = self.get_security_groups(relations.get('firewalls', []))
+        instance.config['security_groups'] = self.get_security_groups(relations['firewalls'], instance.firewalls)
 
     def prepare_instance(self, instance, created):
         instance.remote_path = '/'

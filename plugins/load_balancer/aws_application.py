@@ -14,7 +14,7 @@ class AWSApplicationLoadBalancerProvider(AWSServiceMixin, LoadBalancerProvider):
         super().initialize_terraform(instance, created)
 
         instance.config['subnets'] = self.get_subnets(instance.network)
-        instance.config['security_groups'] = self.get_security_groups(relations['firewalls'])
+        instance.config['security_groups'] = self.get_security_groups(relations['firewalls'], instance.firewalls)
 
     def prepare_instance(self, instance, created):
         super().prepare_instance(instance, created)

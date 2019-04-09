@@ -54,11 +54,15 @@ class AWSServiceMixin(object):
 
         return sgroups
 
-    def get_security_groups(self, names):
-        firewalls = self.command.get_instances(self.command._firewall, names = names)
+    def get_security_groups(self, names, firewalls):
         sgroups = []
 
-        for firewall in firewalls:
-            sgroups.append(firewall.variables['security_group_id'])
+        if names:
+            firewalls = self.command.get_instances(self.command._firewall, names = names)
+            for firewall in firewalls:
+                sgroups.append(firewall.variables['security_group_id'])
+        else:
+            for firewall in firewalls.all():
+                sgroups.append(firewall.variables['security_group_id'])
 
         return sgroups
