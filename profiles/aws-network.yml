@@ -1,4 +1,6 @@
 config:
+  primary_timezone: America/New_York
+
   network_cidr_base: 10/8
   network_cidr_prefix: 16
   network_dns_support: True
