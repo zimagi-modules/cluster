@@ -9,6 +9,9 @@ bootstrap:
     - /var/log/bootstrap.log
     - "@dev_build"
     - "@timezone"
+  options:
+    dev_build: false
+    timezone: America/New_York
 
 audit-bootstrap:
   provider: command
