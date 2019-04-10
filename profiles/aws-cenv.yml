@@ -67,6 +67,7 @@ firewall:
         to_port: "@admin_port"
 
   admin_internal:
+    requires: admin_external
     network: "@aws_networks"
     groups: "@admin_groups"
     rules:
@@ -114,6 +115,7 @@ server:
     ebs_type: "@aws_admin_ebs_type"
     ebs_size: "@aws_admin_ebs_size"
     ebs_iops: "@aws_admin_ebs_iops"
+    ebs_iops: "@aws_admin_ebs_iops"
     ebs_optimized: "@aws_admin_ebs_optimized"
     ebs_encrypted: "@aws_admin_ebs_encrypted"
     firewalls:
@@ -123,3 +125,16 @@ server:
     load_balancer: cenv
     load_balancer_listener: https
     groups: "@admin_groups"
+
+provision:
+  bootstrap-cenv:
+    task: bootstrap
+    servers: cenv
+    user: "@aws_ubuntu_user"
+    dev_build: false
+    timezone: "@primary_timezone"
+
+  deploy-cenv:
+    requires: bootstrap-cenv
+    command: deploy
+    servers: cenv
