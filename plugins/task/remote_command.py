@@ -1,16 +1,19 @@
 from django.conf import settings
 
 from .base import BaseProvider
-from .mixins import cli
+from .mixins import cli, ssh
 
 import copy
 
 
 class Provider(
     cli.CLITaskMixin,
+    ssh.SSHTaskMixin,
     BaseProvider
 ):
     def execute(self, results, main_params):
+        servers = main_params.pop('servers', [])
+
         def exec_server(server):
             params = copy.deepcopy(main_params)
 
