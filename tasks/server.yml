@@ -1,21 +1,27 @@
 
 bootstrap:
-  provider: script
+  provider: remote_script
   script: scripts/bootstrap.sh
   roles: server-admin
-  sudo: True
-  args: "ubuntu /var/log/bootstrap.log false America/New_York"
+  sudo: true
+  args:
+    - "@user"
+    - /var/log/bootstrap.log
+    - "@dev_build"
+    - "@timezone"
 
 audit-bootstrap:
   provider: command
   command: cat /var/log/bootstrap.log
   roles: server-admin
-  sudo: True
+  sudo: true
 
 audit-docker-compose:
   provider: command
-  command: docker-compose logs --tail=100 api
+  command: docker-compose logs --tail=@count api
   roles: server-admin
+  options:
+    count: 100
 
 update:
   provider: command
