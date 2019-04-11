@@ -29,7 +29,7 @@ class Provider(
             args = ensure_list(self.config.get('args', []))
 
             ssh = server.provider.ssh()
-            ssh.upload(script_path, temp_path, mode = 0o755)
+            ssh.upload(script_path, temp_path, mode = 755)
             try:
                 self._ssh_exec(server, temp_path,
                     self._interpolate(args, options),
