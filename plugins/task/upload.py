@@ -1,14 +1,15 @@
-from django.conf import settings
-
 from .base import BaseProvider
-from .mixins import cli
+from .mixins import cli, ssh
+
+import os
 
 
 class Provider(
     cli.CLITaskMixin,
+    ssh.SSHTaskMixin,
     BaseProvider
 ):
-    def execute(self, results, servers, main_params):
+    def execute(self, results, params):
         def exec_server(server):
             if 'file' in self.config:
                 file_path = self.get_path(self.config['file'])
@@ -31,4 +32,7 @@ class Provider(
                 group = self.config.get('group', None)
             )
 
-        self.command.run_list(servers, exec_server)
+        self.command.run_list(
+            self._ssh_servers(params),
+            exec_server
+        )
