@@ -108,6 +108,7 @@ server:
     network: "@aws_networks"
     subnet: "@aws_admin_subnets"
     image: "@aws_ubuntu_image[network]"
+    ssh_port: "@ssh_port"
     user: "@aws_ubuntu_user"
     machine: "@aws_admin_machine"
     tenancy: "@aws_admin_tenancy"
