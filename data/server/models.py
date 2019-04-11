@@ -46,6 +46,7 @@ class Server(
 
     public_ip = django.CharField(null = True, max_length = 128)
     private_ip = django.CharField(null = True, max_length = 128)
+    ssh_port = django.IntegerField(default = 22)
     user = django.CharField(null = True, max_length = 128)
     password = fields.EncryptedCharField(null = True, max_length = 1096)
     private_key = fields.EncryptedDataField(null = True)
@@ -88,5 +89,5 @@ class Server(
         return False
 
 
-    def ping(self, port = 22):
-        return self.provider.ping(port = port)
+    def ping(self):
+        return self.provider.ping()
