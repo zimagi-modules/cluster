@@ -5,7 +5,7 @@ class SSHTaskMixin(object):
         return self.command.search_instances(
             self.manager.get_facade_index()['server'],
             queries = params.get('servers', []),
-            joiner = params.get('filter', 'AND'),
+            joiner = params.get('filter', 'AND').upper(),
             error_on_empty = False
         )
 
