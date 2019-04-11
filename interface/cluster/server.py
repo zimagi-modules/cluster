@@ -34,6 +34,7 @@ class SSHCommand(
         self.silent_data('user', server.user)
         self.silent_data('password', server.password)
         self.silent_data('private_key', server.private_key)
+        self.silent_data('ssh_port', server.ssh_port)
 
     def postprocess(self, result):
         with temp_dir() as temp:
@@ -50,6 +51,9 @@ class SSHCommand(
                 ssh_command.append("-i '{}'".format(
                     temp.save(private_key)
                 ))
+            ssh_command.append("-p {}".format(
+                result.get_named_data('ssh_port')
+            ))
 
             ssh_command.append("{}@{}".format(
                 result.get_named_data('user'),
