@@ -1,9 +1,10 @@
 from django.conf import settings
 
 from .base import BaseProvider
+from .mixins import cli, ssh
 from utility.runtime import Runtime
 from utility.temp import temp_dir
-from utility.data import clean_dict
+from utility.data import clean_dict, ensure_list
 
 import os
 import re
@@ -24,13 +25,18 @@ class AnsibleInventory(object):
         self.group_servers()
 
 
+    def get_server_id(self, server):
+        return "{}-{}".format(server.name, server.id)
+
+
     def generate_hosts(self):
         self.hosts = []
 
         for server in self.servers:
             host = clean_dict({
-                'name': server.name,
+                'server': server,
                 'ansible_host': server.ip,
+                'ansible_port': server.ssh_port,
                 'ansible_user': server.user,
                 'ansible_ssh_pass': server.password,
                 'ansible_become': 'yes',
@@ -55,7 +61,7 @@ class AnsibleInventory(object):
                         'children': [],
                         'servers': []
                     }
-                self.groups[group.name]['servers'].append(server.name)
+                self.groups[group.name]['servers'].append(self.get_server_id(server))
 
                 while group.parent:
                     if group.parent.name not in self.groups:
@@ -69,12 +75,13 @@ class AnsibleInventory(object):
                     group = group.parent
 
     def render(self):
-        data = ['[all]']
+        data = [ '[all]' ]
         for host in self.hosts:
-            record = [host.pop('name')]
+            record = [ self.get_server_id(host.get('server')) ]
 
             for key, value in host.items():
-                record.append("{}={}".format(key, value))
+                if key != 'server':
+                    record.append("{}={}".format(key, value))
 
             data.append(" ".join(record))
         data.append('')
@@ -95,9 +102,12 @@ class AnsibleInventory(object):
         return "\n".join(data)
 
 
-class Provider(BaseProvider):
-
-    def execute(self, results, servers, params):
+class Provider(
+    cli.CLITaskMixin,
+    ssh.SSHTaskMixin,
+    BaseProvider
+):
+    def execute(self, results, params):
         with temp_dir() as temp:
             lock = self.config.get('lock', False)
             ansible_config = self.merge_config(self.config.get('config', None),
@@ -106,7 +116,7 @@ class Provider(BaseProvider):
                 'deprecation_warnings = False',
                 'gathering = smart'
             )
-            inventory = AnsibleInventory(self, servers, temp)
+            inventory = AnsibleInventory(self, self._ssh_servers(params), temp)
 
             if 'group_vars' in self.config:
                 temp.link(self.get_path(self.config['group_vars']),
@@ -121,10 +131,13 @@ class Provider(BaseProvider):
             #    ansible_cmd.append('-vvv')
 
             if 'playbooks' in self.config:
-                command = ansible_cmd + self.config['playbooks']
+                command = ansible_cmd + ensure_list(self.config['playbooks'])
 
                 if lock:
                     params = {}
+                else:
+                    params.pop('servers', None)
+                    params.pop('filter', None)
 
                 if 'variables' in self.config:
                     for key, value in self.config['variables'].items():
