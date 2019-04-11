@@ -56,28 +56,33 @@ class BaseProvider(terraform.TerraformPluginProvider):
         instance.password = password
 
 
-    def ssh(self, timeout = 10, port = 22):
+    def ssh(self, timeout = 10):
         instance = self.check_instance('server ssh')
-        return self.command.ssh(instance, timeout = timeout, port = port)
+        return self.command.ssh(
+            instance.ip, instance.user,
+            password = instance.password,
+            key = instance.private_key,
+            timeout = timeout,
+            port = instance.ssh_port
+        )
 
-    def check_ssh(self, port = 22, tries = 10, interval = 2, timeout = 10, silent = False, instance = None):
+    def check_ssh(self, tries = 10, interval = 2, timeout = 10, silent = False, instance = None):
         if not self.instance and not instance:
             self.command.error("Checking SSH requires a valid server instance given to provider on initialization")
         if not instance:
             instance = self.instance
-
-        host = "{}:{}".format(instance.ip, port)
 
         while True:
             if not tries:
                 break
             try:
                 if not silent:
-                    self.command.info("Checking {}@{} SSH connection".format(instance.user, host))
+                    self.command.info("Checking {}@{}:{} SSH connection".format(instance.user, instance.ip, instance.ssh_port))
 
-                sshlib.SSH(host, instance.user, instance.password,
+                sshlib.SSH(instance.ip, instance.user, instance.password,
                     key = instance.private_key,
-                    timeout = timeout
+                    timeout = timeout,
+                    port = instance.ssh_port
                 )
                 return True
 
@@ -87,10 +92,8 @@ class BaseProvider(terraform.TerraformPluginProvider):
 
         return False
 
-    def ping(self, port = 22):
-        self.check_instance('server ping')
+    def ping(self):
         return self.check_ssh(
-            port = port,
             tries = 1,
             timeout = 1,
             silent = True
