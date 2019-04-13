@@ -17,34 +17,27 @@ class TerraformWrapper(object):
             provider.command.force
         )
 
-    def plan(self, type, instance, namespace = None):
+    def plan(self, type, instance):
         if type:
             manifest_path = self._get_manifest_path(type, instance.provider_type)
             if manifest_path:
-                variables = self.provider.get_variables(instance, namespace)
+                variables = self.provider.get_variables(instance)
                 self.provider.command.data('variables', json.dumps(variables, indent=2))
-                state = instance.state_config.get(namespace, {}) if namespace else instance.state_config
-                self.terraform.plan(manifest_path, variables, state)
+                self.terraform.plan(manifest_path, variables, instance.state_config)
 
-    def apply(self, type, instance, namespace = None):
+    def apply(self, type, instance):
         if type:
             manifest_path = self._get_manifest_path(type, instance.provider_type)
             if manifest_path:
-                variables = self.provider.get_variables(instance, namespace)
-                state = instance.state_config.get(namespace, {}) if namespace else instance.state_config
-                state = self.terraform.apply(manifest_path, variables, state)
-                if namespace:
-                    instance.state_config[namespace] = state
-                else:
-                    instance.state_config = state
+                variables = self.provider.get_variables(instance)
+                instance.state_config = self.terraform.apply(manifest_path, variables, instance.state_config)
 
-    def destroy(self, type, instance, namespace = None):
+    def destroy(self, type, instance):
         if type:
             manifest_path = self._get_manifest_path(type, instance.provider_type)
             if manifest_path:
-                variables = self.provider.get_variables(instance, namespace)
-                state = instance.state_config.get(namespace, {}) if namespace else instance.state_config
-                self.terraform.destroy(manifest_path, variables, state)
+                variables = self.provider.get_variables(instance)
+                self.terraform.destroy(manifest_path, variables, instance.state_config)
 
     def _get_manifest_path(self, type, name):
         try:
@@ -77,6 +70,15 @@ class TerraformPluginProvider(DataPluginProvider):
         return None
 
 
+    def add_credentials(self, config):
+        # Override in subclass
+        pass
+
+    def remove_credentials(self, config):
+        # Override in subclass
+        pass
+
+
     @property
     def terraform(self):
         if not getattr(self, '_terraform_cache', None):
@@ -85,6 +87,7 @@ class TerraformPluginProvider(DataPluginProvider):
 
 
     def initialize_instance(self, instance, created):
+        self.add_credentials(instance.config)
         self.initialize_terraform(instance, created)
 
         if self.test:
@@ -92,15 +95,19 @@ class TerraformPluginProvider(DataPluginProvider):
         else:
             self.terraform.apply(self.terraform_type(), instance)
 
-    def initialize_terraform(self, instance, created, object = None):
+    def initialize_terraform(self, instance, created):
         # Override in subclass
         pass
 
+    def prepare_instance(self, instance, created):
+        super().prepare_instance(instance, created)
+        self.remove_credentials(instance.config)
 
     def finalize_instance(self, instance):
+        self.add_credentials(instance.config)
         self.finalize_terraform(instance)
         self.terraform.destroy(self.terraform_type(), instance)
 
-    def finalize_terraform(self, instance, object = None):
+    def finalize_terraform(self, instance):
         # Override in subclass
         pass
