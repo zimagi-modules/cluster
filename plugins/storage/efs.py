@@ -10,41 +10,30 @@ class EFSStorageProvider(AWSServiceMixin, StorageProvider):
         self.option(int, 'provisioned_throughput', None, help = 'AWS EFS throughput in MiB/s', config_name = 'aws_efs_prov_tp')
         self.option(bool, 'encrypted', False, help = 'AWS EFS encrypted filesystem?', config_name = 'aws_efs_encrypted')
 
-    def initialize_terraform(self, instance, created):
-        if instance.network.provider_type != 'aws':
-            self.command.error("AWS VPC network needed to create AWS EFS storage filesystems")
+    def add_credentials(self, config):
+        self.aws_credentials(config)
 
-        self.aws_credentials(instance.config)
-        super().initialize_terraform(instance, created)
-
-    def finalize_terraform(self, instance):
-        self.aws_credentials(instance.config)
-        super().finalize_terraform(instance)
-
-    def prepare_instance(self, instance, created):
-        super().prepare_instance(instance, created)
-        self.clean_aws_credentials(instance.config)
+    def remove_credentials(self, config):
+        self.clean_aws_credentials(config)
 
 
 class EFSStorageMountProvider(AWSServiceMixin, StorageMountProvider):
 
+    def add_credentials(self, config):
+        self.aws_credentials(config)
+
+    def remove_credentials(self, config):
+        self.clean_aws_credentials(config)
+
     def initialize_terraform(self, instance, created):
         relations = self.command.get_relations(instance.facade)
-
         super().initialize_terraform(instance, created)
-        self.aws_credentials(instance.config)
-
         instance.config['security_groups'] = self.get_security_groups(relations['firewalls'], instance.firewalls)
 
     def prepare_instance(self, instance, created):
         instance.remote_path = '/'
         instance.remote_host = instance.variables['mount_ip']
         super().prepare_instance(instance, created)
-        self.clean_aws_credentials(instance.config)
-
-    def finalize_terraform(self, instance):
-        self.aws_credentials(instance.config)
-        super().finalize_terraform(instance)
 
 
 class Provider(BaseProvider):

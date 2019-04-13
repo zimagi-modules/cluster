@@ -22,14 +22,15 @@ class Provider(AWSServiceMixin, BaseProvider):
 
         self.option(str, 'user', 'ubuntu', help = 'Server SSH user', config_name = 'aws_ec2_user')
 
+    def add_credentials(self, config):
+        self.aws_credentials(config)
+
+    def remove_credentials(self, config):
+        self.clean_aws_credentials(config)
 
     def initialize_terraform(self, instance, created):
         relations = self.command.get_relations(instance.facade)
 
-        if instance.subnet.network.provider_type != 'aws':
-            self.command.error("AWS VPC network needed to create AWS compute instances")
-
-        self.aws_credentials(instance.config)
         if 'key_name' not in instance.config:
             self.ec2_conn = self.ec2(instance.subnet.network)
             key_name, private_key = self._create_keypair(self.ec2_conn)
@@ -46,15 +47,11 @@ class Provider(AWSServiceMixin, BaseProvider):
             instance.public_ip = instance.variables['public_ip_address']
 
         instance.private_ip = instance.variables['private_ip_address']
-
         super().prepare_instance(instance, created)
-        self.clean_aws_credentials(instance.config)
 
 
     def finalize_terraform(self, instance):
-        self.aws_credentials(instance.config)
         super().finalize_terraform(instance)
-
         self.ec2_conn = self.ec2(instance.subnet.network)
         self._delete_keypair(self.ec2_conn, instance.config['key_name'])
 
