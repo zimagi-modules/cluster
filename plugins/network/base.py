@@ -21,7 +21,7 @@ class AddressMap(object):
 
     def cidr(self, config):
         with self.thread_lock:
-            if config['cidr']:
+            if 'cidr' in config and config['cidr']:
                 cidrs = [self.parse_cidr(config['cidr'])]
             else:
                 cidrs = self.parse_subnets(
