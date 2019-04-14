@@ -188,7 +188,6 @@ class FirewallRuleProvider(NetworkMixin, terraform.TerraformPluginProvider):
         return self.command._firewall_rule
 
     def initialize_terraform(self, instance, created):
-        instance.cidrs = ensure_list(instance.cidrs)
         instance.config['rule_type'] = 'cidr'
         instance.config['source_firewall_id'] = None
 
@@ -214,7 +213,7 @@ class FirewallRuleProvider(NetworkMixin, terraform.TerraformPluginProvider):
             instance.cidrs = []
 
         elif instance.cidrs:
-            instance.cidrs = [str(self.address.parse_cidr(x.strip())) for x in instance.cidrs]
+            instance.cidrs = [str(self.address.parse_cidr(x.strip())) for x in ensure_list(instance.cidrs)]
 
         elif not instance.config['self_only'] and not instance.config['source_firewall']:
             instance.cidrs = ['0.0.0.0/0']
