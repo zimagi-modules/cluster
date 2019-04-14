@@ -130,12 +130,7 @@ server:
 provision:
   bootstrap-cenv:
     task: bootstrap
-    servers: cenv
+    servers: groups.name=cenv
     user: "@aws_ubuntu_user"
     dev_build: false
     timezone: "@primary_timezone"
-
-  deploy-cenv:
-    requires: bootstrap-cenv
-    command: deploy
-    servers: cenv
