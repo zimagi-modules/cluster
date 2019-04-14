@@ -1,5 +1,7 @@
 from systems.command import profile
 
+import copy
+
 
 class Provisioner(profile.BaseProvisioner):
 
@@ -33,7 +35,7 @@ class Provisioner(profile.BaseProvisioner):
                 test = self.test
             )
             def process_listener(listener):
-                listener_config = listeners[listener]
+                listener_config = copy.deepcopy(listeners[listener])
                 certificate = self.pop_value('certificate', listener_config)
 
                 self.exec('lb listener save',
