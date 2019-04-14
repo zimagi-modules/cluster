@@ -1,3 +1,5 @@
+from django.conf import settings
+
 from systems.command.base import command_list
 from systems.command.factory import resource
 from systems.command.types import server
@@ -36,11 +38,28 @@ class SSHCommand(
         self.silent_data('private_key', server.private_key)
         self.silent_data('ssh_port', server.ssh_port)
 
+        if not settings.API_EXEC:
+            self._start_session(
+                server.ip,
+                server.user,
+                server.password,
+                server.private_key,
+                server.ssh_port
+            )
+
     def postprocess(self, result):
+        if settings.API_EXEC:
+            self._start_session(
+                result.get_named_data('ip'),
+                result.get_named_data('user'),
+                result.get_named_data('password'),
+                result.get_named_data('private_key'),
+                result.get_named_data('ssh_port')
+            )
+
+    def _start_session(self, ip, user, password, private_key, ssh_port):
         with temp_dir() as temp:
             ssh_command = ["ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"]
-            password = result.get_named_data('password')
-            private_key = result.get_named_data('private_key')
 
             if password:
                 ssh_command = [
@@ -51,14 +70,9 @@ class SSHCommand(
                 ssh_command.append("-i '{}'".format(
                     temp.save(private_key)
                 ))
-            ssh_command.append("-p {}".format(
-                result.get_named_data('ssh_port')
-            ))
+            ssh_command.append("-p {}".format(ssh_port))
+            ssh_command.append("{}@{}".format(user, ip))
 
-            ssh_command.append("{}@{}".format(
-                result.get_named_data('user'),
-                result.get_named_data('ip')
-            ))
             subprocess.call(" ".join(ssh_command), shell = True)
 
 
