@@ -19,7 +19,8 @@ class TerraformWrapper(object):
 
     def plan(self, type, instance):
         if type:
-            manifest_path = self._get_manifest_path(type, instance.provider_type)
+            manifest_name = getattr(instance, 'terraform_name', instance.provider_type)
+            manifest_path = self._get_manifest_path(type, manifest_name)
             if manifest_path:
                 variables = self.provider.get_variables(instance)
                 self.provider.command.data('variables', json.dumps(variables, indent=2))
@@ -27,14 +28,16 @@ class TerraformWrapper(object):
 
     def apply(self, type, instance):
         if type:
-            manifest_path = self._get_manifest_path(type, instance.provider_type)
+            manifest_name = getattr(instance, 'terraform_name', instance.provider_type)
+            manifest_path = self._get_manifest_path(type, manifest_name)
             if manifest_path:
                 variables = self.provider.get_variables(instance)
                 instance.state_config = self.terraform.apply(manifest_path, variables, instance.state_config)
 
     def destroy(self, type, instance):
         if type:
-            manifest_path = self._get_manifest_path(type, instance.provider_type)
+            manifest_name = getattr(instance, 'terraform_name', instance.provider_type)
+            manifest_path = self._get_manifest_path(type, manifest_name)
             if manifest_path:
                 variables = self.provider.get_variables(instance)
                 self.terraform.destroy(manifest_path, variables, instance.state_config)
