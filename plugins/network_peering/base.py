@@ -16,30 +16,26 @@ class NetworkPeeringProvider(data.DataPluginProvider):
 
         if relations['networks']:
             networks = self.command.get_instances(self.command._network, names = relations['networks'])
-        else:
-            networks = instance.networks.all()
-            for network in networks:
-                network.initialize(self.command)
 
-        def save_relation(relation):
-            network1, network2 = sorted(relation, key = lambda x: (x.provider_type, x.name))
+            def save_relation(relation):
+                network1, network2 = sorted(relation, key = lambda x: (x.provider_type, x.name))
 
-            relation_name = "{}:{}".format(network1.name, network2.name)
-            relation_fields = {
-                'network_peering': instance,
-                'network1': network1,
-                'network2': network2
-            }
-            relation_instance = self.command.get_instance(relation_facade, relation_name, required = False)
-            if not relation_instance:
-                self.command.get_provider(
-                    relation_facade.meta.provider_name,
-                    instance.provider_type
-                ).create(relation_name, relation_fields)
-            else:
-                relation_instance.provider.update(relation_fields)
+                relation_name = "{}:{}".format(network1.name, network2.name)
+                relation_fields = {
+                    'network_peering': instance,
+                    'network1': network1,
+                    'network2': network2
+                }
+                relation_instance = self.command.get_instance(relation_facade, relation_name, required = False)
+                if not relation_instance:
+                    self.command.get_provider(
+                        relation_facade.meta.provider_name,
+                        instance.provider_type
+                    ).create(relation_name, relation_fields)
+                else:
+                    relation_instance.provider.update(relation_fields)
 
-        self.command.run_list(itertools.combinations(networks, 2), save_relation)
+            self.command.run_list(itertools.combinations(networks, 2), save_relation)
 
 
     def finalize_instance(self, instance):
