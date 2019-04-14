@@ -1,6 +1,7 @@
 
 bootstrap:
   provider: remote_script
+  module: core
   script: scripts/bootstrap.sh
   roles: server-admin
   sudo: true
@@ -12,24 +13,3 @@ bootstrap:
   options:
     dev_build: false
     timezone: America/New_York
-
-audit-bootstrap:
-  provider: command
-  command: cat /var/log/bootstrap.log
-  roles: server-admin
-  sudo: true
-
-audit-docker-compose:
-  provider: command
-  command: docker-compose logs --tail=@count api
-  roles: server-admin
-  options:
-    count: 100
-
-update:
-  provider: command
-  command: docker-compose pull && docker-compose up -d
-
-restart:
-  provider: command
-  command: docker-compose restart api
