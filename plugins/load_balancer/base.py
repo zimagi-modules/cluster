@@ -27,8 +27,10 @@ class LoadBalancerProvider(terraform.TerraformPluginProvider):
                 instance.name,
                 instance.domain.name
             )
+            domain_name = "{}-{}".format(domain_target, dns_name)
+
             record = self.command._domain_record.retrieve(
-                domain_target,
+                domain_name,
                 domain = instance.domain
             )
             if not record:
@@ -36,19 +38,15 @@ class LoadBalancerProvider(terraform.TerraformPluginProvider):
                     self.command._domain_record.meta.provider_name,
                     instance.domain.provider_type
                 )
-                record = provider.create(domain_target, {
+                record = provider.create(domain_name, {
                     'domain': instance.domain,
                     'target': domain_target,
                     'type': 'CNAME',
-                    'values': [
-                        dns_name
-                    ]
+                    'values': [ dns_name ]
                 })
             else:
-                if dns_name not in record.values:
-                    record.values.append(dns_name)
-                    record.initialize(self.command)
-                    record.provider.update()
+                record.initialize(self.command)
+                record.provider.update()
 
     def remove_domain_reference(self, instance):
         if instance.domain:
@@ -57,19 +55,15 @@ class LoadBalancerProvider(terraform.TerraformPluginProvider):
                 instance.name,
                 instance.domain.name
             )
+            domain_name = "{}-{}".format(domain_target, dns_name)
+
             record = self.command._domain_record.retrieve(
-                domain_target,
+                domain_name,
                 domain = instance.domain
             )
             if record:
-                if dns_name in record.values:
-                    record.values.remove(dns_name)
-                    record.initialize(self.command)
-
-                    if record.values:
-                        record.provider.update()
-                    else:
-                        record.provider.delete()
+                record.initialize(self.command)
+                record.provider.delete()
 
 
 class LoadBalancerListenerProvider(terraform.TerraformPluginProvider):
