@@ -11,4 +11,10 @@ resource "aws_route53_record" "main" {
   type    = "${var.type}"
   ttl     = "${var.ttl}"
   records = "${var.values}"
+
+  set_identifier = "${join("-", var.values)}"
+
+  weighted_routing_policy {
+    weight = 1
+  }
 }
