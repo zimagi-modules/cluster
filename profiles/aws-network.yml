@@ -185,6 +185,9 @@ network:
     dns_support: "@network_dns_support"
     groups: "@network_groups"
 
+network_peering:
+  aws: "@aws_networks"
+
 firewall:
   internet:
     network: "@aws_networks"
