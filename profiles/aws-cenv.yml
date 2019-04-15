@@ -86,6 +86,7 @@ load_balancer:
     internal: false
     idle_timeout: "@aws_load_balancer_timeout"
     firewalls:
+      - internet
       - admin_external
     groups: "@admin_groups"
     listeners:
