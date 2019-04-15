@@ -9,6 +9,7 @@ data "aws_elb_service_account" "main" {}
 
 resource "aws_s3_bucket" "main" {
   bucket = "${format("alb-%s-%s", var.name, var.network.name)}"
+  force_destroy = true
   acl = "private"
   policy = <<POLICY
 {
