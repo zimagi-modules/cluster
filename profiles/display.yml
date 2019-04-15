@@ -68,6 +68,18 @@ config_store:
     - loadbalancer_relation
     - groups
 
+  network_peering_list_fields:
+    - provider_type
+    - networkpeeringrelation_relation
+  network_peering_display_fields:
+    - id
+    - provider_type
+    - config
+    - variables
+    - created
+    - updated
+    - networkpeeringrelation_relation
+
   subnet_list_fields:
     - provider_type
     - cidr
@@ -90,8 +102,6 @@ config_store:
 
   certificate_list_fields:
     - provider_type
-    - created
-    - updated
     - network
     - domain
     - groups
