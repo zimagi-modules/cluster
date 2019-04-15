@@ -2,7 +2,7 @@ parents:
   - module: core
     profile: display
 
-config:
+config_store:
   domain_list_fields:
     - provider_type
     - email
@@ -60,8 +60,9 @@ config:
     - variables
     - created
     - updated
-    - storage_relation
+    - networkpeering_relations
     - subnet_relation
+    - storage_relation
     - firewall_relation
     - certificate_relation
     - loadbalancer_relation
