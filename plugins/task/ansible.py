@@ -26,7 +26,7 @@ class AnsibleInventory(object):
 
 
     def get_server_id(self, server):
-        return "{}-{}".format(server.name, server.id)
+        return "{}-{}".format(server.name, server.ip)
 
 
     def generate_hosts(self):
