@@ -129,7 +129,12 @@ server:
     groups: "@admin_groups"
 
 provision:
+  rotate-credentials:
+    command: server rotate
+    server_search: groups.name=cenv
+
   bootstrap-cenv:
+    requires: rotate-credentials
     task: bootstrap
     servers: groups.name=cenv
     user: "@aws_ubuntu_user"
