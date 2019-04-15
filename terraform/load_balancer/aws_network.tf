@@ -5,6 +5,37 @@ provider "aws" {
   region = "${var.network.region}"
 }
 
+data "aws_elb_service_account" "main" {}
+
+resource "aws_s3_bucket" "main" {
+  bucket = "${format("nlb-%s-%s", var.name, var.network.name)}"
+  acl = "private"
+  policy = <<POLICY
+{
+  "Id": "Policy",
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:PutObject"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:s3:::${format("nlb-%s-%s", var.name, var.network.name)}/*",
+      "Principal": {
+        "AWS": [
+          "${data.aws_elb_service_account.main.arn}"
+        ]
+      }
+    }
+  ]
+}
+POLICY
+
+  tags = {
+    Name = "cenv-load-balancer-logs"
+  }
+}
+
 resource "aws_lb" "main" {
   load_balancer_type = "network"
   name = "${var.name}"
@@ -14,6 +45,11 @@ resource "aws_lb" "main" {
   security_groups = "${var.security_groups}"
 
   enable_cross_zone_load_balancing = true
+
+  access_logs {
+    bucket  = "${aws_s3_bucket.main.id}"
+    enabled = true
+  }
 
   tags = {
     Name = "cenv-load-balancer"
