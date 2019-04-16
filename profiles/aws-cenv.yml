@@ -105,7 +105,7 @@ load_balancer:
 server:
   cenv:
     count: 1
-    provider: ec2
+    provider: ec2_lb
     network: "@aws_networks"
     subnet: "@aws_admin_subnets"
     image: "@aws_ubuntu_image[<network>]"
