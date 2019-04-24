@@ -46,13 +46,18 @@ class AWSServiceMixin(object):
         )
 
 
-    def get_subnets(self, network):
-        sgroups = []
+    def get_subnets(self, names, network):
+        subnet_ids = []
 
-        for subnet in network.subnet_relation.all():
-            sgroups.append(subnet.variables['subnet_id'])
+        if names:
+            subnets = self.command.get_instances(self.command._subnet, names = names)
+            for subnet in subnets:
+                subnet_ids.append(subnet.variables['subnet_id'])
+        else:
+            for subnet in network.subnet_relation.all():
+                subnet_ids.append(subnet.variables['subnet_id'])
 
-        return sgroups
+        return subnet_ids
 
     def get_security_groups(self, names, firewalls):
         sgroups = []
