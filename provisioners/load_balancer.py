@@ -10,6 +10,7 @@ class Provisioner(profile.BaseProvisioner):
 
     def ensure(self, name, config):
         networks = self.pop_values('network', config)
+        subnets = self.pop_values('subnets', config)
         provider = self.pop_value('provider', config)
         domain = self.pop_value('domain', config)
         listeners = self.pop_info('listeners', config)
@@ -29,6 +30,7 @@ class Provisioner(profile.BaseProvisioner):
                     domain = domain
                 ),
                 network_name = network,
+                subnet_names = subnets,
                 domain_name = domain,
                 group_names = groups,
                 firewall_names = firewalls,
@@ -63,6 +65,7 @@ class Provisioner(profile.BaseProvisioner):
         variables = {
             'provider': instance.provider_type,
             'groups': self.get_names(instance.groups),
+            'subnets': self.get_names(instance.subnets),
             'firewalls': self.get_names(instance.firewalls),
             'listeners': {}
         }
