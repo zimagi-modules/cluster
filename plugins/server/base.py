@@ -52,6 +52,7 @@ class BaseProvider(terraform.TerraformPluginProvider):
         module.provider.exec_task(
             'password',
             {
+                "servers": "id={}".format(instance.id),
                 "user": instance.user,
                 "password": password
             }
