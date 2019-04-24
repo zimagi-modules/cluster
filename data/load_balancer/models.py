@@ -1,6 +1,6 @@
 from django.db import models as django
 
-from systems.models import network, group, firewall, domain, provider
+from systems.models import network, subnet, group, firewall, domain, provider
 
 
 class LoadBalancerFacade(
@@ -8,6 +8,7 @@ class LoadBalancerFacade(
     group.GroupModelFacadeMixin,
     firewall.FirewallModelFacadeMixin,
     domain.DomainModelFacadeMixin,
+    subnet.SubnetModelFacadeMixin,
     network.NetworkModelFacadeMixin
 ):
     def get_field_internal_display(self, instance, value, short):
@@ -19,6 +20,7 @@ class LoadBalancer(
     group.GroupMixin,
     firewall.FirewallRelationMixin,
     domain.DomainMixin,
+    subnet.SubnetRelationMixin,
     network.NetworkModel
 ):
     internal = django.BooleanField(default = False)
