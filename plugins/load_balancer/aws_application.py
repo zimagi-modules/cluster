@@ -17,7 +17,7 @@ class AWSApplicationLoadBalancerProvider(AWSServiceMixin, LoadBalancerProvider):
         relations = self.command.get_relations(instance.facade)
         super().initialize_terraform(instance, created)
 
-        instance.config['subnets'] = self.get_subnets(instance.network)
+        instance.config['subnets'] = self.get_subnets(relations['subnets'], instance.network)
         instance.config['security_groups'] = self.get_security_groups(relations['firewalls'], instance.firewalls)
 
 
