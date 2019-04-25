@@ -1,7 +1,7 @@
 config:
   primary_timezone: America/New_York
 
-  network_cidr_base: 10/8
+  network_cidr_base: 10.0.0.0/8
   network_cidr_prefix: 16
   network_dns_support: True
   network_groups: core
@@ -197,15 +197,11 @@ firewall:
         protocol: all
         from_port: 0
         to_port: 0
-        cidrs:
-          - 0.0.0.0/0
       all_in:
         mode: ingress
         protocol: all
         from_port: 0
         to_port: 65535
-        cidrs:
-          - 0.0.0.0/0
     groups: "@core_firewall_groups"
 
   internet:
@@ -216,15 +212,11 @@ firewall:
         protocol: all
         from_port: 0
         to_port: 0
-        cidrs:
-          - 0.0.0.0/0
       icmp_in:
         mode: ingress
         protocol: icmp
         from_port: 8
         to_port: 0
-        cidrs:
-          - 0.0.0.0/0
     groups: "@core_firewall_groups"
 
   ssh_external:
@@ -235,8 +227,6 @@ firewall:
         protocol: tcp
         from_port: "@ssh_port"
         to_port: "@ssh_port"
-        cidrs:
-          - 0.0.0.0/0
     groups: "@core_firewall_groups"
 
   ssh_internal:
@@ -247,5 +237,5 @@ firewall:
         protocol: tcp
         from_port: "@ssh_port"
         to_port: "@ssh_port"
-        self_only: true
+        cidrs: "@network_cidr_base"
     groups: "@core_firewall_groups"
