@@ -1,5 +1,3 @@
-from django.conf import settings
-
 from .base import BaseProvider
 from .mixins import cli, ssh
 from utility.runtime import Runtime

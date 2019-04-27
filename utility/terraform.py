@@ -1,5 +1,3 @@
-from django.conf import settings
-
 from .temp import temp_dir
 
 import os
