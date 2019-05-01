@@ -1,0 +1,5 @@
+
+env:
+  provider: remote_script
+  script: scripts/env.sh
+  roles: server-admin
