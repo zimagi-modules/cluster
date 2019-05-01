@@ -13,7 +13,6 @@ resource "aws_lb_target_group" "main" {
   health_check {
     protocol = "TCP"
     interval = "${var.health_check_interval}"
-    timeout = "${var.health_check_timeout}"
     healthy_threshold = "${var.healthy_threshold}"
     unhealthy_threshold = "${var.unhealthy_threshold}"
   }
