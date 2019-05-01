@@ -30,9 +30,10 @@ class AnsibleInventory(object):
     def generate_hosts(self):
         self.hosts = []
 
-        for server in self.servers:
+        for index, server in enumerate(self.servers):
             host = clean_dict({
                 'server': server,
+                'server_index': index + 1,
                 'ansible_host': server.ip,
                 'ansible_port': server.ssh_port,
                 'ansible_user': server.user,
@@ -40,7 +41,7 @@ class AnsibleInventory(object):
                 'ansible_become': 'yes',
                 'ansible_become_user': 'root',
                 'ansible_become_pass': server.password,
-                'ansible_python_interpreter': '/usr/bin/python3'
+                'ansible_python_interpreter': 'python3'
             })
             if server.private_key:
                 host['ansible_ssh_private_key_file'] = self.temp.save(
@@ -151,15 +152,15 @@ class Provider(
                 self.command.error("Ansible task requires 'playbooks' list configuration")
 
             success = self.command.sh(
-                command,
-                env = {
-                    "ANSIBLE_CONFIG": temp.save(ansible_config, extension = 'cfg')
-                },
-                cwd = self.get_module_path(),
-                display = True
+               command,
+               env = {
+                   "ANSIBLE_CONFIG": temp.save(ansible_config, extension = 'cfg')
+               },
+               cwd = self.get_module_path(),
+               display = True
             )
             if not success:
-                self.command.error("Ansible task failed: {}".format(" ".join(command)))
+               self.command.error("Ansible task failed: {}".format(" ".join(command)))
 
 
     def merge_config(self, config_file_name, *core_config):
