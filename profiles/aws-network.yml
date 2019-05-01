@@ -219,7 +219,7 @@ firewall:
         to_port: 0
     groups: "@core_firewall_groups"
 
-  ssh_external:
+  ssh-external:
     network: "@aws_networks"
     rules:
       tcp_in:
@@ -229,7 +229,7 @@ firewall:
         to_port: "@ssh_port"
     groups: "@core_firewall_groups"
 
-  ssh_internal:
+  ssh-internal:
     network: "@aws_networks"
     rules:
       tcp_in:
