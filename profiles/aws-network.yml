@@ -192,12 +192,12 @@ firewall:
   all:
     network: "@aws_networks"
     rules:
-      all_out:
+      all-out:
         mode: egress
         protocol: all
         from_port: 0
         to_port: 0
-      all_in:
+      all-in:
         mode: ingress
         protocol: all
         from_port: 0
@@ -207,12 +207,12 @@ firewall:
   internet:
     network: "@aws_networks"
     rules:
-      all_out:
+      all-out:
         mode: egress
         protocol: all
         from_port: 0
         to_port: 0
-      icmp_in:
+      icmp-in:
         mode: ingress
         protocol: icmp
         from_port: 8
@@ -222,7 +222,7 @@ firewall:
   ssh-external:
     network: "@aws_networks"
     rules:
-      tcp_in:
+      tcp-in:
         mode: ingress
         protocol: tcp
         from_port: "@ssh_port"
@@ -232,7 +232,7 @@ firewall:
   ssh-internal:
     network: "@aws_networks"
     rules:
-      tcp_in:
+      tcp-in:
         mode: ingress
         protocol: tcp
         from_port: "@ssh_port"

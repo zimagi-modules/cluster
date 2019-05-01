@@ -18,13 +18,13 @@ firewall:
   nfs:
     network: "@aws_networks"
     rules:
-      tcp_in:
+      tcp-in:
         mode: ingress
         protocol: tcp
         from_port: 2049
         to_port: 2049
         cidrs: "@main_storage_access_cidrs"
-      udp_in:
+      udp-in:
         mode: ingress
         protocol: udp
         from_port: 2049
