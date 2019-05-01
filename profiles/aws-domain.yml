@@ -1,11 +1,6 @@
-config:
-  admin_groups: cenv
-
-group:
-  cenv:
 
 domain:
   "@root_domain":
     provider: route53
+    keep: true
     email: "@root_domain_email"
-    groups: "@admin_groups"
