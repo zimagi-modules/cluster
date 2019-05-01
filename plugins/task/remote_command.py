@@ -8,23 +8,30 @@ class Provider(
     BaseProvider
 ):
     def execute(self, results, params):
+        if 'command' in self.config:
+            command = self.config['command']
+        else:
+            self.command.error("Remote command task provider must have a 'command' property specified")
+
+        env = self._merge_options(
+            self.config.get('env', {}),
+            params.pop('env', {})
+        )
+        sudo = self.config.get('sudo', False)
+        lock = self.config.get('lock', False)
+        options = self._merge_options(self.config.get('options', {}), params, lock)
+
+        command = self._interpolate(command, options)
+        if sudo:
+            command = 'sudo ' + command[0]
+        else:
+            command = command[0]
+
         def exec_server(server):
-            if 'command' in self.config:
-                command = self.config['command']
-            else:
-                self.command.error("Remote command task provider must have a 'command' property specified")
-
-            sudo = self.config.get('sudo', False)
-            lock = self.config.get('lock', False)
-            options = self._merge_options(self.config.get('options', {}), params, lock)
-
-            command = self._interpolate(command, options)
-            if sudo:
-                command = 'sudo ' + command[0]
-            else:
-                command = command[0]
-
-            self._ssh_exec(server, command, sudo = sudo)
+            self._ssh_exec(server, command,
+                env = env,
+                sudo = sudo
+            )
 
         self.command.run_list(
             self._ssh_servers(params),
