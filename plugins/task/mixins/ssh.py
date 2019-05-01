@@ -9,9 +9,9 @@ class SSHTaskMixin(object):
             error_on_empty = False
         )
 
-    def _ssh_exec(self, server, command, args = [], options = {}, sudo = False, ssh = None):
+    def _ssh_exec(self, server, command, args = [], options = {}, env = {}, sudo = False, ssh = None):
         if not ssh:
-            ssh = server.provider.ssh()
+            ssh = server.provider.ssh(env = env)
 
         if sudo:
             ssh.sudo(command, *args, **options)
