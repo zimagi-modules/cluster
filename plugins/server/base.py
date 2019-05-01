@@ -60,14 +60,15 @@ class BaseProvider(terraform.TerraformPluginProvider):
         instance.password = password
 
 
-    def ssh(self, timeout = 10):
+    def ssh(self, timeout = 10, env = {}):
         instance = self.check_instance('server ssh')
         return self.command.ssh(
             instance.ip, instance.user,
             password = instance.password,
             key = instance.private_key,
             timeout = timeout,
-            port = instance.ssh_port
+            port = instance.ssh_port,
+            env = env
         )
 
     def check_ssh(self, tries = 10, interval = 2, timeout = 10, silent = False, instance = None):
