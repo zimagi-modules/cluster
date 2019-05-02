@@ -11,26 +11,32 @@ bootstrap:
     - "@dev_build"
     - "@timezone"
   options:
+    user: ubuntu
     dev_build: false
     timezone: America/New_York
 
-audit-bootstrap:
+bootstrap-log:
   provider: remote_command
   command: cat /var/log/bootstrap.log
   roles: server-admin
   sudo: true
 
-audit-docker-compose:
-  provider: remote_command
-  command: docker-compose logs --tail=@count api
-  roles: server-admin
-  options:
-    count: 100
-
 update:
   provider: remote_command
   command: docker-compose pull && docker-compose up -d
+  roles: server-admin
 
 restart:
   provider: remote_command
-  command: docker-compose restart api
+  command: docker-compose restart @system
+  roles: server-admin
+  options:
+    system: api
+
+log:
+  provider: remote_command
+  command: docker-compose logs --tail=@count @system
+  roles: server-admin
+  options:
+    count: 100
+    system: api
