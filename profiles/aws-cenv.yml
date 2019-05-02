@@ -140,7 +140,7 @@ server:
     firewalls:
       - internet
       - ssh-external
-      - admin-internal
+      - admin-external
     load_balancer: cenv
     load_balancer_listener: https
     groups: "@admin_groups"
@@ -159,3 +159,20 @@ provision:
     timezone: "@primary_timezone"
     env:
       CENV_DEFAULT_ENV_NAME: "@environment"
+      CENV_DEFAULT_RUNTIME_REPO: "@DEFAULT_RUNTIME_REPO"
+      CENV_DEFAULT_RUNTIME_IMAGE: "@DEFAULT_RUNTIME_IMAGE"
+      CENV_PARALLEL: "@PARALLEL"
+      CENV_THREAD_COUNT: "@THREAD_COUNT"
+      CENV_TIME_ZONE: "@TIME_ZONE"
+      CENV_CORE_MODULE: "@CORE_MODULE"
+      CENV_DB_PACKAGE_ALL_NAME: "@DB_PACKAGE_ALL_NAME"
+      CENV_DB_MAX_CONNECTIONS: "@DB_MAX_CONNECTIONS"
+      CENV_LOG_LEVEL: "@LOG_LEVEL"
+      CENV_ALLOWED_HOSTS: "@ALLOWED_HOSTS"
+      CENV_ADMIN_USER: "@ADMIN_USER"
+      CENV_DEFAULT_ADMIN_TOKEN: "@DEFAULT_ADMIN_TOKEN"
+
+  deploy-cenv:
+    requires: bootstrap-cenv
+    command: deploy
+    server_search: groups.name=cenv
