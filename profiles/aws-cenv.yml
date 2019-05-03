@@ -176,3 +176,4 @@ provision:
     requires: bootstrap-cenv
     command: deploy
     server_search: groups.name=cenv
+    host: "cenv.@root_domain"
