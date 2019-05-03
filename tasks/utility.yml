@@ -1,0 +1,7 @@
+
+sleep:
+  provider: command
+  command: sleep @number@unit
+  options:
+    number: 5
+    unit: s
