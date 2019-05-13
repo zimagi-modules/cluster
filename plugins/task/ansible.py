@@ -34,6 +34,8 @@ class AnsibleInventory(object):
             host = clean_dict({
                 'server': server,
                 'server_index': index + 1,
+                'server_private_ip': server.private_ip,
+                'server_public_ip': server.public_ip,
                 'ansible_host': server.ip,
                 'ansible_port': server.ssh_port,
                 'ansible_user': server.user,
