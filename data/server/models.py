@@ -50,8 +50,6 @@ class Server(
     user = django.CharField(null = True, max_length = 128)
     password = fields.EncryptedCharField(null = True, max_length = 1096)
     private_key = fields.EncryptedDataField(null = True)
-    data_device = django.CharField(null = True, max_length = 256)
-    backup_device = django.CharField(null = True, max_length = 256)
 
     load_balancer_listener = django.ForeignKey(LoadBalancerListener,
         null = True,
