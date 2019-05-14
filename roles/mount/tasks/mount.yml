@@ -1,0 +1,29 @@
+---
+- name: mount | check
+  command: file -s {{ mount_source }}
+  register: disk_check
+  when: mount_type != "nfs4"
+
+- name: mount | initialize
+  command: mkfs -t {{ mount_type }} {{ mount_source }}
+  when:
+    - mount_type != "nfs4"
+    - "disk_check.stdout | join('') | match(mount_source ~ ': data')"
+
+- name: mount | directory
+  file:
+    path: "{{ mount_path }}"
+    owner: "{{ mount_owner }}"
+    group: "{{ mount_group }}"
+    mode: "{{ mount_mode }}"
+    state: directory
+
+- name: mount | attach
+  mount:
+    fstype: "{{ mount_type }}"
+    name: "{{ mount_path }}"
+    opts: "{{ mount_options }}"
+    src: "{{ mount_source }}"
+    dump: "{{ mount_dump }}"
+    passno: "{{ mount_passno }}"
+    state: mounted
