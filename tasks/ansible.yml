@@ -3,3 +3,8 @@ password:
   provider: ansible
   roles: server-admin
   playbooks: password.yml
+
+mount:
+  provider: ansible
+  roles: server-admin
+  playbooks: mount.yml
