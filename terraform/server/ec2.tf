@@ -19,7 +19,7 @@ resource "aws_instance" "server" {
 
   root_block_device {
     delete_on_termination = "true"
-    volume_size = 8
+    volume_size = "${var.ebs_size}"
     volume_type = "${var.ebs_type}"
     iops = "${var.ebs_iops}"
   }
@@ -36,25 +36,4 @@ output "private_ip_address" {
 }
 output "public_ip_address" {
   value = "${aws_instance.server.public_ip}"
-}
-
-resource "aws_ebs_volume" "data" {
-  availability_zone = "${aws_instance.server.availability_zone}"
-  size = "${var.ebs_size}"
-  type = "${var.ebs_type}"
-  iops = "${var.ebs_iops}"
-  encrypted = "${var.ebs_encrypted}"
-
-  tags = {
-    Name = "cenv-compute"
-  }
-}
-output "data_volume_id" {
-  value = "${aws_ebs_volume.data.id}"
-}
-
-resource "aws_volume_attachment" "data" {
-  device_name = "${var.data_device}"
-  volume_id = "${aws_ebs_volume.data.id}"
-  instance_id = "${aws_instance.server.id}"
 }
