@@ -10,17 +10,13 @@ class Provider(AWSServiceMixin, BaseProvider):
         self.option(str, 'image', 'ami-0d2505740b82f7948', help = 'AWS image name', config_name = 'aws_ec2_image') # Ubuntu 18.04LTS hvm:ebs-ssd us-east-1
         self.option(str, 'machine', 't2.micro', help = 'AWS instance type', config_name = 'aws_ec2_type')
         self.option(str, 'tenancy', 'default', help = 'AWS instance tenancy (default | dedicated)', config_name = 'aws_ec2_tenancy')
-
         self.option(bool, 'monitoring', False, help = 'AWS monitoring enabled?', config_name = 'aws_ec2_monitoring')
-        self.option(bool, 'ebs_optimized', False, help = 'AWS EBS obtimized server?', config_name = 'aws_ec2_ebs_optimized')
-        self.option(bool, 'ebs_encrypted', False, help = 'AWS EBS encrypted volume?', config_name = 'aws_ec2_ebs_encrypted')
+        self.option(str, 'user', 'ubuntu', help = 'Server SSH user', config_name = 'aws_ec2_user')
 
-        self.option(str, 'data_device', '/dev/xvdb', help = 'Server data drive device', config_name = 'aws_ec2_data_device')
+        self.option(bool, 'ebs_optimized', False, help = 'AWS EBS obtimized server?', config_name = 'aws_ec2_ebs_optimized')
         self.option(str, 'ebs_type', 'gp2', help = 'AWS data drive EBS type', config_name = 'aws_ec2_ebs_type')
         self.option(int, 'ebs_size', 10, help = 'AWS data drive EBS volume size (GB)', config_name = 'aws_ec2_ebs_size')
         self.option(int, 'ebs_iops', None, help = 'AWS data drive EBS provisioned IOPS', config_name = 'aws_ec2_ebs_size')
-
-        self.option(str, 'user', 'ubuntu', help = 'Server SSH user', config_name = 'aws_ec2_user')
 
     def add_credentials(self, config):
         self.aws_credentials(config)
