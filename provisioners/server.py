@@ -15,6 +15,7 @@ class Provisioner(profile.BaseProvisioner):
         load_balancer_listener = self.pop_value('load_balancer_listener', config)
         groups = self.pop_values('groups', config)
         firewalls = self.pop_values('firewalls', config)
+        volumes = self.pop_info('volumes', config)
 
         if not provider or not networks or not subnets:
             self.command.error("Server {} requires 'provider', 'network', and 'subnet' fields".format(name))
@@ -46,6 +47,28 @@ class Provisioner(profile.BaseProvisioner):
                     remove = True,
                     test = self.test
                 )
+                def process_volume(volume):
+                    volume_provider = self.pop_value('provider', volumes[volume])
+                    volume_fields = self.interpolate(volumes[volume],
+                        server_provider = provider,
+                        volume_provider = volume_provider,
+                        network = network,
+                        subnet = subnet
+                    )
+                    def process_volume_server(index):
+                        self.exec('server volume save',
+                            server_volume_provider_name = volume_provider,
+                            server_volume_name = volume,
+                            server_volume_fields = volume_fields,
+                            network_name = network,
+                            subnet_name = subnet,
+                            server_name = "{}{}".format(server, index),
+                            test = self.test
+                        )
+                    self.run_list(range(1, count + 1), process_volume_server)
+
+                if volumes and self.profile.include_inner('server_volume'):
+                    self.run_list(volumes.keys(), process_volume)
             self.run_list(subnets, process_subnet)
         self.run_list(networks, process_network)
 
@@ -59,13 +82,18 @@ class Provisioner(profile.BaseProvisioner):
         variables = {
             'provider': instance.provider_type,
             'groups': self.get_names(instance.groups),
-            'firewalls': self.get_names(instance.firewalls)
+            'firewalls': self.get_names(instance.firewalls),
+            'volumes': {}
         }
         if instance.load_balancer:
             variables['load_balancer'] = instance.load_balancer.name
 
         if instance.load_balancer_listener:
             variables['load_balancer_listener'] = instance.load_balancer_listener.name
+
+        for volume in instance.servervolume_relation.all():
+            volume_config = self.get_variables(volume)
+            variables['volumes'][volume.name] = volume_config
 
         return variables
 
