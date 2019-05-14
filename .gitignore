@@ -1,17 +1,8 @@
-# Eclipse project files
-/.project
-/.pydevproject
-/.buildpath
-/.settings
-
-# VSCode files
-/.vscode
-
 # Python files
 __pycache__
 
-# Application files
-/tmp/
+# Ansible files
+*.retry
 
 # Extra files
 *.log
