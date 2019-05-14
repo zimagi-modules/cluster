@@ -1,7 +1,7 @@
 from django.conf import settings
 
 from systems.command.base import command_list
-from systems.command.factory import resource
+from systems.command.factory import resource, router
 from systems.command.types import server
 from utility.temp import temp_dir
 
@@ -79,11 +79,20 @@ class SSHCommand(
 class Command(server.ServerRouterCommand):
 
     def get_subcommands(self):
+        server_volume_name = 'server_volume'
+
         return command_list(
             resource.ResourceCommandSet(
                 server.ServerActionCommand, self.name,
                 save_multiple = True
             ),
             ('rotate', RotateCommand),
-            ('ssh', SSHCommand)
+            ('ssh', SSHCommand),
+            ('volume', router.Router(
+                server.ServerRouterCommand,
+                resource.ResourceCommandSet(
+                    server.ServerActionCommand, server_volume_name,
+                    provider_name = server_volume_name,
+                )
+            ))
         )
