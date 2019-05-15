@@ -10,13 +10,10 @@
     - mount_type != "nfs4"
     - "disk_check.stdout | join('') | match(mount_source ~ ': data')"
 
-- name: mount | directory
-  file:
-    path: "{{ mount_path }}"
-    owner: "{{ mount_owner }}"
-    group: "{{ mount_group }}"
-    mode: "{{ mount_mode }}"
-    state: directory
+- name: mount | ensure group
+  group:
+    name: "{{ mount_group }}"
+    state: present
 
 - name: mount | attach
   mount:
@@ -27,3 +24,11 @@
     dump: "{{ mount_dump }}"
     passno: "{{ mount_passno }}"
     state: mounted
+
+- name: mount | directory
+  file:
+    path: "{{ mount_path }}"
+    owner: "{{ mount_owner }}"
+    group: "{{ mount_group }}"
+    mode: "{{ mount_mode }}"
+    state: directory
