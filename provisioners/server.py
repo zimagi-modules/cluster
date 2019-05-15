@@ -48,13 +48,15 @@ class Provisioner(profile.BaseProvisioner):
                     test = self.test
                 )
                 def process_volume(volume):
-                    volume_provider = self.pop_value('provider', volumes[volume])
+                    volume_provider = self.get_value('provider', volumes[volume])
                     volume_fields = self.interpolate(volumes[volume],
                         server_provider = provider,
                         volume_provider = volume_provider,
                         network = network,
                         subnet = subnet
                     )
+                    volume_fields.pop('provider')
+
                     def process_volume_server(index):
                         self.exec('server volume save',
                             server_volume_provider_name = volume_provider,
