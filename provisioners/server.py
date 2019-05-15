@@ -93,6 +93,7 @@ class Provisioner(profile.BaseProvisioner):
 
         for volume in instance.servervolume_relation.all():
             volume_config = self.get_variables(volume)
+            volume_config['provider'] = volume.provider_type
             variables['volumes'][volume.name] = volume_config
 
         return variables
