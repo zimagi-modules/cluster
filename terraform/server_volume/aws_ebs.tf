@@ -21,7 +21,7 @@ output "data_volume_id" {
 }
 
 resource "aws_volume_attachment" "main" {
-  device_name = "${var.source}"
+  device_name = "${var.location}"
   volume_id = "${aws_ebs_volume.main.id}"
   instance_id = "${var.server.instance_id}"
 }
