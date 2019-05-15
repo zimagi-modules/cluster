@@ -10,8 +10,8 @@ class BaseProvider(terraform.TerraformPluginProvider):
     def facade(self):
         return self.command._server_volume
 
-    def prepare_instance(self, instance, created):
-        super().prepare_instance(instance, created)
+    def store_related(self, instance, created, test):
+        super().store_related(instance, created, test)
         self.mount_volume(instance)
 
 
@@ -20,20 +20,21 @@ class BaseProvider(terraform.TerraformPluginProvider):
             self.command._module,
             self.manager.module_name(__file__)
         )
+        mount_params = {
+            'path': instance.name,
+            'source': instance.location,
+            'type': instance.type,
+            'owner': instance.owner,
+            'group': instance.group,
+            'mode': instance.mode
+        }
+        if instance.options:
+            mount_params['options'] = ",".join(instance.options)
+
         module.provider.exec_task(
             'mount',
             {
-                "servers": "id={}".format(instance.id),
-                "mounts": [
-                    {
-                        'path': instance.name,
-                        'source': instance.source,
-                        'type': instance.type,
-                        'options': ",".join(instance.options),
-                        'owner': instance.owner,
-                        'group': instance.group,
-                        'mode': instance.mode
-                    }
-                ]
+                "servers": "id={}".format(instance.server.id),
+                "mounts": [ mount_params ]
             }
         )
