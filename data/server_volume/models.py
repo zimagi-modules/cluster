@@ -15,7 +15,7 @@ class ServerVolume(
     provider.ProviderMixin,
     server.ServerModel
 ):
-    source = django.CharField(max_length = 256)
+    location = django.CharField(max_length = 256)
     type = django.CharField(default = 'ext4', max_length = 128)
     owner = django.CharField(default = 'root', max_length = 128)
     group = django.CharField(default = 'root', max_length = 128)
@@ -26,8 +26,9 @@ class ServerVolume(
         verbose_name = "server volume"
         verbose_name_plural = "server volumes"
         facade_class = ServerVolumeFacade
+        scope_process = 'post'
         ordering = ['name']
-        provider_name = 'volume'
+        provider_name = 'server_volume'
 
     def __str__(self):
         return "{} ({})".format(self.server.name, self.name)
