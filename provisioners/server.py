@@ -62,7 +62,7 @@ class Provisioner(profile.BaseProvisioner):
                             server_volume_fields = volume_fields,
                             network_name = network,
                             subnet_name = subnet,
-                            server_name = "{}{}".format(server, index),
+                            server_name = "{}{}".format(name, index),
                             test = self.test
                         )
                     self.run_list(range(1, count + 1), process_volume_server)
