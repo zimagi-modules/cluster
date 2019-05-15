@@ -5,7 +5,7 @@
     mount_type={{ item.type }}
     mount_path={{ item.path }}
     mount_source={{ item.source }}
-    mount_options={{ item.options | default(omit) }}
+    mount_options={{ item.options | default('defaults') }}
     mount_dump={{ item.dump | default(omit) }}
     mount_passno={{ item.passno | default(omit) }}
     mount_owner={{ item.owner | default('root') }}
