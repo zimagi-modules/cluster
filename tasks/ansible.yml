@@ -1,10 +1,18 @@
 
-password:
+_ansible: &ansible
   provider: ansible
   roles: server-admin
+  config: ansible.cfg
+
+
+password:
+  <<: *ansible
   playbooks: password.yml
 
 mount:
-  provider: ansible
-  roles: server-admin
+  <<: *ansible
   playbooks: mount.yml
+
+user-environment:
+  <<: *ansible
+  playbooks: user-environment.yml
