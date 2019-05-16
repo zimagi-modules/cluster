@@ -1,0 +1,9 @@
+---
+- name: install | utility packages
+  apt:
+    name: "{{ utility_packages }}"
+    state: present
+  vars:
+    utility_packages:
+    - vim
+    - git

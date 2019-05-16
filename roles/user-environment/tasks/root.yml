@@ -1,0 +1,32 @@
+---
+- name: root | .bashrc
+  copy:
+    src: root.bashrc
+    dest: /root/.bashrc
+    owner: root
+    group: root
+    mode: u=rw,g=r
+
+- name: root | .profile
+  copy:
+    src: shared.profile
+    dest: /root/.profile
+    owner: root
+    group: root
+    mode: u=rw,g=r
+
+- name: root | .bash_aliases
+  copy:
+    src: shared.bash_aliases
+    dest: /root/.bash_aliases
+    owner: root
+    group: root
+    mode: u=rw,g=r
+
+- name: root | .vimrc
+  copy:
+    src: shared.vimrc
+    dest: /root/.vimrc
+    owner: root
+    group: root
+    mode: u=rw,g=r
