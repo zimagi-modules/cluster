@@ -15,6 +15,11 @@
     name: "{{ mount_group }}"
     state: present
 
+- name: mount | ensure user
+  user:
+    name: "{{ mount_owner }}"
+    state: present
+
 - name: mount | attach
   mount:
     fstype: "{{ mount_type }}"
