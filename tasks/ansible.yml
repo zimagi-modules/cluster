@@ -3,6 +3,7 @@ _ansible: &ansible
   provider: ansible
   roles: server-admin
   config: ansible.cfg
+  group_vars: variables
 
 
 password:
