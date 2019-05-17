@@ -1,6 +1,7 @@
 parents:
   - aws-network
   - aws-domain
+  - aws-storage
 
 config:
   admin_subnet_cidr_prefix: 28
@@ -24,11 +25,7 @@ config:
   aws_admin_machine: t2.micro
   aws_admin_tenancy: default
   aws_admin_monitoring: false
-  aws_admin_ebs_type: gp2
-  aws_admin_ebs_size: 10
-  aws_admin_ebs_iops: null
   aws_admin_ebs_optimized: false
-  aws_admin_ebs_encrypted: false
 
   admin_port: 5123
 
@@ -94,6 +91,31 @@ firewall:
         to_port: "@admin_port"
         source_firewall: admin-external
 
+  nfs:
+    rules:
+      tcp-in:
+        cidrs: "&subnet:@aws_admin_subnets:cidr"
+      udp-in:
+        cidrs: "&subnet:@aws_admin_subnets:cidr"
+
+storage:
+  cenv-lib:
+    provider: efs
+    network: "@aws_networks"
+    performance_mode: "@aws_storage_performance_mode"
+    throughput_mode:  "@aws_storage_throughput_mode"
+    provisioned_throughput: "@aws_storage_provisioned_throughput"
+    encrypted: "@aws_storage_encrypted"
+    groups: "@admin_groups"
+
+mount:
+  cenv-lib:
+    storage: cenv-lib
+    network: "@aws_networks"
+    subnet: "@aws_admin_subnets"
+    groups: "@admin_groups"
+    firewalls: "@storage_firewalls"
+
 load_balancer:
   cenv:
     provider: aws_application
@@ -102,10 +124,10 @@ load_balancer:
     domain: "@root_domain"
     internal: false
     idle_timeout: "@aws_load_balancer_timeout"
+    groups: "@admin_groups"
     firewalls:
       - internet
       - admin-external
-    groups: "@admin_groups"
     listeners:
       https:
         port: "@admin_port"
@@ -131,19 +153,26 @@ server:
     machine: "@aws_admin_machine"
     tenancy: "@aws_admin_tenancy"
     monitoring: "@aws_admin_monitoring"
-    ebs_type: "@aws_admin_ebs_type"
-    ebs_size: "@aws_admin_ebs_size"
-    ebs_iops: "@aws_admin_ebs_iops"
-    ebs_iops: "@aws_admin_ebs_iops"
     ebs_optimized: "@aws_admin_ebs_optimized"
-    ebs_encrypted: "@aws_admin_ebs_encrypted"
+    load_balancer: cenv
+    load_balancer_listener: https
+    groups: "@admin_groups"
+    volumes:
+      /usr/local/lib/cenv:
+        type: nfs4
+        location: "&{mount(network=<network>;subnet=<subnet>):cenv-lib:remote_host}:/"
+        options:
+          - nfsvers=4.1
+          - rsize=1048576
+          - wsize=1048576
+          - hard
+          - timeo=600
+          - retrans=2
+          - noresvport
     firewalls:
       - internet
       - ssh-external
       - admin-external
-    load_balancer: cenv
-    load_balancer_listener: https
-    groups: "@admin_groups"
 
 provision:
   cenv-credentials:
