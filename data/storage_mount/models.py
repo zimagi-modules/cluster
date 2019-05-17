@@ -6,8 +6,8 @@ from systems.models import subnet, storage, firewall, provider
 class StorageMountFacade(
     provider.ProviderModelFacadeMixin,
     firewall.FirewallModelFacadeMixin,
-    subnet.SubnetModelFacadeMixin,
-    storage.StorageModelFacadeMixin
+    storage.StorageModelFacadeMixin,
+    subnet.SubnetModelFacadeMixin
 ):
     def get_field_remote_host_display(self, instance, value, short):
         return value
@@ -22,21 +22,17 @@ class StorageMountFacade(
 class StorageMount(
     provider.ProviderMixin,
     firewall.FirewallRelationMixin,
-    subnet.SubnetMixin,
-    storage.StorageModel
+    storage.StorageMixin,
+    subnet.SubnetModel
 ):
     remote_host = django.CharField(null = True, max_length = 128)
     remote_path = django.CharField(null = True, max_length = 256)
     mount_options = django.TextField(null = True)
 
-    class Meta(storage.StorageModel.Meta):
+    class Meta(subnet.SubnetModel.Meta):
         verbose_name = "mount"
         verbose_name_plural = "mounts"
         facade_class = StorageMountFacade
-        unique_together = (
-            ('storage', 'name'),
-            ('subnet', 'name')
-        )
         scope = ('storage', 'subnet')
         ordering = ['name']
         provider_name = 'storage:mount'
