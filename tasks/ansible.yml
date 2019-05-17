@@ -6,6 +6,10 @@ _ansible: &ansible
   group_vars: variables
 
 
+bootstrap:
+  <<: *ansible
+  playbooks: bootstrap.yml
+
 password:
   <<: *ansible
   playbooks: password.yml

@@ -1,19 +1,10 @@
 
-bootstrap:
-  provider: remote_script
-  module: core
-  script: scripts/bootstrap.sh
+environment:
+  provider: remote_command
+  command: env | grep 'CENV_' > @env_file
   roles: server-admin
-  sudo: true
-  args:
-    - "@user"
-    - /var/log/bootstrap.log
-    - "@dev_build"
-    - "@timezone"
   options:
-    user: ubuntu
-    dev_build: false
-    timezone: America/New_York
+    env_file: ~/.env
 
 bootstrap-log:
   provider: remote_command
