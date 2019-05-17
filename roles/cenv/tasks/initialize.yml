@@ -1,0 +1,5 @@
+---
+- name: initialization | check
+  stat:
+    path: "{{ local_docker_compose }}"
+  register: _docker_compose
