@@ -161,14 +161,7 @@ server:
       /usr/local/lib/cenv:
         type: nfs4
         location: "&{mount(network=<network>;subnet=<subnet>):cenv-lib:remote_host}:/"
-        options:
-          - nfsvers=4.1
-          - rsize=1048576
-          - wsize=1048576
-          - hard
-          - timeo=600
-          - retrans=2
-          - noresvport
+        options: "@aws_efs_volume_options"
     firewalls:
       - internet
       - ssh-external
