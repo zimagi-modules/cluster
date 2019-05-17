@@ -191,6 +191,7 @@ network_peering:
 firewall:
   all:
     network: "@aws_networks"
+    groups: "@core_firewall_groups"
     rules:
       all-out:
         mode: egress
@@ -202,10 +203,10 @@ firewall:
         protocol: all
         from_port: 0
         to_port: 65535
-    groups: "@core_firewall_groups"
 
   internet:
     network: "@aws_networks"
+    groups: "@core_firewall_groups"
     rules:
       all-out:
         mode: egress
@@ -217,20 +218,20 @@ firewall:
         protocol: icmp
         from_port: 8
         to_port: 0
-    groups: "@core_firewall_groups"
 
   ssh-external:
     network: "@aws_networks"
+    groups: "@core_firewall_groups"
     rules:
       tcp-in:
         mode: ingress
         protocol: tcp
         from_port: "@ssh_port"
         to_port: "@ssh_port"
-    groups: "@core_firewall_groups"
 
   ssh-internal:
     network: "@aws_networks"
+    groups: "@core_firewall_groups"
     rules:
       tcp-in:
         mode: ingress
@@ -238,4 +239,3 @@ firewall:
         from_port: "@ssh_port"
         to_port: "@ssh_port"
         cidrs: "@network_cidr_base"
-    groups: "@core_firewall_groups"
