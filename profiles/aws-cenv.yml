@@ -162,6 +162,9 @@ server:
         type: nfs4
         location: "&{mount(network=<network>;subnet=<subnet>):cenv-lib:remote_host}:/"
         options: "@aws_efs_volume_options"
+        owner: "@aws_ubuntu_user"
+        group: "@aws_ubuntu_user"
+        mode: "0770"
     firewalls:
       - internet
       - ssh-external
@@ -177,20 +180,18 @@ provision:
     task: user-environment
     servers: groups.name=cenv
 
-  bootstrap-cenv:
+  cenv-app-environment:
     requires: cenv-credentials
-    task: bootstrap
+    task: environment
     servers: groups.name=cenv
-    user: "@aws_ubuntu_user"
-    dev_build: false
-    timezone: "@primary_timezone"
     env:
       CENV_DEFAULT_ENV_NAME: "@environment"
       CENV_DEFAULT_RUNTIME_REPO: "@DEFAULT_RUNTIME_REPO"
       CENV_DEFAULT_RUNTIME_IMAGE: "@DEFAULT_RUNTIME_IMAGE"
+      CENV_SECRET_KEY: "%%cenv_secret_key:50"
       CENV_PARALLEL: "@PARALLEL"
       CENV_THREAD_COUNT: "@THREAD_COUNT"
-      CENV_TIME_ZONE: "@TIME_ZONE"
+      CENV_TIME_ZONE: "@primary_timezone"
       CENV_CORE_MODULE: "@CORE_MODULE"
       CENV_DB_PACKAGE_ALL_NAME: "@DB_PACKAGE_ALL_NAME"
       CENV_DB_MAX_CONNECTIONS: "@DB_MAX_CONNECTIONS"
@@ -199,8 +200,23 @@ provision:
       CENV_ADMIN_USER: "@ADMIN_USER"
       CENV_DEFAULT_ADMIN_TOKEN: "@DEFAULT_ADMIN_TOKEN"
 
+  cenv-cluster:
+    requires: cenv-app-environment
+    task: bootstrap
+    servers: groups.name=cenv
+    ntp_timezone: "@primary_timezone"
+    app_user: "@aws_ubuntu_user"
+    docker_users:
+      - "@aws_ubuntu_user"
+
+  cenv-wait:
+    requires: cenv-cluster
+    task: sleep
+    number: 1
+    unit: m
+
   deploy-cenv:
-    requires: bootstrap-cenv
+    requires: cenv-wait
     command: deploy
     server_search: groups.name=cenv
     host: "cenv.@root_domain"
