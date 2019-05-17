@@ -13,10 +13,7 @@ class Provider(
         else:
             self.command.error("Remote command task provider must have a 'command' property specified")
 
-        env = self._merge_options(
-            self.config.get('env', {}),
-            params.pop('env', {})
-        )
+        env = self._env_vars(params)
         sudo = self.config.get('sudo', False)
         lock = self.config.get('lock', False)
         options = self._merge_options(self.config.get('options', {}), params, lock)

@@ -22,10 +22,7 @@ class Provider(
         script_base, script_ext = os.path.splitext(script_path)
         temp_path = "/tmp/{}{}".format(self.generate_name(24), script_ext)
 
-        env = self._merge_options(
-            self.config.get('env', {}),
-            params.pop('env', {})
-        )
+        env = self._env_vars(params)
         sudo = self.config.get('sudo', False)
         lock = self.config.get('lock', False)
         options = self._merge_options(self.config.get('options', {}), params, lock)

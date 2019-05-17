@@ -110,6 +110,7 @@ class Provider(
 ):
     def execute(self, results, params):
         with temp_dir() as temp:
+            env = self._env_vars(params)
             lock = self.config.get('lock', False)
             ansible_config = self.merge_config(self.config.get('config', None),
                 '[defaults]',
@@ -153,11 +154,10 @@ class Provider(
             else:
                 self.command.error("Ansible task requires 'playbooks' list configuration")
 
+            env["ANSIBLE_CONFIG"] = temp.save(ansible_config, extension = 'cfg')
             success = self.command.sh(
                command,
-               env = {
-                   "ANSIBLE_CONFIG": temp.save(ansible_config, extension = 'cfg')
-               },
+               env = env,
                cwd = self.get_module_path(),
                display = True
             )
