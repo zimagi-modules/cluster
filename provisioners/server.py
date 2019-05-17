@@ -55,7 +55,7 @@ class Provisioner(profile.BaseProvisioner):
                         network = network,
                         subnet = subnet
                     )
-                    volume_fields.pop('provider')
+                    volume_fields.pop('provider', None)
 
                     def process_volume_server(index):
                         self.exec('server volume save',
