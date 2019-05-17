@@ -172,6 +172,11 @@ provision:
     command: server rotate
     server_search: groups.name=cenv
 
+  cenv-user-environment:
+    requires: cenv-credentials
+    task: user-environment
+    servers: groups.name=cenv
+
   bootstrap-cenv:
     requires: cenv-credentials
     task: bootstrap
