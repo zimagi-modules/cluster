@@ -1,7 +1,7 @@
 - hosts: all
   roles:
-    - { role: geerlingguy.ntp }
     - { role: geerlingguy.docker }
+    - { role: geerlingguy.ntp }
 
 - hosts: "{{ groups['all'][0::2] }}"
   roles:
