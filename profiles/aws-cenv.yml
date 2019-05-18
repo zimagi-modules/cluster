@@ -218,5 +218,5 @@ provision:
   deploy-cenv:
     requires: cenv-wait
     command: deploy
-    server_search: groups.name=cenv
+    server_search: id=&server(network=@aws_networks[0];subnet=@aws_admin_subnets[0]):cenv1:id
     host: "cenv.@root_domain"
