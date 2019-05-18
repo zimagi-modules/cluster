@@ -162,8 +162,6 @@ server:
         type: nfs4
         location: "&{mount(network=<network>;subnet=<subnet>):cenv-lib:remote_host}:/"
         options: "@aws_efs_volume_options"
-        owner: "@aws_ubuntu_user"
-        group: "@aws_ubuntu_user"
         mode: "0770"
     firewalls:
       - internet
