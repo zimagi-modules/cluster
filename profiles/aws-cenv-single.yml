@@ -3,7 +3,7 @@ parents:
 
 config:
   aws_admin_network: "@aws_networks[0]"
-  aws_admin_subnet: "@aws_admin_subnets[0]"
+  aws_admin_subnet: admin-gateway
 
   db_data_dir: /var/local/data
   db_data_device: /dev/xvdb
@@ -12,6 +12,14 @@ config:
   aws_admin_ebs_size: 20
   aws_admin_ebs_iops: null
   aws_admin_ebs_encrypted: false
+
+subnet:
+  "@aws_admin_subnet":
+    network: "@aws_admin_network"
+    cidr_prefix: "@admin_subnet_cidr_prefix"
+    zone_suffix: a
+    use_public_ip: true
+    groups: "@admin_group"
 
 server:
   "@admin_server_name":
