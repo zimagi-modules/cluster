@@ -84,6 +84,7 @@ class Command(server.ServerRouterCommand):
         return command_list(
             resource.ResourceCommandSet(
                 server.ServerActionCommand, self.name,
+                provider_name = self.name,
                 save_multiple = True
             ),
             ('rotate', RotateCommand),
