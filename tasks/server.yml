@@ -6,12 +6,6 @@ environment:
   options:
     env_file: ~/.env
 
-bootstrap-log:
-  provider: remote_command
-  command: cat /var/log/bootstrap.log
-  roles: server-admin
-  sudo: true
-
 update:
   provider: remote_command
   command: docker-compose pull && docker-compose up -d
