@@ -1,0 +1,56 @@
+parents:
+  - aws-cenv-core
+
+config:
+  aws_admin_network: "@aws_networks[0]"
+  aws_admin_subnet: "@aws_admin_subnets[0]"
+
+  db_data_dir: /var/local/data
+  db_data_device: /dev/xvdb
+
+  aws_admin_ebs_type: gp2
+  aws_admin_ebs_size: 20
+  aws_admin_ebs_iops: null
+  aws_admin_ebs_encrypted: false
+
+server:
+  "@admin_server_name":
+    count: 1
+    provider: ec2
+    network: "@aws_admin_network"
+    subnet: "@aws_admin_subnet"
+    image: "@aws_ubuntu_image[<network>]"
+    ssh_port: "@ssh_port"
+    user: "@aws_ubuntu_user"
+    machine: "@aws_admin_machine"
+    tenancy: "@aws_admin_tenancy"
+    monitoring: "@aws_admin_monitoring"
+    ebs_optimized: "@aws_admin_ebs_optimized"
+    groups: "@admin_group"
+    volumes:
+      "@db_data_dir":
+        provider: aws_ebs
+        type: ext4
+        location: "@db_data_device"
+        ebs_type: "@aws_admin_ebs_type"
+        ebs_size: "@aws_admin_ebs_size"
+        ebs_iops: "@aws_admin_ebs_iops"
+        ebs_encrypted: "@aws_admin_ebs_encrypted"
+    firewalls:
+      - internet
+      - ssh-external
+      - admin-external
+
+provision:
+  cenv-app-environment:
+    env:
+      CENV_POSTGRES_DB: "@cenv_database"
+      CENV_POSTGRES_USER: "@cenv_database_user"
+      CENV_POSTGRES_PASSWORD: "@cenv_password"
+
+  cenv-cluster:
+    remote_docker_compose: https://raw.githubusercontent.com/venturiscm/cenv/master/app/docker-compose.bootstrap.yml
+
+  deploy-cenv:
+    server_search: id=&server(network=@aws_admin_network;subnet=@aws_admin_subnet):@{admin_server_name}1:id
+    host: "&server(network=@aws_admin_network;subnet=@aws_admin_subnet):@{admin_server_name}1:ip"

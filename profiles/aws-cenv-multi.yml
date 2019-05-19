@@ -1,0 +1,106 @@
+parents:
+  - aws-domain
+  - aws-storage
+  - aws-cenv-core
+
+config:
+  aws_load_balancer_timeout: 60
+  aws_load_balancer_health_path: /status
+  aws_load_balancer_healthy_status: 200
+  aws_load_balancer_health_check_interval: 30
+  aws_load_balancer_health_timeout: 10
+  aws_load_balancer_healthy_threshold: 3
+  aws_load_balancer_unhealthy_threshold: 3
+
+domain:
+  "@root_domain":
+    certificate_authority: letsencrypt
+
+certificate:
+  "@admin_server_name":
+    provider: aws
+    network: "@aws_networks"
+    domain: "@root_domain"
+    groups: "@admin_group"
+
+firewall:
+  nfs:
+    rules:
+      tcp-in:
+        cidrs: "&subnet:@aws_admin_subnets:cidr"
+      udp-in:
+        cidrs: "&subnet:@aws_admin_subnets:cidr"
+
+storage:
+  "@{admin_server_name}-lib":
+    provider: efs
+    network: "@aws_networks"
+    performance_mode: "@aws_storage_performance_mode"
+    throughput_mode:  "@aws_storage_throughput_mode"
+    provisioned_throughput: "@aws_storage_provisioned_throughput"
+    encrypted: "@aws_storage_encrypted"
+    groups: "@admin_group"
+
+mount:
+  "@{admin_server_name}-lib":
+    storage: "@{admin_server_name}-lib"
+    network: "@aws_networks"
+    subnet: "@aws_admin_subnets"
+    groups: "@admin_group"
+    firewalls: "@storage_firewalls"
+
+load_balancer:
+  "@{admin_server_name}-@environment":
+    provider: aws_application
+    network: "@aws_networks"
+    subnets: "@aws_admin_subnets"
+    domain: "@root_domain"
+    internal: false
+    idle_timeout: "@aws_load_balancer_timeout"
+    groups: "@admin_group"
+    firewalls:
+      - internet
+      - admin-external
+    listeners:
+      https:
+        port: "@admin_port"
+        certificate: "@admin_server_name"
+        target_port: "@admin_port"
+        target_protocol: https
+        health_check_path: "@aws_load_balancer_health_path"
+        health_check_interval: "@aws_load_balancer_health_check_interval"
+        health_check_timeout: "@aws_load_balancer_health_timeout"
+        healthy_status: "@aws_load_balancer_healthy_status"
+        healthy_threshold: "@aws_load_balancer_healthy_threshold"
+        unhealthy_threshold: "@aws_load_balancer_unhealthy_threshold"
+
+server:
+  "@admin_server_name":
+    count: 1
+    provider: ec2_lb
+    network: "@aws_networks"
+    subnet: "@aws_admin_subnets"
+    image: "@aws_ubuntu_image[<network>]"
+    ssh_port: "@ssh_port"
+    user: "@aws_ubuntu_user"
+    machine: "@aws_admin_machine"
+    tenancy: "@aws_admin_tenancy"
+    monitoring: "@aws_admin_monitoring"
+    ebs_optimized: "@aws_admin_ebs_optimized"
+    load_balancer: "@{admin_server_name}-@environment"
+    load_balancer_listener: https
+    groups: "@admin_group"
+    volumes:
+      /usr/local/lib/cenv:
+        type: nfs4
+        location: "&{mount(network=<network>;subnet=<subnet>):@{admin_server_name}-lib:remote_host}:/"
+        options: "@aws_efs_volume_options"
+        mode: "0770"
+    firewalls:
+      - internet
+      - ssh-external
+      - admin-external
+
+provision:
+  deploy-cenv:
+    host: "cenv-@environment.@root_domain"
