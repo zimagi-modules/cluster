@@ -2,13 +2,14 @@ from django.db import models as django
 
 from settings.roles import Roles
 from data.load_balancer_listener.models import LoadBalancerListener
-from systems.models import fields, subnet, firewall, provider, load_balancer, group
+from systems.models import fields, subnet, firewall, provider, load_balancer, group, domain
 
 
 class ServerFacade(
     provider.ProviderModelFacadeMixin,
     group.GroupModelFacadeMixin,
     firewall.FirewallModelFacadeMixin,
+    domain.DomainModelFacadeMixin,
     load_balancer.LoadBalancerModelFacadeMixin,
     subnet.SubnetModelFacadeMixin
 ):
@@ -38,6 +39,7 @@ class Server(
     provider.ProviderMixin,
     group.GroupMixin,
     firewall.FirewallRelationMixin,
+    domain.DomainMixin,
     load_balancer.LoadBalancerMixin,
     subnet.SubnetModel
 ):
@@ -51,6 +53,8 @@ class Server(
     password = fields.EncryptedCharField(null = True, max_length = 1096)
     private_key = fields.EncryptedDataField(null = True)
 
+    domain_name = django.CharField(null = True, max_length = 128)
+
     load_balancer_listener = django.ForeignKey(LoadBalancerListener,
         null = True,
         on_delete = django.PROTECT,
@@ -61,7 +65,7 @@ class Server(
         verbose_name = "server"
         verbose_name_plural = "servers"
         facade_class = ServerFacade
-        relation = ['load_balancer', 'load_balancer_listener']
+        relation = ['domain', 'load_balancer', 'load_balancer_listener']
         dynamic_fields = ['status']
         ordering = ['name']
         provider_name = 'server'
