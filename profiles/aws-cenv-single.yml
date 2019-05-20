@@ -49,7 +49,7 @@ server:
       - ssh-external
       - admin-external
 
-provision:
+run:
   cenv-app-environment:
     env:
       CENV_POSTGRES_DB: "@cenv_database"

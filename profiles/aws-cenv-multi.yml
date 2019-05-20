@@ -133,6 +133,6 @@ server:
       - ssh-external
       - admin-external
 
-provision:
+run:
   deploy-cenv:
     host: "@{admin_server_name}-@environment.@root_domain"

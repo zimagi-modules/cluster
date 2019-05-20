@@ -44,7 +44,7 @@ firewall:
         to_port: "@admin_port"
         source_firewall: admin-external
 
-provision:
+run:
   cenv-credentials:
     command: server rotate
     server_search: groups.name=@admin_group
