@@ -1,12 +1,12 @@
 from systems.command import profile
 
 
-class Provisioner(profile.BaseProvisioner):
+class ProfileComponent(profile.BaseProfileComponent):
 
     def priority(self):
         return 3
 
-    def ensure(self, name, networks):
+    def run(self, name, networks):
         self.exec('network peering save',
             network_peering_name = name,
             network_names = networks,

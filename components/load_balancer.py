@@ -3,12 +3,12 @@ from systems.command import profile
 import copy
 
 
-class Provisioner(profile.BaseProvisioner):
+class ProfileComponent(profile.BaseProfileComponent):
 
     def priority(self):
         return 5
 
-    def ensure(self, name, config):
+    def run(self, name, config):
         networks = self.pop_values('network', config)
         subnets = self.pop_values('subnets', config)
         provider = self.pop_value('provider', config)

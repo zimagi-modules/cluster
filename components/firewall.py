@@ -1,12 +1,12 @@
 from systems.command import profile
 
 
-class Provisioner(profile.BaseProvisioner):
+class ProfileComponent(profile.BaseProfileComponent):
 
     def priority(self):
         return 4
 
-    def ensure(self, name, config):
+    def run(self, name, config):
         networks = self.pop_values('network', config)
         rules = self.pop_info('rules', config)
         groups = self.pop_values('groups', config)
