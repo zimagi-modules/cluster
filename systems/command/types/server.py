@@ -1,7 +1,7 @@
 from settings.roles import Roles
 from .router import RouterCommand
 from .action import ActionCommand
-from systems.command.mixins import network, server, load_balancer
+from systems.command.mixins import network, server, domain, load_balancer
 
 
 class ServerRouterCommand(RouterCommand):
@@ -12,6 +12,7 @@ class ServerRouterCommand(RouterCommand):
 
 class ServerActionCommand(
     server.ServerMixin,
+    domain.DomainMixin,
     load_balancer.LoadBalancerMixin,
     network.NetworkMixin,
     ActionCommand
