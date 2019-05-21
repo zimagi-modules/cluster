@@ -10,10 +10,13 @@ class Command(
 ):
     def parse(self):
         self.parse_server_search(False)
-        self.parse_environment_host('--host')
+        self.parse_variable('destination', '--dest', str,
+            'environment runtime host destination',
+            value_label = 'HOST'
+        )
 
     def exec(self):
-        host = self.environment_host
+        destination = self.options.get('destination', None)
 
         def deploy_env(env):
             self.data("Deploying environment to", str(env))
@@ -23,16 +26,14 @@ class Command(
             self._update_environments(self.server_instances),
             deploy_env
         )
-        if host:
-            self.environment.provider.update({
-                'host': host
-            })
+        if destination:
+            self.update_env_host(host = destination)
 
     def _update_environments(self, servers):
-        curr_env = self._environment.get_env()
+        env_name = self._environment.get_env()
         environments = []
         for index, server in enumerate(servers):
-            environments.append(self._environment.create("{}-{}".format(curr_env, index),
+            environments.append(self.create_env("{}-{}".format(env_name, index),
                 host = server.ip
             ))
         return environments
