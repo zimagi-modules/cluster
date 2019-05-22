@@ -11,6 +11,7 @@ class ProfileComponent(profile.BaseProfileComponent):
         count = self.pop_value('count', config)
         networks = self.pop_values('network', config)
         subnets = self.pop_values('subnet', config)
+        domain = self.pop_value('domain', config)
         load_balancer = self.pop_value('load_balancer', config)
         load_balancer_listener = self.pop_value('load_balancer_listener', config)
         groups = self.pop_values('groups', config)
@@ -40,6 +41,7 @@ class ProfileComponent(profile.BaseProfileComponent):
                     ),
                     network_name = network,
                     subnet_name = subnet,
+                    domain_name = domain,
                     load_balancer_name = load_balancer,
                     load_balancer_listener_name = load_balancer_listener,
                     group_names = groups,
