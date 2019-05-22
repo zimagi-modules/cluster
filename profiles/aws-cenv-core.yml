@@ -1,4 +1,5 @@
 parents:
+  - aws-domain
   - aws-network
 
 config:

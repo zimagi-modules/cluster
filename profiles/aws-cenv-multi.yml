@@ -1,5 +1,4 @@
 parents:
-  - aws-domain
   - aws-storage
   - aws-cenv-core
 
