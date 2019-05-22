@@ -35,6 +35,8 @@ server:
     monitoring: "@aws_admin_monitoring"
     ebs_optimized: "@aws_admin_ebs_optimized"
     groups: "@admin_group"
+    domain: "@root_domain"
+    domain_name: "@admin_server_name"
     volumes:
       "@db_data_dir":
         provider: aws_ebs
