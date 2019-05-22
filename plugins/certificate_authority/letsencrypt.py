@@ -1,7 +1,11 @@
+from django.conf import settings
+
 from .base import BaseProvider
 from utility.temp import temp_dir
 
 import datetime
+import os
+import pathlib
 
 
 class Provider(BaseProvider):
@@ -48,7 +52,6 @@ class Provider(BaseProvider):
     def init_temp_dir(self, temp):
         cert_dir = self.certificate_directory
 
-        temp.mkdir('config')
         temp.mkdir('work')
         temp.mkdir('logs')
 
@@ -89,13 +92,17 @@ class Provider(BaseProvider):
 
 
     def certbot(self, temp, command, *args):
+        certbot_config_dir = os.path.join(settings.LIB_DIR, 'certbot', self.domain.name)
+        pathlib.Path(certbot_config_dir).mkdir(mode = 0o700, parents = True, exist_ok = True)
+
         self.init_temp_dir(temp)
+        self.domain.provider.add_credentials(self.domain.config)
 
         certbot_command = [
             'certbot', command,
             '--agree-tos',
             '--non-interactive',
-            '--config-dir', temp.path('config'),
+            '--config-dir', certbot_config_dir,
             '--work-dir', temp.path('work'),
             '--logs-dir', temp.path('logs')
         ]
