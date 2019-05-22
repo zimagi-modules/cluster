@@ -61,6 +61,7 @@ run:
     servers: groups.name=@admin_group
     env:
       CENV_DEFAULT_ENV_NAME: "@environment"
+      CENV_DEFAULT_HOST_NAME: "@DEFAULT_HOST_NAME"
       CENV_DEFAULT_RUNTIME_REPO: "@DEFAULT_RUNTIME_REPO"
       CENV_DEFAULT_RUNTIME_IMAGE: "@DEFAULT_RUNTIME_IMAGE"
       CENV_SECRET_KEY: "%%cenv_secret_key:50"
@@ -68,6 +69,7 @@ run:
       CENV_THREAD_COUNT: "@THREAD_COUNT"
       CENV_TIME_ZONE: "@primary_timezone"
       CENV_CORE_MODULE: "@CORE_MODULE"
+      CENV_DEFAULT_MODULES: " @DEFAULT_MODULES "
       CENV_DB_PACKAGE_ALL_NAME: "@DB_PACKAGE_ALL_NAME"
       CENV_LOG_LEVEL: "@LOG_LEVEL"
       CENV_ALLOWED_HOSTS: "@ALLOWED_HOSTS"
@@ -86,7 +88,7 @@ run:
   cenv-wait:
     requires: cenv-cluster
     task: sleep
-    number: 1
+    number: 3
     unit: m
 
   deploy-cenv:
