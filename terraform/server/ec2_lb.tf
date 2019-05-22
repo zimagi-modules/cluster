@@ -43,9 +43,6 @@ output "private_ip_address" {
 output "public_ip_address" {
   value = "${var.use_public_ip ? aws_eip.server_ip.0.public_ip : null}"
 }
-output "public_dns" {
-  value = "${var.use_public_ip ? aws_eip.server_ip.0.public_dns : null}"
-}
 
 resource "aws_lb_target_group_attachment" "gateway" {
   target_group_arn = "${var.load_balancer_listener.target_group_arn}"
