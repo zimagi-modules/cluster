@@ -11,8 +11,24 @@ import pathlib
 class Provider(BaseProvider):
 
     @property
-    def certificate_directory(self):
-        return "config/renewal/{}".format(self.domain.name)
+    def root_directory(self):
+        certbot_config_dir = os.path.join(settings.LIB_DIR, 'certbot', self.domain.name)
+        pathlib.Path(certbot_config_dir).mkdir(mode = 0o700, parents = True, exist_ok = True)
+        return certbot_config_dir
+
+    @property
+    def renewal_directory(self):
+        return "{}/renewal/{}".format(
+            self.root_directory,
+            self.domain.name
+        )
+
+    @property
+    def live_directory(self):
+        return "{}/live/{}".format(
+            self.root_directory,
+            self.domain.name
+        )
 
 
     def request(self):
@@ -38,7 +54,7 @@ class Provider(BaseProvider):
         with temp_dir() as temp:
             self.command.info('Revoking certbot certificate for domain')
             self.certbot(temp, 'revoke',
-                '--cert-path', "{}/fullchain.pem".format(self.certificate_directory),
+                '--cert-path', "{}/fullchain.pem".format(self.live_directory),
                 '-d', "*.{}".format(self.domain.name),
                 '-m', self.domain.email
             )
@@ -50,7 +66,7 @@ class Provider(BaseProvider):
 
 
     def init_temp_dir(self, temp):
-        cert_dir = self.certificate_directory
+        cert_dir = self.live_directory
 
         temp.mkdir('work')
         temp.mkdir('logs')
@@ -73,7 +89,7 @@ class Provider(BaseProvider):
             )
 
     def save_certificates(self, temp):
-        cert_dir = "config/live/{}".format(self.domain.name)
+        cert_dir = self.live_directory
 
         self.domain.private_key = temp.load('privkey.pem',
             directory = cert_dir
@@ -92,9 +108,6 @@ class Provider(BaseProvider):
 
 
     def certbot(self, temp, command, *args):
-        certbot_config_dir = os.path.join(settings.LIB_DIR, 'certbot', self.domain.name)
-        pathlib.Path(certbot_config_dir).mkdir(mode = 0o700, parents = True, exist_ok = True)
-
         self.init_temp_dir(temp)
         self.domain.provider.add_credentials(self.domain.config)
 
@@ -102,7 +115,7 @@ class Provider(BaseProvider):
             'certbot', command,
             '--agree-tos',
             '--non-interactive',
-            '--config-dir', certbot_config_dir,
+            '--config-dir', self.root_directory,
             '--work-dir', temp.path('work'),
             '--logs-dir', temp.path('logs')
         ]
@@ -118,4 +131,5 @@ class Provider(BaseProvider):
         if not success:
             self.command.error("Certbot failed: {}".format(" ".join(command)))
 
+        self.domain.provider.remove_credentials(self.domain.config)
         self.save_certificates(temp)
