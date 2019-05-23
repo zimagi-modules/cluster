@@ -1,9 +1,9 @@
-from .temp import temp_dir
+from .project import project_dir
 
 import os
 import pathlib
 import json
-import threading
+import hashlib
 
 
 class TerraformError(Exception):
@@ -12,109 +12,119 @@ class TerraformError(Exception):
 
 class Terraform(object):
 
-    init_lock = threading.Lock()
-
-
     def __init__(self, command, ignore = False):
+        self.lib_type = 'terraform'
         self.command = command
         self.ignore = ignore
 
+    @property
+    def get_project_name(self, manifest_path, variables):
+        type = os.path.basename(manifest_path).replace('.tf', '')
+        digest = hashlib.sha1(json.dumps(variables)).hexdigest()
+        return "{}-{}".format(type, digest)
 
-    def init(self, temp, display = False):
+
+    def init(self, project, display = False):
         terraform_command = (
             'terraform',
             'init',
             '-force-copy'
         )
-        #with self.init_lock:
-        if True:
-            success = self.command.sh(
-                terraform_command,
-                cwd = temp.temp_path,
-                display = display
-            )
-            if not success and not self.ignore:
-                raise TerraformError("Terraform init failed: {}".format(" ".join(terraform_command)))
+        success = self.command.sh(
+            terraform_command,
+            cwd = project.base_path,
+            display = display
+        )
+        if not success and not self.ignore:
+            raise TerraformError("Terraform init failed: {}".format(" ".join(terraform_command)))
 
 
     def plan(self, manifest_path, variables, state, display_init = False):
-        with temp_dir() as temp:
-            temp.link(manifest_path, 'manifest.tf')
+        with project_dir(self.lib_type, self.get_project_name(manifest_path, variables)) as project:
+            project.link(manifest_path, 'manifest.tf')
 
-            self.save_variable_index(temp, variables)
+            self.save_variable_index(project, variables)
             if state:
-                self.save_state(temp, state)
-
-            self.init(temp, display_init)
+                self.save_state(project, state)
+            else:
+                self.init(project, display_init)
 
             terraform_command = (
                 'terraform',
                 'plan',
-                "-var-file={}".format(self.save_variables(temp, variables))
+                "-var-file={}".format(self.save_variables(project, variables))
             )
             success = self.command.sh(
                 terraform_command,
-                cwd = temp.temp_path,
+                cwd = project.base_path,
                 display = True
             )
+            self.clean_project(project)
+
             if not success and not self.ignore:
                 raise TerraformError("Terraform plan failed: {}".format(" ".join(terraform_command)))
 
 
     def apply(self, manifest_path, variables, state, display_init = False):
-        with temp_dir() as temp:
-            temp.link(manifest_path, 'manifest.tf')
+        with project_dir(self.lib_type, self.get_project_name(manifest_path, variables)) as project:
+            project.link(manifest_path, 'manifest.tf')
 
-            self.save_variable_index(temp, variables)
+            self.save_variable_index(project, variables)
             if state:
-                self.save_state(temp, state)
-
-            self.init(temp, display_init)
+                self.save_state(project, state)
+            else:
+                self.init(project, display_init)
 
             terraform_command = (
                 'terraform',
                 'apply',
                 '-auto-approve',
-                "-var-file={}".format(self.save_variables(temp, variables))
+                "-var-file={}".format(self.save_variables(project, variables))
             )
             success = self.command.sh(
                 terraform_command,
-                cwd = temp.temp_path,
+                cwd = project.base_path,
                 display = True
             )
             if not success and not self.ignore:
+                self.clean_project(project)
                 raise TerraformError("Terraform apply failed: {}".format(" ".join(terraform_command)))
 
             self.command.info('')
-            return self.load_state(temp)
+
+            state = self.load_state(project)
+            self.clean_project(project)
+            return state
 
 
     def destroy(self, manifest_path, variables, state, display_init = False):
-        with temp_dir() as temp:
-            temp.link(manifest_path, 'manifest.tf')
+        with project_dir(self.lib_type, self.get_project_name(manifest_path, variables)) as project:
+            project.link(manifest_path, 'manifest.tf')
 
-            self.save_variable_index(temp, variables)
+            self.save_variable_index(project, variables)
             if state:
-                self.save_state(temp, state)
-
-            self.init(temp, display_init)
+                self.save_state(project, state)
+            else:
+                self.init(project, display_init)
 
             terraform_command = [
                 'terraform',
                 'destroy',
                 '-auto-approve',
-                "-var-file={}".format(self.save_variables(temp, variables))
+                "-var-file={}".format(self.save_variables(project, variables))
             ]
             success = self.command.sh(
                 terraform_command,
-                cwd = temp.temp_path,
+                cwd = project.base_path,
                 display = True
             )
+            self.clean_project(project)
+
             if not success and not self.ignore:
                 raise TerraformError("Terraform destroy failed: {}".format(" ".join(terraform_command)))
 
 
-    def save_variable_index(self, temp, variables):
+    def save_variable_index(self, project, variables):
         index = []
 
         for name, value in variables.items():
@@ -130,7 +140,7 @@ class Terraform(object):
                 '  type = {}'.format(data_type),
                 '}'
             ])
-        return temp.save("\n".join(index), 'variables.tf')
+        return project.save("\n".join(index), 'variables.tf')
 
     def parse_object(self, variables, prefix):
         object = ['object({']
@@ -148,12 +158,17 @@ class Terraform(object):
         return "\n".join(object)
 
 
-    def save_variables(self, temp, variables):
-        return temp.save(json.dumps(variables), extension = 'tfvars.json')
+    def save_variables(self, project, variables):
+        return project.save(json.dumps(variables), 'variables.tfvars.json')
 
 
-    def save_state(self, temp, state):
-        return temp.save(json.dumps(state), 'terraform.tfstate')
+    def save_state(self, project, state):
+        return project.save(json.dumps(state), 'terraform.tfstate')
 
-    def load_state(self, temp):
-        return json.loads(temp.load('terraform.tfstate'))
+    def load_state(self, project):
+        return json.loads(project.load('terraform.tfstate'))
+
+
+    def clean_project(self, project):
+        project.remove('variables.tfvars.json')
+        project.remove('terraform.tfstate')
