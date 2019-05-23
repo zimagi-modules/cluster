@@ -126,7 +126,7 @@ class Provider(BaseProvider):
 
         command = certbot_command + list(args)
         success = self.command.sh(command,
-            cwd = temp.temp_path
+            cwd = temp.base_path
         )
         if not success:
             self.command.error("Certbot failed: {}".format(" ".join(command)))
