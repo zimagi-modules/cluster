@@ -21,7 +21,7 @@ class Terraform(object):
         self.command = command
         self.ignore = ignore
 
-    @property
+
     def get_project_name(self, manifest_path, variables):
         type = os.path.basename(manifest_path).replace('.tf', '')
         digest = hashlib.sha1(json.dumps(variables)).hexdigest()
