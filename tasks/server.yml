@@ -8,7 +8,7 @@ environment:
 
 update:
   provider: remote_command
-  command: docker image prune -fa && docker-compose pull && docker-compose up -d
+  command: docker image prune -fa && docker-compose rm -fs api && docker-compose pull && docker-compose up -d
   roles: server-admin
 
 restart:
