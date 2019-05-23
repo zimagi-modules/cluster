@@ -74,7 +74,7 @@ run:
       CENV_LOG_LEVEL: "@LOG_LEVEL"
       CENV_ALLOWED_HOSTS: "@ALLOWED_HOSTS"
       CENV_ADMIN_USER: "@ADMIN_USER"
-      CENV_DEFAULT_ADMIN_TOKEN: "%%cenv_default_admin_token:60"
+      CENV_DEFAULT_ADMIN_TOKEN: "@DEFAULT_ADMIN_TOKEN"
 
   cenv-cluster:
     requires: cenv-app-environment
@@ -88,11 +88,11 @@ run:
   cenv-wait:
     requires: cenv-cluster
     task: sleep
-    number: 3
+    number: 5
     unit: m
 
   deploy-cenv:
     requires: cenv-wait
     command: deploy
     server_search: id=&server(network=@aws_networks[0];subnet=@aws_admin_subnets[0]):@{admin_server_name}1:id
-    host: "&server(network=@aws_networks[0];subnet=@aws_admin_subnets[0]):@{admin_server_name}1:ip"
+    destination: "&server(network=@aws_networks[0];subnet=@aws_admin_subnets[0]):@{admin_server_name}1:ip"

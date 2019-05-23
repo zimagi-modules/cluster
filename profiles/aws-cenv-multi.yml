@@ -134,4 +134,4 @@ server:
 
 run:
   deploy-cenv:
-    host: "@{admin_server_name}-@environment.@root_domain"
+    destination: "@{admin_server_name}-@environment.@root_domain"
