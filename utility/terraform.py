@@ -26,7 +26,8 @@ class Terraform(object):
             'init',
             '-force-copy'
         )
-        with self.init_lock:
+        #with self.init_lock:
+        if True:
             success = self.command.sh(
                 terraform_command,
                 cwd = temp.temp_path,
