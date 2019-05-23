@@ -48,14 +48,13 @@ class SSHCommand(
             )
 
     def postprocess(self, result):
-        if settings.API_EXEC:
-            self._start_session(
-                result.get_named_data('ip'),
-                result.get_named_data('user'),
-                result.get_named_data('password'),
-                result.get_named_data('private_key'),
-                result.get_named_data('ssh_port')
-            )
+        self._start_session(
+            result.get_named_data('ip'),
+            result.get_named_data('user'),
+            result.get_named_data('password'),
+            result.get_named_data('private_key'),
+            result.get_named_data('ssh_port')
+        )
 
     def _start_session(self, ip, user, password, private_key, ssh_port):
         with temp_dir() as temp:
