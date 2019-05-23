@@ -4,6 +4,7 @@ import os
 import pathlib
 import json
 import hashlib
+import threading
 
 
 class TerraformError(Exception):
@@ -11,6 +12,9 @@ class TerraformError(Exception):
 
 
 class Terraform(object):
+
+    thread_lock = threading.Lock()
+
 
     def __init__(self, command, ignore = False):
         self.lib_type = 'terraform'
@@ -30,13 +34,14 @@ class Terraform(object):
             'init',
             '-force-copy'
         )
-        success = self.command.sh(
-            terraform_command,
-            cwd = project.base_path,
-            display = display
-        )
-        if not success and not self.ignore:
-            raise TerraformError("Terraform init failed: {}".format(" ".join(terraform_command)))
+        with self.thread_lock:
+            success = self.command.sh(
+                terraform_command,
+                cwd = project.base_path,
+                display = display
+            )
+            if not success and not self.ignore:
+                raise TerraformError("Terraform init failed: {}".format(" ".join(terraform_command)))
 
 
     def plan(self, manifest_path, variables, state, display_init = False):
