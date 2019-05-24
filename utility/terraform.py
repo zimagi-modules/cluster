@@ -185,3 +185,4 @@ class Terraform(object):
     def clean_project(self, project):
         project.remove('variables.tfvars.json')
         project.remove('terraform.tfstate')
+        project.remove('terraform.tfstate.backup')
