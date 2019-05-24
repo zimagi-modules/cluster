@@ -24,7 +24,7 @@ class Terraform(object):
 
     def get_project_name(self, manifest_path, variables):
         type = os.path.basename(manifest_path).replace('.tf', '')
-        digest = hashlib.sha1(json.dumps(variables)).hexdigest()
+        digest = hashlib.sha1(json.dumps(variables).encode()).hexdigest()
         return "{}-{}".format(type, digest)
 
 
