@@ -3,7 +3,6 @@ from .project import project_dir
 import os
 import pathlib
 import json
-import hashlib
 import threading
 
 
@@ -21,6 +20,7 @@ class Terraform(object):
         self.command = command
         self.id = id
         self.ignore = ignore
+        self.initialize = False
 
 
     def get_project_name(self, manifest_path, variables):
@@ -28,31 +28,37 @@ class Terraform(object):
         return "{}-{}".format(type, self.id)
 
 
+    def check_init(self, project):
+        if not project.exists('manifest.yml'):
+            self.initialize = True
+
     def init(self, project, display = False):
-        terraform_command = (
-            'terraform',
-            'init',
-            '-force-copy'
-        )
-        with self.thread_lock:
-            success = self.command.sh(
-                terraform_command,
-                cwd = project.base_path,
-                display = display
+        if self.initialize:
+            terraform_command = (
+                'terraform',
+                'init',
+                '-force-copy'
             )
-            if not success and not self.ignore:
-                raise TerraformError("Terraform init failed: {}".format(" ".join(terraform_command)))
+            with self.thread_lock:
+                success = self.command.sh(
+                    terraform_command,
+                    cwd = project.base_path,
+                    display = display
+                )
+                if not success and not self.ignore:
+                    raise TerraformError("Terraform init failed: {}".format(" ".join(terraform_command)))
 
 
     def plan(self, manifest_path, variables, state, display_init = False):
         with project_dir(self.lib_type, self.get_project_name(manifest_path, variables)) as project:
-            project.link(manifest_path, 'manifest.tf')
+            self.check_init(project)
 
+            project.link(manifest_path, 'manifest.tf')
             self.save_variable_index(project, variables)
             if state:
                 self.save_state(project, state)
-            else:
-                self.init(project, display_init)
+
+            self.init(project, display_init)
 
             terraform_command = (
                 'terraform',
@@ -72,13 +78,14 @@ class Terraform(object):
 
     def apply(self, manifest_path, variables, state, display_init = False):
         with project_dir(self.lib_type, self.get_project_name(manifest_path, variables)) as project:
-            project.link(manifest_path, 'manifest.tf')
+            self.check_init(project)
 
+            project.link(manifest_path, 'manifest.tf')
             self.save_variable_index(project, variables)
             if state:
                 self.save_state(project, state)
-            else:
-                self.init(project, display_init)
+
+            self.init(project, display_init)
 
             terraform_command = (
                 'terraform',
@@ -104,13 +111,14 @@ class Terraform(object):
 
     def destroy(self, manifest_path, variables, state, display_init = False):
         with project_dir(self.lib_type, self.get_project_name(manifest_path, variables)) as project:
-            project.link(manifest_path, 'manifest.tf')
+            self.check_init(project)
 
+            project.link(manifest_path, 'manifest.tf')
             self.save_variable_index(project, variables)
             if state:
                 self.save_state(project, state)
-            else:
-                self.init(project, display_init)
+
+            self.init(project, display_init)
 
             terraform_command = [
                 'terraform',
