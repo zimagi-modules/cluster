@@ -16,16 +16,16 @@ class Terraform(object):
     thread_lock = threading.Lock()
 
 
-    def __init__(self, command, ignore = False):
+    def __init__(self, command, id, ignore = False):
         self.lib_type = 'terraform'
         self.command = command
+        self.id = id
         self.ignore = ignore
 
 
     def get_project_name(self, manifest_path, variables):
         type = os.path.basename(manifest_path).replace('.tf', '')
-        digest = hashlib.sha1(json.dumps(variables).encode()).hexdigest()
-        return "{}-{}".format(type, digest)
+        return "{}-{}".format(type, self.id)
 
 
     def init(self, project, display = False):

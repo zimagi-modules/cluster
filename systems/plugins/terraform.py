@@ -9,10 +9,10 @@ import json
 
 class TerraformWrapper(object):
 
-    def __init__(self, provider):
+    def __init__(self, provider, id):
         self.provider = provider
         self.manager = provider.command.manager
-        self.terraform = Terraform(provider.command)
+        self.terraform = Terraform(provider.command, id)
 
     def plan(self, type, instance):
         if type:
@@ -79,10 +79,9 @@ class TerraformPluginProvider(DataPluginProvider):
         pass
 
 
-    @property
-    def terraform(self):
+    def terraform(self, id):
         if not getattr(self, '_terraform_cache', None):
-            self._terraform_cache = TerraformWrapper(self)
+            self._terraform_cache = TerraformWrapper(self, id)
         return self._terraform_cache
 
 
@@ -91,9 +90,9 @@ class TerraformPluginProvider(DataPluginProvider):
         self.initialize_terraform(instance, created)
 
         if self.test:
-            self.terraform.plan(self.terraform_type(), instance)
+            self.terraform(instance.id).plan(self.terraform_type(), instance)
         else:
-            self.terraform.apply(self.terraform_type(), instance)
+            self.terraform(instance.id).apply(self.terraform_type(), instance)
 
     def initialize_terraform(self, instance, created):
         # Override in subclass
@@ -106,7 +105,7 @@ class TerraformPluginProvider(DataPluginProvider):
     def finalize_instance(self, instance):
         self.add_credentials(instance.config)
         self.finalize_terraform(instance)
-        self.terraform.destroy(self.terraform_type(), instance)
+        self.terraform(instance.id).destroy(self.terraform_type(), instance)
 
     def finalize_terraform(self, instance):
         # Override in subclass
