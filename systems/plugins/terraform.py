@@ -9,39 +9,50 @@ import json
 
 class TerraformWrapper(object):
 
-    def __init__(self, provider, id):
+    def __init__(self, provider, instance):
         self.provider = provider
         self.manager = provider.command.manager
-        self.terraform = Terraform(provider.command, id)
+        self.instance = instance
+        self.terraform = None
 
-    def plan(self, type, instance):
-        if type:
-            manifest_name = getattr(instance, 'terraform_name', instance.provider_type)
-            manifest_path = self._get_manifest_path(type, manifest_name)
+        if self.provider.terraform_type():
+            self.terraform = Terraform(
+                self.provider.command,
+                self.instance.get_id()
+            )
+
+
+    def plan(self):
+        if self.provider.terraform_type():
+            manifest_path = self._get_manifest_path()
             if manifest_path:
-                variables = self.provider.get_variables(instance)
+                variables = self.provider.get_variables(self.instance)
                 self.provider.command.data('variables', json.dumps(variables, indent=2))
-                self.terraform.plan(manifest_path, variables, instance.state_config)
+                self.terraform.plan(manifest_path, variables, self.instance.state_config)
 
-    def apply(self, type, instance):
-        if type:
-            manifest_name = getattr(instance, 'terraform_name', instance.provider_type)
-            manifest_path = self._get_manifest_path(type, manifest_name)
+    def apply(self):
+        if self.provider.terraform_type():
+            manifest_path = self._get_manifest_path()
             if manifest_path:
-                variables = self.provider.get_variables(instance)
-                instance.state_config = self.terraform.apply(manifest_path, variables, instance.state_config)
+                variables = self.provider.get_variables(self.instance)
+                self.instance.state_config = self.terraform.apply(manifest_path, variables, self.instance.state_config)
 
-    def destroy(self, type, instance):
-        if type:
-            manifest_name = getattr(instance, 'terraform_name', instance.provider_type)
-            manifest_path = self._get_manifest_path(type, manifest_name)
+    def destroy(self):
+        if self.provider.terraform_type():
+            manifest_path = self._get_manifest_path()
             if manifest_path:
-                variables = self.provider.get_variables(instance)
-                self.terraform.destroy(manifest_path, variables, instance.state_config)
+                variables = self.provider.get_variables(self.instance)
+                self.terraform.destroy(manifest_path, variables, self.instance.state_config)
 
-    def _get_manifest_path(self, type, name):
+
+    def _get_manifest_path(self):
         try:
-            return self.manager.module_file('terraform', type, "{}.tf".format(name))
+            name = getattr(self.instance, 'terraform_name', self.instance.provider_type)
+            return self.manager.module_file(
+                'terraform',
+                self.provider.terraform_type(),
+                "{}.tf".format(name)
+            )
         except Exception as e:
             return None
 
@@ -79,20 +90,22 @@ class TerraformPluginProvider(DataPluginProvider):
         pass
 
 
-    def terraform(self, id):
+    def get_terraform(self, instance):
         if not getattr(self, '_terraform_cache', None):
-            self._terraform_cache = TerraformWrapper(self, id)
+            self._terraform_cache = TerraformWrapper(self, instance)
         return self._terraform_cache
 
 
     def initialize_instance(self, instance, created):
+        terraform = self.get_terraform(instance)
+
         self.add_credentials(instance.config)
         self.initialize_terraform(instance, created)
 
         if self.test:
-            self.terraform(instance.id).plan(self.terraform_type(), instance)
+            terraform.plan()
         else:
-            self.terraform(instance.id).apply(self.terraform_type(), instance)
+            terraform.apply()
 
     def initialize_terraform(self, instance, created):
         # Override in subclass
@@ -105,7 +118,8 @@ class TerraformPluginProvider(DataPluginProvider):
     def finalize_instance(self, instance):
         self.add_credentials(instance.config)
         self.finalize_terraform(instance)
-        self.terraform(instance.id).destroy(self.terraform_type(), instance)
+        self.get_terraform(instance).destroy()
+        self.remove_credentials(instance.config)
 
     def finalize_terraform(self, instance):
         # Override in subclass
