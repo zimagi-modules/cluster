@@ -15,17 +15,18 @@ class Terraform(object):
     thread_lock = threading.Lock()
 
 
-    def __init__(self, command, id, ignore = False):
+    def __init__(self, command, type, id, ignore = False):
         self.lib_type = 'terraform'
         self.command = command
+        self.type = type
         self.id = id
         self.ignore = ignore
         self.initialize = False
 
 
     def get_project_name(self, manifest_path, variables):
-        type = os.path.basename(manifest_path).replace('.tf', '')
-        return "{}-{}".format(type, self.id)
+        provider = os.path.basename(manifest_path).replace('.tf', '')
+        return "{}.{}.{}".format(self.type, provider, self.id)
 
 
     def check_init(self, project):
@@ -135,6 +136,7 @@ class Terraform(object):
 
             if not success and not self.ignore:
                 raise TerraformError("Terraform destroy failed: {}".format(" ".join(terraform_command)))
+            project.delete()
 
 
     def save_variable_index(self, project, variables):

@@ -18,6 +18,7 @@ class TerraformWrapper(object):
         if self.provider.terraform_type():
             self.terraform = Terraform(
                 self.provider.command,
+                self.provider.terraform_type(),
                 self.instance.get_id()
             )
 
