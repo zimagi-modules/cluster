@@ -14,9 +14,14 @@ class Command(
             'environment runtime host destination',
             value_label = 'HOST'
         )
+        self.parse_variable('destination_name', '--dest-name', str,
+            'destination environment runtime host name',
+            value_label = 'NAME'
+        )
 
     def exec(self):
         destination = self.options.get('destination', None)
+        destination_name = self.options.get('destination_name', settings.DEFAULT_HOST_NAME)
 
         def deploy_env(env):
             self.data("Deploying environment to", str(env))
@@ -27,7 +32,10 @@ class Command(
             deploy_env
         )
         if destination:
-            self.update_env_host(host = destination)
+            self.update_env_host(
+                name = destination_name,
+                host = destination
+            )
 
     def _update_environments(self, servers):
         env_name = self._environment.get_env()
