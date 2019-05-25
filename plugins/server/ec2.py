@@ -39,7 +39,7 @@ class Provider(AWSServiceMixin, BaseProvider):
         instance.config['security_groups'] = self.get_security_groups(relations['firewalls'], instance.firewalls)
 
     def prepare_instance(self, instance, created):
-        if instance.variables['public_ip_address']:
+        if instance.variables.get('public_ip_address', None):
             instance.public_ip = instance.variables['public_ip_address']
 
         instance.private_ip = instance.variables['private_ip_address']
