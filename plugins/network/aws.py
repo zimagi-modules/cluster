@@ -32,12 +32,15 @@ class AWSSubnetProvider(AWSServiceMixin, SubnetProvider):
         self.clean_aws_credentials(config)
 
     def initialize_terraform(self, instance, created):
+        relations = self.command.get_relations(instance.facade)
+
         if instance.config['zone'] is None and instance.config['zone_suffix'] is not None:
             instance.config['zone'] = "{}{}".format(
                 instance.network.config['region'],
                 instance.config['zone_suffix']
             )
         super().initialize_terraform(instance, created)
+        instance.config['nat_route_tables'] = self.get_nat_route_tables(relations['subnets'], instance.subnets)
 
 
 class AWSFirewallProvider(AWSServiceMixin, FirewallProvider):
