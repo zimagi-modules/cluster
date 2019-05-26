@@ -36,6 +36,7 @@ subnet:
     cidr_prefix: "@admin_subnet_cidr_prefix"
     zone_suffix: a
     use_public_ip: "@admin_subnet_public_ip"
+    nat_subnets: "@aws_nat_subnets"
     groups: "@admin_group"
 
   admin-2:
@@ -44,6 +45,7 @@ subnet:
     cidr_prefix: "@admin_subnet_cidr_prefix"
     zone_suffix: b
     use_public_ip: "@admin_subnet_public_ip"
+    nat_subnets: "@aws_nat_subnets"
     groups: "@admin_group"
 
   admin-3:
@@ -52,6 +54,7 @@ subnet:
     cidr_prefix: "@admin_subnet_cidr_prefix"
     zone_suffix: c
     use_public_ip: "@admin_subnet_public_ip"
+    nat_subnets: "@aws_nat_subnets"
     groups: "@admin_group"
 
 firewall:
