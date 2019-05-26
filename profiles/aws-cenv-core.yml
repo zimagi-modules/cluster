@@ -4,6 +4,7 @@ parents:
 
 config:
   admin_subnet_cidr_prefix: 28
+  admin_subnet_public_ip: true
 
   admin_server_name: cenv
   admin_group: cenv

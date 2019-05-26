@@ -3,8 +3,6 @@ parents:
   - aws-cenv-core
 
 config:
-  admin_subnet_public_ip: true
-
   aws_admin_subnets:
     - admin-1
     - admin-2
