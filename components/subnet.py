@@ -8,7 +8,7 @@ class ProfileComponent(profile.BaseProfileComponent):
 
     def run(self, name, config):
         networks = self.pop_values('network', config)
-        subnets = self.pop_values('subnets', config)
+        nat_subnet = self.pop_value('nat_subnet', config)
         groups = self.pop_values('groups', config)
 
         if not networks:
@@ -21,7 +21,7 @@ class ProfileComponent(profile.BaseProfileComponent):
                     network = network
                 ),
                 network_name = network,
-                subnet_names = subnets,
+                nat_subnet_name = nat_subnet,
                 group_names = groups,
                 test = self.test
             )
