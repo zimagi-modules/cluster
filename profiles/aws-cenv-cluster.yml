@@ -135,7 +135,3 @@ server:
       - internet
       - ssh-external
       - admin-external
-
-run:
-  deploy-cenv:
-    destination: "@{admin_server_name}-@environment.@root_domain"

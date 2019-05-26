@@ -98,5 +98,4 @@ run:
     requires: cenv-wait
     command: deploy
     server_search: id=&server(network=@aws_networks[0];subnet=@aws_admin_subnets[0]):@{admin_server_name}1:id
-    destination: "&server(network=@aws_networks[0];subnet=@aws_admin_subnets[0]):@{admin_server_name}1:ip"
     destination_name: "@admin_host_name"
