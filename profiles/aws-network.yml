@@ -26,8 +26,9 @@ config:
     - aws-ap-southeast-2
 
   aws_nat_subnets:
-    - nat-1
-    - nat-2
+    - nat-a
+    - nat-b
+    - nat-c
 
   # Ubuntu 18.04LTS hvm:ebs-ssd
   aws_ubuntu_user: ubuntu
@@ -245,7 +246,7 @@ firewall:
         cidrs: "@network_cidr_base"
 
 subnet:
-  nat-1:
+  nat-a:
     when_in: "@aws_nat_subnets"
     network: "@aws_networks"
     cidr_prefix: 28
@@ -254,11 +255,20 @@ subnet:
     use_nat: true
     groups: "@network_groups"
 
-  nat-2:
+  nat-b:
     when_in: "@aws_nat_subnets"
     network: "@aws_networks"
     cidr_prefix: 28
     zone_suffix: b
+    use_public_ip: true
+    use_nat: true
+    groups: "@network_groups"
+
+  nat-c:
+    when_in: "@aws_nat_subnets"
+    network: "@aws_networks"
+    cidr_prefix: 28
+    zone_suffix: c
     use_public_ip: true
     use_nat: true
     groups: "@network_groups"
