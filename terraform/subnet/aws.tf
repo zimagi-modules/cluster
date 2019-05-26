@@ -20,11 +20,6 @@ output "subnet_id" {
   value = "${aws_subnet.network.id}"
 }
 
-resource "aws_route_table_association" "network" {
-  subnet_id      = "${aws_subnet.network.id}"
-  route_table_id = "${var.network.route_table_id}"
-}
-
 resource "aws_eip" "nat" {
   count = "${var.use_nat ? 1 : 0}"
   vpc = true
@@ -53,4 +48,15 @@ output "nat_public_ip" {
 }
 output "nat_route_table_id" {
   value = "${var.use_nat ? aws_route_table.nat.0.id : null}"
+}
+
+resource "aws_route_table_association" "public" {
+  count = "${var.use_public_ip ? 1 : 0}"
+  subnet_id = "${aws_subnet.network.id}"
+  route_table_id = "${var.network.route_table_id}"
+}
+resource "aws_route_table_association" "private" {
+  count = "${var.use_nat_route_table ? 1 : 0}"
+  subnet_id = "${aws_subnet.network.id}"
+  route_table_id = "${var.nat_subnet != null ? var.nat_subnet.nat_route_table_id : null}"
 }
