@@ -31,6 +31,7 @@ certificate:
 
 subnet:
   admin-1:
+    requires: "@aws_nat_subnets"
     when_in: "@aws_admin_subnets"
     network: "@aws_networks"
     cidr_prefix: "@admin_subnet_cidr_prefix"
@@ -40,6 +41,7 @@ subnet:
     groups: "@admin_group"
 
   admin-2:
+    requires: "@aws_nat_subnets"
     when_in: "@aws_admin_subnets"
     network: "@aws_networks"
     cidr_prefix: "@admin_subnet_cidr_prefix"
@@ -49,6 +51,7 @@ subnet:
     groups: "@admin_group"
 
   admin-3:
+    requires: "@aws_nat_subnets"
     when_in: "@aws_admin_subnets"
     network: "@aws_networks"
     cidr_prefix: "@admin_subnet_cidr_prefix"
