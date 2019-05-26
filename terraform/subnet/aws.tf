@@ -24,3 +24,33 @@ resource "aws_route_table_association" "network" {
   subnet_id      = "${aws_subnet.network.id}"
   route_table_id = "${var.network.route_table_id}"
 }
+
+resource "aws_eip" "nat" {
+  count = "${var.use_nat ? 1 : 0}"
+  vpc = true
+}
+resource "aws_nat_gateway" "nat" {
+  count = "${var.use_nat ? 1 : 0}"
+  allocation_id = "${aws_eip.nat.0.id}"
+  subnet_id = "${aws_subnet.network.id}"
+}
+resource "aws_route_table" "nat" {
+  count = "${var.use_nat ? 1 : 0}"
+  vpc_id = "${var.network.vpc_id}"
+  route {
+    cidr_block = "0.0.0.0/0"
+    nat_gateway_id = "${aws_nat_gateway.nat.0.id}"
+  }
+}
+output "nat_id" {
+  value = "${var.use_nat ? aws_nat_gateway.nat.0.id : null}"
+}
+output "nat_private_ip" {
+  value = "${var.use_nat ? aws_nat_gateway.nat.0.private_ip : null}"
+}
+output "nat_public_ip" {
+  value = "${var.use_nat ? aws_nat_gateway.nat.0.public_ip : null}"
+}
+output "nat_route_table_id" {
+  value = "${var.use_nat ? aws_route_table.nat.0.id : null}"
+}
