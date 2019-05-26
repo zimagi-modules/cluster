@@ -59,6 +59,19 @@ class AWSServiceMixin(object):
 
         return subnet_ids
 
+    def get_nat_route_tables(self, names, subnets):
+        route_table_ids = []
+
+        if names:
+            subnets = self.command.get_instances(self.command._subnet, names = names)
+            for subnet in subnets:
+                route_table_ids.append(subnet.variables['nat_route_table_id'])
+        else:
+            for subnet in subnets.all():
+                route_table_ids.append(subnet.variables['nat_route_table_id'])
+
+        return route_table_ids
+
     def get_security_groups(self, names, firewalls):
         sgroups = []
 
