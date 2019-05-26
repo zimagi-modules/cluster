@@ -35,7 +35,7 @@ class Provider(AWSServiceMixin, BaseProvider):
             instance.private_key = private_key
 
         super().initialize_terraform(instance, created)
-        instance.config['use_public_ip'] = instance.subnet.config['use_public_ip']
+        instance.config['use_public_ip'] = instance.subnet.use_public_ip
         instance.config['security_groups'] = self.get_security_groups(relations['firewalls'], instance.firewalls)
 
     def prepare_instance(self, instance, created):
