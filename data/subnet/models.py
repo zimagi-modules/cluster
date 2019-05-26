@@ -26,7 +26,7 @@ class Subnet(
     use_public_ip = django.BooleanField(default = True)
     use_nat = django.BooleanField(default = False)
 
-    nat_subnets = django.ManyToManyField("Subnet",
+    subnets = django.ManyToManyField("Subnet",
         related_name = "%(class)s_relations",
         editable = False
     )

@@ -8,6 +8,7 @@ class ProfileComponent(profile.BaseProfileComponent):
 
     def run(self, name, config):
         networks = self.pop_values('network', config)
+        subnets = self.pop_values('subnets', config)
         groups = self.pop_values('groups', config)
 
         if not networks:
@@ -20,6 +21,7 @@ class ProfileComponent(profile.BaseProfileComponent):
                     network = network
                 ),
                 network_name = network,
+                subnet_names = subnets,
                 group_names = groups,
                 test = self.test
             )
@@ -30,6 +32,7 @@ class ProfileComponent(profile.BaseProfileComponent):
 
     def variables(self, instance):
         return {
+            'subnets': self.get_names(instance.subnets),
             'groups': self.get_names(instance.groups)
         }
 
