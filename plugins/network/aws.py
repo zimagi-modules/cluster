@@ -24,7 +24,6 @@ class AWSSubnetProvider(AWSServiceMixin, SubnetProvider):
         super().provider_config(type)
         self.option(str, 'zone', None, help = 'AWS availability zone (default random)', config_name = 'aws_zone')
         self.option(str, 'zone_suffix', None, help = 'AWS availability zone suffix (appended to region)', config_name = 'aws_zone_suffix')
-        self.option(bool, 'use_public_ip', True, help = 'Enable public IP addresses for instances in subnet', config_name = 'aws_public_ip')
 
     def add_credentials(self, config):
         self.aws_credentials(config)
