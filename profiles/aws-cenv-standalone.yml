@@ -61,7 +61,7 @@ run:
       CENV_POSTGRES_PASSWORD: "@cenv_password"
 
   cenv-cluster:
-    remote_docker_compose: https://raw.githubusercontent.com/venturiscm/cenv/master/app/docker-compose.bootstrap.yml
+    remote_docker_compose: https://raw.githubusercontent.com/venturiscm/cenv/master/app/docker-compose.standalone.yml
 
   deploy-cenv:
     server_search: id=&server(network=@aws_admin_network;subnet=@aws_admin_subnet):@{admin_server_name}1:id
