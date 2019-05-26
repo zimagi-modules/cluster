@@ -32,9 +32,10 @@ class ProfileComponent(profile.BaseProfileComponent):
 
     def variables(self, instance):
         return {
-            'subnets': self.get_names(instance.subnets),
             'groups': self.get_names(instance.groups)
         }
+        if instance.nat_subnet:
+            variables['nat_subnet'] = instance.nat_subnet.name
 
     def destroy(self, name, config):
         networks = self.pop_values('network', config)
