@@ -40,3 +40,13 @@ class NetworkMixin(DataMixin):
         self.facade_index['02_subnet'] = self._subnet
         self.facade_index['02_firewall'] = self._firewall
         self.facade_index['03_firewall_rule'] = self._firewall_rule
+
+
+    def parse_nat_subnet_name(self, optional = False, help_text = 'NAT subnet name'):
+        self.parse_variable('nat_subnet_name', optional, str, help_text,
+            value_label = 'NAME',
+        )
+
+    @property
+    def nat_subnet_name(self):
+        return self.options.get('nat_subnet_name', None)
