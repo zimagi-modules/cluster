@@ -1,4 +1,4 @@
-from systems.command.base import command_list
+from systems.command.base import command_set
 from systems.command.factory import resource, router
 from systems.command.types import firewall
 
@@ -9,7 +9,7 @@ class Command(firewall.FirewallRouterCommand):
         network_provider_name = 'network'
         firewall_rule_name = 'firewall_rule'
 
-        return command_list(
+        return command_set(
             resource.ResourceCommandSet(
                 firewall.FirewallActionCommand, self.name,
                 provider_name = network_provider_name,

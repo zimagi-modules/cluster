@@ -1,4 +1,4 @@
-from systems.command.base import command_list
+from systems.command.base import command_set
 from systems.command.factory import resource, router
 from systems.command.types import network
 
@@ -8,7 +8,7 @@ class Command(network.NetworkRouterCommand):
     def get_subcommands(self):
         network_peering_name = 'network_peering'
 
-        return command_list(
+        return command_set(
             resource.ResourceCommandSet(
                 network.NetworkActionCommand, self.name,
                 provider_name = self.name,

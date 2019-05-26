@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from systems.command.base import command_list
+from systems.command.base import command_set
 from systems.command.factory import resource, router
 from systems.command.types import server
 from utility.temp import temp_dir
@@ -80,7 +80,7 @@ class Command(server.ServerRouterCommand):
     def get_subcommands(self):
         server_volume_name = 'server_volume'
 
-        return command_list(
+        return command_set(
             resource.ResourceCommandSet(
                 server.ServerActionCommand, self.name,
                 provider_name = self.name,

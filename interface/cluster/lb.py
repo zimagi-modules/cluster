@@ -1,4 +1,4 @@
-from systems.command.base import command_list
+from systems.command.base import command_set
 from systems.command.factory import resource, router
 from systems.command.types import load_balancer
 
@@ -9,7 +9,7 @@ class Command(load_balancer.LoadBalancerRouterCommand):
         name = 'load_balancer'
         listener_name = 'load_balancer_listener'
 
-        return command_list(
+        return command_set(
             resource.ResourceCommandSet(
                 load_balancer.LoadBalancerActionCommand, name,
                 provider_name = name,
