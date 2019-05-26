@@ -26,8 +26,10 @@ class Subnet(
     use_public_ip = django.BooleanField(default = True)
     use_nat = django.BooleanField(default = False)
 
-    subnets = django.ManyToManyField("Subnet",
-        related_name = "%(class)s_relations",
+    nat_subnet = django.ForeignKey("Subnet",
+        null = True,
+        on_delete = django.SET_NULL,
+        related_name = "%(class)s_relation",
         editable = False
     )
 
@@ -35,6 +37,7 @@ class Subnet(
         verbose_name = "subnet"
         verbose_name_plural = "subnets"
         facade_class = SubnetFacade
+        relation = ['nat_subnet']
         ordering = ['cidr']
         provider_name = 'network:subnet'
         provider_relation = 'network'
