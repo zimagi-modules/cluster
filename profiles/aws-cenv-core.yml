@@ -11,7 +11,7 @@ config:
 
   admin_host_name: default
 
-  aws_admin_machine: t2.micro
+  aws_admin_machine: t3.small
   aws_admin_tenancy: default
   aws_admin_monitoring: false
   aws_admin_ebs_optimized: false
