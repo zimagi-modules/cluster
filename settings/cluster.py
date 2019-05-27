@@ -13,4 +13,9 @@ from .config import Config
 # Core Django settings
 
 #-------------------------------------------------------------------------------
-# Django Addons
+# Addons
+
+#
+# Terraform configuration
+#
+TERRAFORM_MAX_PROCESSES = Config.integer('CENV_TERRAFORM_MAX_PROCESSES', 1)

@@ -1,3 +1,5 @@
+from django.conf import settings
+
 from .project import project_dir
 
 import os
@@ -12,8 +14,8 @@ class TerraformError(Exception):
 
 class Terraform(object):
 
-    thread_lock = threading.Lock()
-    run_lock = threading.Semaphore(3)
+    init_lock = threading.Lock()
+    run_lock = threading.Semaphore(settings.TERRAFORM_MAX_PROCESSES)
 
 
     def __init__(self, command, type, id, ignore = False):
@@ -41,7 +43,7 @@ class Terraform(object):
                 'init',
                 '-force-copy'
             )
-            with self.thread_lock:
+            with self.init_lock:
                 success = self.command.sh(
                     terraform_command,
                     cwd = project.base_path,
