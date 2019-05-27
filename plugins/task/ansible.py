@@ -130,7 +130,7 @@ class Provider(
                 '-i', temp.save(inventory.render())
             ]
             #if Runtime.debug():
-            #    ansible_cmd.append('-vvv')
+            ansible_cmd.append('-vvvv')
 
             if 'playbooks' in self.config:
                 command = ansible_cmd + ensure_list(self.config['playbooks'])
