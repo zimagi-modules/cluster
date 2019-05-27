@@ -13,6 +13,7 @@ class TerraformError(Exception):
 class Terraform(object):
 
     thread_lock = threading.Lock()
+    run_lock = threading.Semaphore(3)
 
 
     def __init__(self, command, type, id, ignore = False):
@@ -66,11 +67,12 @@ class Terraform(object):
                 'plan',
                 "-var-file={}".format(self.save_variables(project, variables))
             )
-            success = self.command.sh(
-                terraform_command,
-                cwd = project.base_path,
-                display = True
-            )
+            with self.run_lock:
+                success = self.command.sh(
+                    terraform_command,
+                    cwd = project.base_path,
+                    display = True
+                )
             self.clean_project(project)
 
             if not success and not self.ignore:
@@ -94,11 +96,12 @@ class Terraform(object):
                 '-auto-approve',
                 "-var-file={}".format(self.save_variables(project, variables))
             )
-            success = self.command.sh(
-                terraform_command,
-                cwd = project.base_path,
-                display = True
-            )
+            with self.run_lock:
+                success = self.command.sh(
+                    terraform_command,
+                    cwd = project.base_path,
+                    display = True
+                )
             if not success and not self.ignore:
                 self.clean_project(project)
                 raise TerraformError("Terraform apply failed: {}".format(" ".join(terraform_command)))
@@ -127,11 +130,12 @@ class Terraform(object):
                 '-auto-approve',
                 "-var-file={}".format(self.save_variables(project, variables))
             ]
-            success = self.command.sh(
-                terraform_command,
-                cwd = project.base_path,
-                display = True
-            )
+            with self.run_lock:
+                success = self.command.sh(
+                    terraform_command,
+                    cwd = project.base_path,
+                    display = True
+                )
             self.clean_project(project)
 
             if not success and not self.ignore:
