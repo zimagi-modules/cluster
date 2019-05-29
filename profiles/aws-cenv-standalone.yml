@@ -63,6 +63,9 @@ run:
   cenv-cluster:
     remote_docker_compose: https://raw.githubusercontent.com/venturiscm/cenv/master/app/docker-compose.standalone.yml
 
+  cenv-wait:
+    host: "&server(network=@aws_admin_network;subnet=@aws_admin_subnet):@{admin_server_name}1:ip"
+
   deploy-cenv:
     server_search: id=&server(network=@aws_admin_network;subnet=@aws_admin_subnet):@{admin_server_name}1:id
     destination: "@{admin_server_name}-@environment.@root_domain"
