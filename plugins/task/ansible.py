@@ -1,3 +1,5 @@
+from django.conf import settings
+
 from .base import BaseProvider
 from .mixins import cli, ssh
 from utility.runtime import Runtime
@@ -7,6 +9,7 @@ from utility.data import clean_dict, ensure_list
 import os
 import re
 import json
+import threading
 
 
 class AnsibleInventory(object):
@@ -108,6 +111,9 @@ class Provider(
     ssh.SSHTaskMixin,
     BaseProvider
 ):
+    thread_lock = threading.Semaphore(settings.ANSIBLE_MAX_PROCESSES)
+
+
     def execute(self, results, params):
         with temp_dir() as temp:
             env = self._env_vars(params)
@@ -155,12 +161,13 @@ class Provider(
                 self.command.error("Ansible task requires 'playbooks' list configuration")
 
             env["ANSIBLE_CONFIG"] = temp.save(ansible_config, extension = 'cfg')
-            success = self.command.sh(
-               command,
-               env = env,
-               cwd = self.get_module_path(),
-               display = True
-            )
+            with self.thread_lock:
+                success = self.command.sh(
+                    command,
+                    env = env,
+                    cwd = self.get_module_path(),
+                    display = True
+                )
             if not success:
                self.command.error("Ansible task failed: {}".format(" ".join(command)))
 
