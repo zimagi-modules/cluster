@@ -42,14 +42,13 @@ class Terraform(object):
                 'init',
                 '-force-copy'
             )
-            with self.thread_lock:
-                success = self.command.sh(
-                    terraform_command,
-                    cwd = project.base_path,
-                    display = display
-                )
-                if not success and not self.ignore:
-                    raise TerraformError("Terraform init failed: {}".format(" ".join(terraform_command)))
+            success = self.command.sh(
+                terraform_command,
+                cwd = project.base_path,
+                display = display
+            )
+            if not success and not self.ignore:
+                raise TerraformError("Terraform init failed: {}".format(" ".join(terraform_command)))
 
 
     def plan(self, manifest_path, variables, state, display_init = False):
@@ -61,14 +60,14 @@ class Terraform(object):
             if state:
                 self.save_state(project, state)
 
-            self.init(project, display_init)
-
-            terraform_command = (
-                'terraform',
-                'plan',
-                "-var-file={}".format(self.save_variables(project, variables))
-            )
             with self.thread_lock:
+                self.init(project, display_init)
+
+                terraform_command = (
+                    'terraform',
+                    'plan',
+                    "-var-file={}".format(self.save_variables(project, variables))
+                )
                 success = self.command.sh(
                     terraform_command,
                     cwd = project.base_path,
@@ -89,15 +88,15 @@ class Terraform(object):
             if state:
                 self.save_state(project, state)
 
-            self.init(project, display_init)
-
-            terraform_command = (
-                'terraform',
-                'apply',
-                '-auto-approve',
-                "-var-file={}".format(self.save_variables(project, variables))
-            )
             with self.thread_lock:
+                self.init(project, display_init)
+
+                terraform_command = (
+                    'terraform',
+                    'apply',
+                    '-auto-approve',
+                    "-var-file={}".format(self.save_variables(project, variables))
+                )
                 success = self.command.sh(
                     terraform_command,
                     cwd = project.base_path,
@@ -123,15 +122,15 @@ class Terraform(object):
             if state:
                 self.save_state(project, state)
 
-            self.init(project, display_init)
-
-            terraform_command = [
-                'terraform',
-                'destroy',
-                '-auto-approve',
-                "-var-file={}".format(self.save_variables(project, variables))
-            ]
             with self.thread_lock:
+                self.init(project, display_init)
+
+                terraform_command = [
+                    'terraform',
+                    'destroy',
+                    '-auto-approve',
+                    "-var-file={}".format(self.save_variables(project, variables))
+                ]
                 success = self.command.sh(
                     terraform_command,
                     cwd = project.base_path,
