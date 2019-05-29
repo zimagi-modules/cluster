@@ -1,27 +1,47 @@
 
+_server: &server
+  roles: server-admin
+
+
+cli:
+  <<: *server
+  provider: remote_command
+  command: "@command"
+  options:
+    command: env
+
+sudo:
+  <<: *server
+  provider: remote_command
+  command: "@command"
+  sudo: true
+  options:
+    command: env
+
+
 environment:
+  <<: *server
   provider: remote_command
   command: env | grep 'CENV_' > @env_file
-  roles: server-admin
   options:
     env_file: ~/.env
 
 update:
+  <<: *server
   provider: remote_command
   command: docker image prune -fa && docker-compose rm -fs api && docker-compose pull && docker-compose up -d
-  roles: server-admin
 
 restart:
+  <<: *server
   provider: remote_command
   command: docker-compose restart @system
-  roles: server-admin
   options:
     system: api
 
 log:
+  <<: *server
   provider: remote_command
   command: docker-compose logs --tail=@count @system
-  roles: server-admin
   options:
     count: 100
     system: api
