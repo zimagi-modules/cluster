@@ -14,8 +14,7 @@ class TerraformError(Exception):
 
 class Terraform(object):
 
-    init_lock = threading.Lock()
-    run_lock = threading.Semaphore(settings.TERRAFORM_MAX_PROCESSES)
+    thread_lock = threading.Semaphore(settings.TERRAFORM_MAX_PROCESSES)
 
 
     def __init__(self, command, type, id, ignore = False):
@@ -43,7 +42,7 @@ class Terraform(object):
                 'init',
                 '-force-copy'
             )
-            with self.init_lock:
+            with self.thread_lock:
                 success = self.command.sh(
                     terraform_command,
                     cwd = project.base_path,
@@ -69,7 +68,7 @@ class Terraform(object):
                 'plan',
                 "-var-file={}".format(self.save_variables(project, variables))
             )
-            with self.run_lock:
+            with self.thread_lock:
                 success = self.command.sh(
                     terraform_command,
                     cwd = project.base_path,
@@ -98,7 +97,7 @@ class Terraform(object):
                 '-auto-approve',
                 "-var-file={}".format(self.save_variables(project, variables))
             )
-            with self.run_lock:
+            with self.thread_lock:
                 success = self.command.sh(
                     terraform_command,
                     cwd = project.base_path,
@@ -132,7 +131,7 @@ class Terraform(object):
                 '-auto-approve',
                 "-var-file={}".format(self.save_variables(project, variables))
             ]
-            with self.run_lock:
+            with self.thread_lock:
                 success = self.command.sh(
                     terraform_command,
                     cwd = project.base_path,
