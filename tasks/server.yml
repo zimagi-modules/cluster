@@ -29,19 +29,21 @@ environment:
 update:
   <<: *server
   provider: remote_command
-  command: docker image prune -fa && docker-compose rm -fs api && docker-compose pull && docker-compose up -d
+  command: docker image prune -fa && docker-compose rm -fs @service && docker-compose pull && docker-compose up -d
+  options:
+    service: api
 
 restart:
   <<: *server
   provider: remote_command
-  command: docker-compose restart @system
+  command: docker-compose restart @service
   options:
-    system: api
+    service: api
 
 log:
   <<: *server
   provider: remote_command
-  command: docker-compose logs --tail=@count @system
+  command: docker-compose logs --tail=@count @service
   options:
     count: 100
-    system: api
+    service: api
