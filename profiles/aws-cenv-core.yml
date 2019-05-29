@@ -98,6 +98,7 @@ run:
     task: wait
     host: "&server(network=@aws_networks[0];subnet=@aws_admin_subnets[0]):@{admin_server_name}1:ip"
     port: "@admin_port"
+    timeout: 600
 
   deploy-cenv:
     requires: cenv-wait
