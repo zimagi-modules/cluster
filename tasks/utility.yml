@@ -5,3 +5,18 @@ sleep:
   options:
     number: 5
     unit: s
+
+wait:
+  provider: script
+  module: core
+  script: scripts/wait.sh
+  args:
+    - "--host=@host"
+    - "--port=@port"
+    - "--timeout=@timeout"
+    - "@flags"
+  options:
+    host: localhost
+    port: 5123
+    timeout: 0
+    flags: "--quiet"
