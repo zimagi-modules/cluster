@@ -22,8 +22,11 @@ config:
   cenv_database_user: "%%cenv_database_user:30"
   cenv_password: "%%cenv_password:30"
 
-  terraform_max_processes: 1
-  ansible_max_processes: 1
+  admin_parallel: true
+  admin_db_max_connections: 1
+  admin_thread_count: 5
+  admin_terraform_max_processes: 1
+  admin_ansible_max_processes: 1
 
 group:
   "@admin_group":
@@ -71,18 +74,19 @@ run:
       CENV_DEFAULT_RUNTIME_REPO: "@DEFAULT_RUNTIME_REPO"
       CENV_DEFAULT_RUNTIME_IMAGE: "@DEFAULT_RUNTIME_IMAGE"
       CENV_SECRET_KEY: "%%cenv_secret_key:50"
-      CENV_PARALLEL: "@PARALLEL"
-      CENV_THREAD_COUNT: "@THREAD_COUNT"
+      CENV_PARALLEL: "@admin_parallel"
+      CENV_THREAD_COUNT: "@admin_thread_count"
       CENV_TIME_ZONE: "@primary_timezone"
       CENV_CORE_MODULE: "@CORE_MODULE"
       CENV_DEFAULT_MODULES: " @DEFAULT_MODULES "
       CENV_DB_PACKAGE_ALL_NAME: "@DB_PACKAGE_ALL_NAME"
+      CENV_DB_MAX_CONNECTIONS: "@admin_db_max_connections"
       CENV_LOG_LEVEL: "@LOG_LEVEL"
       CENV_ALLOWED_HOSTS: "@ALLOWED_HOSTS"
       CENV_ADMIN_USER: "@ADMIN_USER"
       CENV_DEFAULT_ADMIN_TOKEN: "@DEFAULT_ADMIN_TOKEN"
-      CENV_TERRAFORM_MAX_PROCESSES: "@terraform_max_processes"
-      CENV_ANSIBLE_MAX_PROCESSES: "@ansible_max_processes"
+      CENV_TERRAFORM_MAX_PROCESSES: "@admin_terraform_max_processes"
+      CENV_ANSIBLE_MAX_PROCESSES: "@admin_ansible_max_processes"
 
   cenv-cluster:
     requires: cenv-app-environment
