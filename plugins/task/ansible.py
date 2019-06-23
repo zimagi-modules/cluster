@@ -191,7 +191,7 @@ class Provider(
         config_contents = self.module.load_file(ansible_config_file)
 
         if not config_contents:
-            self.command.error("Could not load configuration from: {}".format(ansible_config_file))
+            return "\n".join(core_config)
 
         config = []
         sections = {}
