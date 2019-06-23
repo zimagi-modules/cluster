@@ -2,7 +2,7 @@
 _ansible: &ansible
   provider: ansible
   roles: server-admin
-  config: ansible.cfg
+  directory: ansible
 
 
 password:
