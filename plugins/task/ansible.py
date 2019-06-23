@@ -118,13 +118,23 @@ class Provider(
         with temp_dir() as temp:
             env = self._env_vars(params)
             lock = self.config.get('lock', False)
-            ansible_config = self.merge_config(self.config.get('config', None),
+            directory = self.config.get('directory', None)
+            project_dir = self.get_module_path() if not directory else self.get_path(directory)
+
+            ansible_config = self.merge_config(directory,
                 '[defaults]',
                 'host_key_checking = False',
                 'deprecation_warnings = False',
                 'gathering = smart'
             )
             inventory = AnsibleInventory(self, self._ssh_servers(params), temp)
+
+            if directory:
+                for filename in os.listdir(project_dir):
+                    if not filename.endswith(".cfg"):
+                        temp.link(os.path.join(project_dir, filename),
+                            name = filename
+                        )
 
             if 'group_vars' in self.config:
                 temp.link(self.get_path(self.config['group_vars']),
@@ -165,21 +175,23 @@ class Provider(
                 success = self.command.sh(
                     command,
                     env = env,
-                    cwd = self.get_module_path(),
+                    cwd = project_dir,
                     display = True
                 )
             if not success:
                self.command.error("Ansible task failed: {}".format(" ".join(command)))
 
 
-    def merge_config(self, config_file_name, *core_config):
-        if not config_file_name:
+    def merge_config(self, ansible_dir, *core_config):
+        if not ansible_dir:
             return "\n".join(core_config)
+        else:
+            ansible_config_file = "{}/{}".format(ansible_dir, 'ansible.cfg')
 
-        config_contents = self.module.load_file(config_file_name)
+        config_contents = self.module.load_file(ansible_config_file)
 
         if not config_contents:
-            self.command.error("Could not load configuration from: {}".format(config_file_name))
+            self.command.error("Could not load configuration from: {}".format(ansible_config_file))
 
         config = []
         sections = {}
