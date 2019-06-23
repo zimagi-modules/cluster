@@ -136,11 +136,6 @@ class Provider(
                             name = filename
                         )
 
-            if 'group_vars' in self.config:
-                temp.link(self.get_path(self.config['group_vars']),
-                    name = 'group_vars'
-                )
-
             ansible_cmd = [
                 'ansible-playbook',
                 '-i', temp.save(inventory.render())
