@@ -3,12 +3,7 @@ _ansible: &ansible
   provider: ansible
   roles: server-admin
   config: ansible.cfg
-  group_vars: variables
 
-
-bootstrap:
-  <<: *ansible
-  playbooks: bootstrap.yml
 
 password:
   <<: *ansible

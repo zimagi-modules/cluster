@@ -17,33 +17,3 @@ sudo:
   sudo: true
   options:
     command: env
-
-
-environment:
-  <<: *server
-  provider: remote_command
-  command: env | grep 'CENV_' > @env_file
-  options:
-    env_file: ~/.env
-
-update:
-  <<: *server
-  provider: remote_command
-  command: docker image prune -fa && docker-compose rm -fs @service && docker-compose pull && docker-compose up -d
-  options:
-    service: api
-
-restart:
-  <<: *server
-  provider: remote_command
-  command: docker-compose restart @service
-  options:
-    service: api
-
-log:
-  <<: *server
-  provider: remote_command
-  command: docker-compose logs --tail=@count @service
-  options:
-    count: 100
-    service: api
