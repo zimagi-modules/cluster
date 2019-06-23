@@ -1,55 +1,5 @@
-config:
-  primary_timezone: America/New_York
-
-  network_cidr_base: 10.0.0.0/8
-  network_cidr_prefix: 16
-  network_dns_support: True
-  network_groups: core
-
-  core_firewall_groups: core
-
-  aws_networks:
-    - aws-us-east-1
-    - aws-us-east-2
-    - aws-us-west-1
-    - aws-us-west-2
-    - aws-ca-central-1
-    - aws-sa-east-1
-    - aws-eu-central-1
-    - aws-eu-west-1
-    - aws-eu-west-2
-    - aws-eu-west-3
-    - aws-ap-northeast-1
-    - aws-ap-northeast-2
-    - aws-ap-south-1
-    - aws-ap-southeast-1
-    - aws-ap-southeast-2
-
-  aws_nat_subnets:
-    - nat-a
-    - nat-b
-    - nat-c
-
-  # Ubuntu 18.04LTS hvm:ebs-ssd
-  aws_ubuntu_user: ubuntu
-  aws_ubuntu_image:
-    aws-us-east-1: ami-07073342279f98d28
-    aws-us-east-2: ami-02e1499f8253f416f
-    aws-us-west-1: ami-09a3ee98385ff6b68
-    aws-us-west-2: ami-0e3e4660d8725dd31
-    aws-ca-central-1: ami-00a7d7ec7a73de008
-    aws-sa-east-1: ami-0100acce7c30020c9
-    aws-eu-central-1: ami-015796b0bb7c85278
-    aws-eu-west-1: ami-0c21eb76a5574aa2f
-    aws-eu-west-2: ami-031e9af9a62a515ca
-    aws-eu-west-3: ami-0cf799901ece2e2af
-    aws-ap-northeast-1: ami-0238fc6af6bba5241
-    aws-ap-northeast-2: ami-0a5732cf00ef2da99
-    aws-ap-south-1: ami-0bcc667116a070e40
-    aws-ap-southeast-1: ami-033a3bd1e8ea825a5
-    aws-ap-southeast-2: ami-0626846f14dbd80e5
-
-  ssh_port: 22
+parents:
+  - aws-config
 
 group:
   core:
@@ -244,6 +194,21 @@ firewall:
         from_port: "@ssh_port"
         to_port: "@ssh_port"
         cidrs: "@network_cidr_base"
+
+  nfs:
+    network: "@aws_networks"
+    groups: "@core_firewall_groups"
+    rules:
+      tcp-in:
+        mode: ingress
+        protocol: tcp
+        from_port: 2049
+        to_port: 2049
+      udp-in:
+        mode: ingress
+        protocol: udp
+        from_port: 2049
+        to_port: 2049
 
 subnet:
   nat-a:
