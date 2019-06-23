@@ -1,8 +1,0 @@
----
-# Application user
-app_user: ubuntu
-app_home: "/home/{{ app_user }}"
-
-# Docker application environment
-remote_docker_compose: https://raw.githubusercontent.com/venturiscm/cenv/master/app/docker-compose.cluster.yml
-local_docker_compose: "{{ app_home }}/docker-compose.yml"
