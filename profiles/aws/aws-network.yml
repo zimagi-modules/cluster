@@ -4,12 +4,6 @@ parents:
 group:
   core:
 
-domain:
-  "@root_domain":
-    provider: route53
-    email: "@root_domain_email"
-    certificate_authority: letsencrypt
-
 network:
   aws-us-east-1:
     when_in: "@aws_networks"
