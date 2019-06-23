@@ -1,8 +1,0 @@
-parents:
-  - aws-config
-
-domain:
-  "@root_domain":
-    provider: route53
-    email: "@root_domain_email"
-    certificate_authority: letsencrypt
