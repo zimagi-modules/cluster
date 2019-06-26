@@ -11,12 +11,12 @@ wait:
   module: core
   script: scripts/wait.sh
   args:
-    - "--host=@wait_host"
+    - "--hosts=@wait_hosts"
     - "--port=@wait_port"
     - "--timeout=@timeout"
     - "@flags"
   options:
-    wait_host: localhost
+    wait_hosts: localhost
     wait_port: 5123
     timeout: 0
     flags: "--quiet"
