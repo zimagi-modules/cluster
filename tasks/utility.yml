@@ -19,4 +19,4 @@ wait:
     wait_hosts: localhost
     wait_port: 5123
     timeout: 0
-    flags: "--quiet"
+    flags: ""
