@@ -14,9 +14,7 @@ wait:
     - "--hosts=@wait_hosts"
     - "--port=@wait_port"
     - "--timeout=@timeout"
-    - "@flags"
   options:
     wait_hosts: localhost
     wait_port: 5123
     timeout: 0
-    flags: ""
