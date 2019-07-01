@@ -34,6 +34,7 @@ class Provider(BaseProvider):
     def request(self):
         with temp_dir() as temp:
             self.command.info('Requesting certbot certificate for domain')
+            self.ignore_failure = False
             self.certbot(temp, 'certonly',
                 '--cert-name', self.domain.name,
                 '-d', "*.{}".format(self.domain.name),
@@ -43,6 +44,7 @@ class Provider(BaseProvider):
     def renew(self):
         with temp_dir() as temp:
             self.command.info('Renewing certbot certificate for domain')
+            self.ignore_failure = False
             self.certbot(temp, 'certonly',
                 '--force-renewal',
                 '--cert-name', self.domain.name,
@@ -53,15 +55,13 @@ class Provider(BaseProvider):
     def revoke(self):
         with temp_dir() as temp:
             self.command.info('Revoking certbot certificate for domain')
-            try:
-                self.certbot(temp, 'revoke',
-                    '--cert-path', "{}/fullchain.pem".format(self.live_directory),
-                    '-d', "*.{}".format(self.domain.name),
-                    '-m', self.domain.email
-                )
-            except Exception:
-                pass
 
+            self.ignore_failure = True
+            self.certbot(temp, 'revoke',
+                '--cert-path', "{}/fullchain.pem".format(self.live_directory),
+                '-d', "*.{}".format(self.domain.name),
+                '-m', self.domain.email
+            )
             self.domain.private_key = None
             self.domain.certificate = None
             self.domain.fullchain = None
@@ -132,7 +132,7 @@ class Provider(BaseProvider):
         success = self.command.sh(command,
             cwd = temp.base_path
         )
-        if not success:
+        if not success and not self.ignore_failure:
             self.command.error("Certbot failed: {}".format(" ".join(command)))
 
         self.domain.provider.remove_credentials(self.domain.config)
