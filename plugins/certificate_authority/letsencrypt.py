@@ -53,11 +53,15 @@ class Provider(BaseProvider):
     def revoke(self):
         with temp_dir() as temp:
             self.command.info('Revoking certbot certificate for domain')
-            self.certbot(temp, 'revoke',
-                '--cert-path', "{}/fullchain.pem".format(self.live_directory),
-                '-d', "*.{}".format(self.domain.name),
-                '-m', self.domain.email
-            )
+            try:
+                self.certbot(temp, 'revoke',
+                    '--cert-path', "{}/fullchain.pem".format(self.live_directory),
+                    '-d', "*.{}".format(self.domain.name),
+                    '-m', self.domain.email
+                )
+            except Exception:
+                pass
+
             self.domain.private_key = None
             self.domain.certificate = None
             self.domain.fullchain = None
