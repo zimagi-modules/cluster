@@ -1,5 +1,5 @@
 netaddr == 0.7.19
-ansible == 2.7.9
+ansible == 2.7.12
 jinja2 == 2.10.1
 passlib == 1.7.1
 boto3 == 1.9.119
