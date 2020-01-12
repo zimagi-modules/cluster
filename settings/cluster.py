@@ -18,9 +18,9 @@ from .config import Config
 #
 # Terraform configuration
 #
-TERRAFORM_MAX_PROCESSES = Config.integer('CENV_TERRAFORM_MAX_PROCESSES', 10)
+TERRAFORM_MAX_PROCESSES = Config.integer('MCMI_TERRAFORM_MAX_PROCESSES', 10)
 
 #
 # Ansible configuration
 #
-ANSIBLE_MAX_PROCESSES = Config.integer('CENV_ANSIBLE_MAX_PROCESSES', 10)
+ANSIBLE_MAX_PROCESSES = Config.integer('MCMI_ANSIBLE_MAX_PROCESSES', 10)

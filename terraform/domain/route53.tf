@@ -10,7 +10,7 @@ resource "aws_route53_zone" "main" {
   force_destroy = true
 
   tags = {
-    Name = "cenv-domain"
+    Name = "mcmi-domain"
   }
 }
 output "zone_id" {

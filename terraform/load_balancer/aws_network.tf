@@ -33,7 +33,7 @@ resource "aws_s3_bucket" "main" {
 POLICY
 
   tags = {
-    Name = "cenv-load-balancer-logs"
+    Name = "mcmi-load-balancer-logs"
   }
 }
 
@@ -53,7 +53,7 @@ resource "aws_lb" "main" {
   }
 
   tags = {
-    Name = "cenv-load-balancer"
+    Name = "mcmi-load-balancer"
   }
 }
 output "lb_id" {

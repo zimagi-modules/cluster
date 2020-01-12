@@ -13,7 +13,7 @@ resource "aws_subnet" "network" {
   assign_ipv6_address_on_creation = false
 
   tags = {
-    Name = "cenv-network"
+    Name = "mcmi-network"
   }
 }
 output "subnet_id" {

@@ -11,7 +11,7 @@ resource "aws_acm_certificate" "cert" {
   certificate_chain = "${var.chain}"
 
   tags = {
-    Name = "cenv-certificate"
+    Name = "mcmi-certificate"
   }
 }
 output "cert_id" {

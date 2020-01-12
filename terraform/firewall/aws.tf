@@ -8,9 +8,9 @@ provider "aws" {
 resource "aws_security_group" "firewall" {
   name = "${var.name}"
   vpc_id = "${var.network.vpc_id}"
-  
+
   tags = {
-    Name = "cenv-network"
+    Name = "mcmi-network"
   }
 }
 output "security_group_id" {

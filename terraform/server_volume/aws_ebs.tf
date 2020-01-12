@@ -13,7 +13,7 @@ resource "aws_ebs_volume" "main" {
   encrypted = "${var.ebs_encrypted}"
 
   tags = {
-    Name = "cenv-ebs"
+    Name = "mcmi-ebs"
   }
 }
 output "data_volume_id" {

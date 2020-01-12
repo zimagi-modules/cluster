@@ -25,7 +25,7 @@ resource "aws_instance" "server" {
   }
 
   tags = {
-    Name = "cenv-compute"
+    Name = "mcmi-compute"
   }
 }
 resource "aws_eip" "server_ip" {

@@ -12,7 +12,7 @@ resource "aws_efs_file_system" "data" {
   encrypted = "${var.encrypted}"
 
   tags = {
-    Name = "cenv-storage"
+    Name = "mcmi-storage"
   }
 }
 output "filesystem_id" {

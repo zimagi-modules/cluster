@@ -20,7 +20,7 @@ resource "aws_vpc_peering_connection" "network1" {
   peer_region = "${var.network2.region}"
 
   tags = {
-    Name = "cenv-network"
+    Name = "mcmi-network"
     Side = "Requester"
   }
 }
@@ -31,7 +31,7 @@ resource "aws_vpc_peering_connection_accepter" "network2" {
   auto_accept = true
 
   tags = {
-    Name = "cenv-network"
+    Name = "mcmi-network"
     Side = "Accepter"
   }
 }
