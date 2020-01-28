@@ -4,7 +4,9 @@ import boto3
 
 class AWSServiceMixin(object):
 
-    def aws_credentials(self, config = {}):
+    def aws_credentials(self, config = None):
+        if not config:
+            config = {}
         try:
             config['access_key'] = self.command.get_config('aws_access_key', required = True).strip()
             os.environ['AWS_ACCESS_KEY_ID'] = config['access_key']

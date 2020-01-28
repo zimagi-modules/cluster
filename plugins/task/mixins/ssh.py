@@ -9,7 +9,14 @@ class SSHTaskMixin(object):
             error_on_empty = False
         )
 
-    def _ssh_exec(self, server, command, args = [], options = {}, env = {}, sudo = False, ssh = None):
+    def _ssh_exec(self, server, command, args = None, options = None, env = None, sudo = False, ssh = None):
+        if not args:
+            args = []
+        if not options:
+            options = {}
+        if not env:
+            env = {}
+
         if not ssh:
             ssh = server.provider.ssh(env = env)
 
