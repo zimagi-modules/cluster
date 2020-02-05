@@ -1,7 +1,3 @@
-parents:
-  - module: core
-    profile: display
-
 config_store:
   domain_list_fields:
     - provider_type
