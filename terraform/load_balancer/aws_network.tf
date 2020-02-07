@@ -1,14 +1,14 @@
 
 provider "aws" {
-  access_key = "${var.access_key}"
-  secret_key = "${var.secret_key}"
-  region = "${var.network.region}"
+  access_key = var.access_key
+  secret_key = var.secret_key
+  region = var.network.region
 }
 
 data "aws_elb_service_account" "main" {}
 
 resource "aws_s3_bucket" "main" {
-  bucket = "${format("nlb-%s-%s", var.name, var.network.name)}"
+  bucket = format("nlb-%s-%s", var.name, var.network.name)
   force_destroy = true
   acl = "private"
   policy = <<POLICY
@@ -39,16 +39,16 @@ POLICY
 
 resource "aws_lb" "main" {
   load_balancer_type = "network"
-  name = "${var.name}"
-  internal = "${var.internal}"
+  name = var.name
+  internal = var.internal
 
-  subnets = "${var.subnets}"
-  security_groups = "${var.security_groups}"
+  subnets = var.subnets
+  security_groups = var.security_groups
 
   enable_cross_zone_load_balancing = true
 
   access_logs {
-    bucket  = "${aws_s3_bucket.main.id}"
+    bucket  = aws_s3_bucket.main.id
     enabled = true
   }
 
@@ -57,11 +57,11 @@ resource "aws_lb" "main" {
   }
 }
 output "lb_id" {
-  value = "${aws_lb.main.id}"
+  value = aws_lb.main.id
 }
 output "lb_arn" {
-  value = "${aws_lb.main.arn}"
+  value = aws_lb.main.arn
 }
 output "lb_dns_name" {
-  value = "${aws_lb.main.dns_name}"
+  value = aws_lb.main.dns_name
 }
