@@ -4,9 +4,7 @@ import boto3
 
 class AWSServiceMixin(object):
 
-    def aws_credentials(self, config = None):
-        if not config:
-            config = {}
+    def aws_credentials(self, config):
         try:
             config['access_key'] = self.command.get_config('aws_access_key', required = True).strip()
             os.environ['AWS_ACCESS_KEY_ID'] = config['access_key']
@@ -29,7 +27,7 @@ class AWSServiceMixin(object):
 
     def _init_session(self):
         if not getattr(self, 'session', None):
-            config = self.aws_credentials()
+            config = self.aws_credentials({})
             self.session = boto3.Session(
                 aws_access_key_id = config['access_key'],
                 aws_secret_access_key = config['secret_key']
