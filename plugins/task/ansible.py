@@ -125,7 +125,8 @@ class Provider(
                 '[defaults]',
                 'host_key_checking = False',
                 'deprecation_warnings = False',
-                'gathering = smart'
+                'gathering = smart',
+                'jinja2_native = True'
             )
             inventory = AnsibleInventory(self, self._ssh_servers(params), temp)
 
@@ -140,8 +141,8 @@ class Provider(
                 'ansible-playbook',
                 '-i', temp.save(inventory.render())
             ]
-            #if Runtime.debug():
-            #    ansible_cmd.append('-vvvv')
+            if Runtime.debug():
+                ansible_cmd.append('-vvvv')
 
             if 'playbooks' in self.config:
                 command = ansible_cmd + ensure_list(self.config['playbooks'])
@@ -174,7 +175,7 @@ class Provider(
                     display = True
                 )
             if not success:
-               self.command.error("Ansible task failed: {}".format(" ".join(command)))
+                self.command.error("Ansible task failed: {}".format(" ".join(command)))
 
 
     def merge_config(self, ansible_dir, *core_config):
