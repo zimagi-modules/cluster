@@ -172,7 +172,8 @@ class Provider(
                     command,
                     env = env,
                     cwd = project_dir,
-                    display = True
+                    display = True,
+                    line_prefix = '[ansible]: '
                 )
             if not success:
                 self.command.error("Ansible task failed: {}".format(" ".join(command)))
