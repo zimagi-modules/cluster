@@ -45,7 +45,8 @@ class Terraform(object):
             success = self.command.sh(
                 terraform_command,
                 cwd = project.base_path,
-                display = display
+                display = display,
+                line_prefix = '[terraform]: '
             )
             if not success and not self.ignore:
                 raise TerraformError("Terraform init failed: {}".format(" ".join(terraform_command)))
@@ -71,7 +72,8 @@ class Terraform(object):
                 success = self.command.sh(
                     terraform_command,
                     cwd = project.base_path,
-                    display = True
+                    display = True,
+                    line_prefix = '[terraform]: '
                 )
             self.clean_project(project)
 
@@ -100,7 +102,8 @@ class Terraform(object):
                 success = self.command.sh(
                     terraform_command,
                     cwd = project.base_path,
-                    display = True
+                    display = True,
+                    line_prefix = '[terraform]: '
                 )
             if not success and not self.ignore:
                 self.clean_project(project)
@@ -134,7 +137,8 @@ class Terraform(object):
                 success = self.command.sh(
                     terraform_command,
                     cwd = project.base_path,
-                    display = True
+                    display = True,
+                    line_prefix = '[terraform]: '
                 )
             self.clean_project(project)
 
