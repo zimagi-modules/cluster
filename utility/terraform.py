@@ -1,6 +1,7 @@
 from django.conf import settings
 
 from .project import project_dir
+from utility.runtime import Runtime
 
 import os
 import pathlib
@@ -56,7 +57,7 @@ class Terraform(object):
         with project_dir(self.lib_type, self.get_project_name(manifest_path, variables)) as project:
             self.check_init(project)
 
-            project.link(manifest_path, 'manifest.tf')
+            project.copy(manifest_path, 'manifest.tf')
             self.save_variable_index(project, variables)
             if state:
                 self.save_state(project, state)
@@ -75,7 +76,9 @@ class Terraform(object):
                     display = True,
                     line_prefix = '[terraform]: '
                 )
-            self.clean_project(project)
+
+            if not Runtime.debug():
+                self.clean_project(project)
 
             if not success and not self.ignore:
                 raise TerraformError("Terraform plan failed: {}".format(" ".join(terraform_command)))
@@ -85,7 +88,7 @@ class Terraform(object):
         with project_dir(self.lib_type, self.get_project_name(manifest_path, variables)) as project:
             self.check_init(project)
 
-            project.link(manifest_path, 'manifest.tf')
+            project.copy(manifest_path, 'manifest.tf')
             self.save_variable_index(project, variables)
             if state:
                 self.save_state(project, state)
@@ -106,13 +109,16 @@ class Terraform(object):
                     line_prefix = '[terraform]: '
                 )
             if not success and not self.ignore:
-                self.clean_project(project)
+                if not Runtime.debug():
+                    self.clean_project(project)
                 raise TerraformError("Terraform apply failed: {}".format(" ".join(terraform_command)))
 
             self.command.info('')
 
             state = self.load_state(project)
-            self.clean_project(project)
+
+            if not Runtime.debug():
+                self.clean_project(project)
             return state
 
 
@@ -120,7 +126,7 @@ class Terraform(object):
         with project_dir(self.lib_type, self.get_project_name(manifest_path, variables)) as project:
             self.check_init(project)
 
-            project.link(manifest_path, 'manifest.tf')
+            project.copy(manifest_path, 'manifest.tf')
             self.save_variable_index(project, variables)
             if state:
                 self.save_state(project, state)
@@ -140,7 +146,8 @@ class Terraform(object):
                     display = True,
                     line_prefix = '[terraform]: '
                 )
-            self.clean_project(project)
+            if not Runtime.debug():
+                self.clean_project(project)
 
             if not success and not self.ignore:
                 raise TerraformError("Terraform destroy failed: {}".format(" ".join(terraform_command)))
@@ -182,11 +189,11 @@ class Terraform(object):
 
 
     def save_variables(self, project, variables):
-        return project.save(json.dumps(variables), 'variables.tfvars.json')
+        return project.save(json.dumps(variables, indent = 2), 'variables.tfvars.json')
 
 
     def save_state(self, project, state):
-        return project.save(json.dumps(state), 'terraform.tfstate')
+        return project.save(json.dumps(state, indent = 2), 'terraform.tfstate')
 
     def load_state(self, project):
         return json.loads(project.load('terraform.tfstate'))
