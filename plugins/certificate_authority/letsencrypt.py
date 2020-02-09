@@ -135,5 +135,4 @@ class Provider(BaseProvider):
         if not success and not self.ignore_failure:
             self.command.error("Certbot failed: {}".format(" ".join(command)))
 
-        self.domain.provider.remove_credentials(self.domain.config)
         self.save_certificates(temp)
