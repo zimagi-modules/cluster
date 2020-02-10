@@ -5,28 +5,36 @@ provider "aws" {
   region = var.network.region
 }
 
-data "aws_elb_service_account" "main" {}
-
 resource "aws_s3_bucket" "main" {
   bucket = format("nlb-%s-%s", var.name, var.network.name)
   force_destroy = true
   acl = "private"
   policy = <<POLICY
 {
-  "Id": "Policy",
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Action": [
-        "s3:PutObject"
-      ],
+      "Sid": "AWSLogDeliveryWrite",
       "Effect": "Allow",
-      "Resource": "arn:aws:s3:::${format("nlb-%s-%s", var.name, var.network.name)}/*",
       "Principal": {
-        "AWS": [
-          "${data.aws_elb_service_account.main.arn}"
-        ]
+        "Service": "delivery.logs.amazonaws.com"
+      },
+      "Action": "s3:PutObject",
+      "Resource": "arn:aws:s3:::${format("nlb-%s-%s", var.name, var.network.name)}/lb/AWSLogs/*",
+      "Condition": {
+        "StringEquals": {
+          "s3:x-amz-acl": "bucket-owner-full-control"
+        }
       }
+    },
+    {
+      "Sid": "AWSLogDeliveryAclCheck",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "delivery.logs.amazonaws.com"
+      },
+      "Action": "s3:GetBucketAcl",
+      "Resource": "arn:aws:s3:::${format("nlb-%s-%s", var.name, var.network.name)}"
     }
   ]
 }
@@ -48,7 +56,8 @@ resource "aws_lb" "main" {
   enable_cross_zone_load_balancing = true
 
   access_logs {
-    bucket  = aws_s3_bucket.main.id
+    bucket  = aws_s3_bucket.main.bucket
+    prefix = "lb"
     enabled = true
   }
 
