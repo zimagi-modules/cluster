@@ -5,36 +5,28 @@ provider "aws" {
   region = var.network.region
 }
 
+data "aws_elb_service_account" "main" {}
+
 resource "aws_s3_bucket" "main" {
   bucket = format("alb-%s-%s", var.name, var.network.name)
   force_destroy = true
   acl = "private"
   policy = <<POLICY
 {
+  "Id": "Policy",
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "AWSLogDeliveryWrite",
+      "Action": [
+        "s3:PutObject"
+      ],
       "Effect": "Allow",
+      "Resource": "arn:aws:s3:::${format("alb-%s-%s", var.name, var.network.name)}/lb/*",
       "Principal": {
-        "Service": "delivery.logs.amazonaws.com"
-      },
-      "Action": "s3:PutObject",
-      "Resource": "arn:aws:s3:::${format("alb-%s-%s", var.name, var.network.name)}/lb/AWSLogs/*",
-      "Condition": {
-        "StringEquals": {
-          "s3:x-amz-acl": "bucket-owner-full-control"
-        }
+        "AWS": [
+          "${data.aws_elb_service_account.main.arn}"
+        ]
       }
-    },
-    {
-      "Sid": "AWSLogDeliveryAclCheck",
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "delivery.logs.amazonaws.com"
-      },
-      "Action": "s3:GetBucketAcl",
-      "Resource": "arn:aws:s3:::${format("alb-%s-%s", var.name, var.network.name)}"
     }
   ]
 }
