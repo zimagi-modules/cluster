@@ -8,7 +8,7 @@
   command: mkfs -t {{ mount_type }} {{ mount_source }}
   when:
     - mount_type != "nfs4"
-    - "disk_check.stdout | join('') | match(mount_source ~ ': data')"
+    - "disk_check.stdout | join('') is match(mount_source ~ ': data')"
 
 - name: mount | ensure group
   group:
