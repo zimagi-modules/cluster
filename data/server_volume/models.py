@@ -35,3 +35,8 @@ class ServerVolume(
 
     def allowed_groups(self):
         return [ Roles.admin, Roles.server_admin ]
+
+    def save(self, *args, **kwargs):
+        if not isinstance(self.mode, str):
+            self.mode = "0{}".format(self.mode)
+        super().save(*args, **kwargs)
