@@ -38,16 +38,16 @@ resource "aws_route_table" "nat" {
   }
 }
 output "nat_id" {
-  value = var.use_nat ? aws_nat_gateway.nat.0.id : null
+  value = var.use_nat && length(aws_nat_gateway.nat) > 0 ? aws_nat_gateway.nat.0.id : null
 }
 output "nat_private_ip" {
-  value = var.use_nat ? aws_nat_gateway.nat.0.private_ip : null
+  value = var.use_nat && length(aws_nat_gateway.nat) > 0 ? aws_nat_gateway.nat.0.private_ip : null
 }
 output "nat_public_ip" {
-  value = var.use_nat ? aws_nat_gateway.nat.0.public_ip : null
+  value = var.use_nat && length(aws_nat_gateway.nat) > 0 ? aws_nat_gateway.nat.0.public_ip : null
 }
 output "nat_route_table_id" {
-  value = var.use_nat ? aws_route_table.nat.0.id : null
+  value = var.use_nat && length(aws_nat_gateway.nat) > 0 ? aws_route_table.nat.0.id : null
 }
 
 resource "aws_route_table_association" "public" {
