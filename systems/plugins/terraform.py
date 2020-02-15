@@ -126,12 +126,8 @@ class TerraformPluginProvider(DataPluginProvider):
 
     def finalize_instance(self, instance):
         self.add_credentials(instance.config)
-
-        def destroy():
-            self.finalize_terraform(instance)
-            self.get_terraform(instance).destroy()
-
-        self.run_exclusive(self.terraform_lock_id(), destroy)
+        self.finalize_terraform(instance)
+        self.get_terraform(instance).destroy()
         self.remove_credentials(instance.config)
 
     def finalize_terraform(self, instance):
