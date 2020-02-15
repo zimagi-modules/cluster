@@ -106,15 +106,15 @@ class TerraformPluginProvider(DataPluginProvider):
 
         self.add_credentials(instance.config)
 
-        def initialize():
+        def provision():
             self.initialize_terraform(instance, created)
 
-        self.run_exclusive(self.terraform_lock_id(), initialize)
+            if self.test:
+                terraform.plan()
+            else:
+                terraform.apply()
 
-        if self.test:
-            terraform.plan()
-        else:
-            terraform.apply()
+        self.run_exclusive(self.terraform_lock_id(), provision)
 
 
     def initialize_terraform(self, instance, created):
