@@ -81,10 +81,6 @@ class TerraformPluginProvider(DataPluginProvider):
         # Override in subclass
         return None
 
-    def terraform_lock_id(self):
-        # Override in subclass
-        return None
-
 
     def add_credentials(self, config):
         # Override in subclass
@@ -105,16 +101,12 @@ class TerraformPluginProvider(DataPluginProvider):
         terraform = self.get_terraform(instance)
 
         self.add_credentials(instance.config)
+        self.initialize_terraform(instance, created)
 
-        def provision():
-            self.initialize_terraform(instance, created)
-
-            if self.test:
-                terraform.plan()
-            else:
-                terraform.apply()
-
-        self.run_exclusive(self.terraform_lock_id(), provision)
+        if self.test:
+            terraform.plan()
+        else:
+            terraform.apply()
 
 
     def initialize_terraform(self, instance, created):
