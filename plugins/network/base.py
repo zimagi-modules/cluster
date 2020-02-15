@@ -127,7 +127,7 @@ class NetworkProvider(NetworkMixin, terraform.TerraformPluginProvider):
     def terraform_type(self):
         return 'network'
 
-    def terraform_lock_id(self):
+    def store_lock_id(self):
         return 'terraform-network-provider'
 
     @property
@@ -150,7 +150,7 @@ class SubnetProvider(SubnetMixin, terraform.TerraformPluginProvider):
     def terraform_type(self):
         return 'subnet'
 
-    def terraform_lock_id(self):
+    def store_lock_id(self):
         return 'terraform-network-provider'
 
     @property
