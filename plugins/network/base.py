@@ -67,42 +67,22 @@ class AddressMap(object):
 
 class NetworkAddressMap(AddressMap):
 
-    _instance = None
-
-    def __new__(cls, *args, **kwargs):
-        if not cls._instance:
-            cls._instance = object.__new__(cls)
-        return cls._instance
-
     def __init__(self):
-        if not getattr(self, '_initialized', False):
-            super().__init__()
+        super().__init__()
 
-            with self.thread_lock:
-                for network in Network.facade.all():
-                    self.cidr_index[network.cidr] = True
-
-            self._initialized = True
+        with self.thread_lock:
+            for network in Network.facade.all():
+                self.cidr_index[network.cidr] = True
 
 
 class SubnetAddressMap(AddressMap):
 
-    _instance = None
-
-    def __new__(cls, *args, **kwargs):
-        if not cls._instance:
-            cls._instance = object.__new__(cls)
-        return cls._instance
-
     def __init__(self):
-        if not getattr(self, '_initialized', False):
-            super().__init__()
+        super().__init__()
 
-            with self.thread_lock:
-                for subnet in Subnet.facade.all():
-                    self.cidr_index[subnet.cidr] = True
-
-            self._initialized = True
+        with self.thread_lock:
+            for subnet in Subnet.facade.all():
+                self.cidr_index[subnet.cidr] = True
 
 
 class NetworkMixin(object):
