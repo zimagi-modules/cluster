@@ -13,7 +13,7 @@ resource "aws_ebs_volume" "main" {
   encrypted = var.ebs_encrypted
 
   tags = {
-    Name = "mcmi-ebs"
+    Name = join(":", ["mcmi", var.server.subnet.network.name, var.server.subnet.name, var.server.name, var.name])
   }
 }
 output "data_volume_id" {

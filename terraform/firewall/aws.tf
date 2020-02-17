@@ -10,7 +10,7 @@ resource "aws_security_group" "firewall" {
   vpc_id = var.network.vpc_id
 
   tags = {
-    Name = "mcmi-network"
+    Name = join(":", ["mcmi", var.network.name, var.name])
   }
 }
 output "security_group_id" {

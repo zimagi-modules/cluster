@@ -14,6 +14,7 @@ resource "aws_security_group_rule" "firewall_link" {
     protocol = var.protocol == "all" ? "-1" : var.protocol
     self = var.self_only ? var.self_only : null
     source_security_group_id = var.self_only ? null : var.source_firewall_id
+    description = join(":", ["mcmi", var.firewall.network.name, var.firewall.name, var.name])
 }
 resource "aws_security_group_rule" "firewall_cidr" {
     count = var.rule_type == "link" ? 0 : 1
@@ -23,6 +24,7 @@ resource "aws_security_group_rule" "firewall_cidr" {
     to_port = var.to_port
     protocol = var.protocol == "all" ? "-1" : var.protocol
     cidr_blocks = var.cidrs
+    description = join(":", ["mcmi", var.firewall.network.name, var.firewall.name, var.name])
 }
 
 output "rule_id" {

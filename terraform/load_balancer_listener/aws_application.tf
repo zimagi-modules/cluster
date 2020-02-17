@@ -19,6 +19,10 @@ resource "aws_lb_target_group" "main" {
     healthy_threshold = var.healthy_threshold
     unhealthy_threshold = var.unhealthy_threshold
   }
+
+  tags = {
+    Name = join(":", ["mcmi", var.load_balancer.network.name, var.load_balancer.name, var.name])
+  }
 }
 
 resource "aws_lb_listener" "main" {

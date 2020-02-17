@@ -25,13 +25,17 @@ resource "aws_instance" "server" {
   }
 
   tags = {
-    Name = "mcmi-compute"
+    Name = join(":", ["mcmi", var.subnet.network.name, var.subnet.name, var.name])
   }
 }
 resource "aws_eip" "server_ip" {
   count = var.use_public_ip ? 1 : 0
   instance = aws_instance.server.id
   vpc = true
+
+  tags = {
+    Name = join(":", ["mcmi", var.subnet.network.name, var.subnet.name, var.name])
+  }
 }
 
 output "instance_id" {

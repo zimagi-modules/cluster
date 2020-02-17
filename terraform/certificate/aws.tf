@@ -11,7 +11,7 @@ resource "aws_acm_certificate" "cert" {
   certificate_chain = var.chain
 
   tags = {
-    Name = "mcmi-certificate"
+    Name = join(":", ["mcmi", var.network.name, var.name])
   }
 }
 output "cert_id" {

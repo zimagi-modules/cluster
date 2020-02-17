@@ -12,7 +12,7 @@ resource "aws_vpc" "network" {
   enable_dns_hostnames = var.dns_hostnames
 
   tags = {
-    Name = "mcmi-network"
+    Name = join(":", ["mcmi", var.name])
   }
 }
 output "vpc_id" {
@@ -23,7 +23,7 @@ resource "aws_internet_gateway" "network" {
   vpc_id = aws_vpc.network.id
 
   tags = {
-    Name = "mcmi-network"
+    Name = join(":", ["mcmi", var.name])
   }
 }
 output "ig_id" {
@@ -34,7 +34,7 @@ resource "aws_route_table" "network" {
   vpc_id = aws_vpc.network.id
 
   tags = {
-    Name = "mcmi-network"
+    Name = join(":", ["mcmi", var.name])
   }
 }
 output "route_table_id" {
