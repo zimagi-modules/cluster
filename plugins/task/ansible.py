@@ -128,6 +128,7 @@ class Provider(
     def execute(self, results, params):
         with temp_dir() as temp:
             env = self._env_vars(params)
+            playbooks = []
             lock = self.config.get('lock', False)
             directory = self.config.get('directory', None)
             project_dir = self.get_module_path() if not directory else self.get_path(directory)
@@ -156,7 +157,8 @@ class Provider(
                 ansible_cmd.append('-vvvv')
 
             if 'playbooks' in self.config:
-                command = ansible_cmd + ensure_list(self.config['playbooks'])
+                playbooks = ensure_list(self.config['playbooks'])
+                command = ansible_cmd + playbooks
 
                 if lock:
                     params = {}
@@ -188,6 +190,8 @@ class Provider(
                 )
             if not success:
                 self.command.error("Ansible task failed: {}".format(" ".join(command)))
+
+            self.command.success("Ansible playbooks {} completed successfully".format(", ".join(playbooks)))
 
 
     def merge_config(self, ansible_dir, *core_config):
