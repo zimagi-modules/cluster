@@ -9,6 +9,17 @@ class Provider(
     ssh.SSHTaskMixin,
     BaseProvider
 ):
+    def get_fields(self):
+        return {
+            'file': '<required>',
+            'remote_path': '<required>',
+            'servers': '<required>,...',
+            'filter': 'AND',
+            'owner': None,
+            'group': None,
+            'mode': '644'
+        }
+
     def execute(self, results, params):
         if 'file' in self.config:
             file_path = self.get_path(self.config['file'])

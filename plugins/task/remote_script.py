@@ -10,6 +10,18 @@ class Provider(
     ssh.SSHTaskMixin,
     BaseProvider
 ):
+    def get_fields(self):
+        return {
+            'script': '<required>',
+            'env': {},
+            'servers': '<required>,...',
+            'filter': 'AND',
+            'sudo': False,
+            'lock': False,
+            'args': [],
+            'options': {}
+        }
+
     def execute(self, results, params):
         if 'script' in self.config:
             script_path = self.get_path(self.config['script'])

@@ -7,6 +7,17 @@ class Provider(
     ssh.SSHTaskMixin,
     BaseProvider
 ):
+    def get_fields(self):
+        return {
+            'command': '<required>',
+            'env': {},
+            'servers': '<required>,...',
+            'filter': 'AND',
+            'sudo': False,
+            'lock': False,
+            'options': {}
+        }
+
     def execute(self, results, params):
         if 'command' in self.config:
             command = self.config['command']

@@ -114,6 +114,17 @@ class Provider(
     thread_lock = threading.Semaphore(settings.ANSIBLE_MAX_PROCESSES)
 
 
+    def get_fields(self):
+        return {
+            'env': {},
+            'servers': '<required>,...',
+            'filter': 'AND',
+            'playbooks': '<required>,...',
+            'variables': {},
+            'lock': False,
+            'directory': None
+        }
+
     def execute(self, results, params):
         with temp_dir() as temp:
             env = self._env_vars(params)
