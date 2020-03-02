@@ -1,5 +1,5 @@
 parents:
-  - aws-config
+  - aws/config
 
 group:
   core:
