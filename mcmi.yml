@@ -1,11 +1,6 @@
 scripts: scripts/install.sh
 requirements: requirements.txt
 
-tasks: tasks
-profiles:
-  - profiles
-  - profiles/aws
-
 roles:
   network-admin: Network administrator (full privileges over all environment networks, subnets, and firewalls)
   security-admin: Network security administrator (full privileges over environment firewalls)
