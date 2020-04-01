@@ -139,7 +139,6 @@ class Provider(
                 'deprecation_warnings = False',
                 'gathering = smart',
                 'force_valid_group_names = ignore',
-                'jinja2_native = True',
                 'display_skipped_hosts = no'
             )
             inventory = AnsibleInventory(self, self._ssh_servers(params), temp)
