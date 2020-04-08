@@ -1,4 +1,10 @@
 
+echo:
+  provider: command
+  command: echo "@text"
+  options:
+    text: something
+
 sleep:
   provider: command
   command: sleep @number@unit
