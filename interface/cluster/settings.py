@@ -4,7 +4,7 @@ Cluster module settings definition
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-from .config import Config
+from settings.config import Config
 
 #-------------------------------------------------------------------------------
 # Core Django settings
