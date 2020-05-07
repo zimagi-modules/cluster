@@ -13,7 +13,7 @@ class ProfileComponent(profile.BaseProfileComponent):
         subnets = self.pop_values('subnet', config)
         domain = self.pop_value('domain', config)
         load_balancer = self.pop_value('load_balancer', config)
-        load_balancer_listener = self.pop_value('load_balancer_listener', config)
+        load_balancer_listeners = self.pop_value('load_balancer_listeners', config)
         groups = self.pop_values('groups', config)
         firewalls = self.pop_values('firewalls', config)
         volumes = self.pop_info('volumes', config)
@@ -21,8 +21,8 @@ class ProfileComponent(profile.BaseProfileComponent):
         if not provider or not networks or not subnets:
             self.command.error("Server {} requires 'provider', 'network', and 'subnet' fields".format(name))
 
-        if load_balancer and not load_balancer_listener or not load_balancer and load_balancer_listener:
-            self.command.error("Server {} requires neither or both of 'load_balancer' and 'load_balancer_listener' fields".format(name))
+        if load_balancer and not load_balancer_listeners or not load_balancer and load_balancer_listeners:
+            self.command.error("Server {} requires neither or both of 'load_balancer' and 'load_balancer_listeners' fields".format(name))
 
         if not count:
             count = 1
@@ -43,7 +43,7 @@ class ProfileComponent(profile.BaseProfileComponent):
                     subnet_name = subnet,
                     domain_name = domain,
                     load_balancer_name = load_balancer,
-                    load_balancer_listener_name = load_balancer_listener,
+                    load_balancer_listener_names = load_balancer_listeners,
                     group_names = groups,
                     firewall_names = firewalls,
                     remove = True,
@@ -92,8 +92,8 @@ class ProfileComponent(profile.BaseProfileComponent):
         if instance.load_balancer:
             variables['load_balancer'] = instance.load_balancer.name
 
-        if instance.load_balancer_listener:
-            variables['load_balancer_listener'] = instance.load_balancer_listener.name
+        if instance.load_balancer_listeners:
+            variables['load_balancer_listeners'] = self.get_names(instance.load_balancer_listeners)
 
         for volume in instance.servervolume_relation.all():
             volume_config = self.get_variables(volume)
