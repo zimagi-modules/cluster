@@ -55,17 +55,15 @@ class Server(
 
     domain_name = django.CharField(null = True, max_length = 128)
 
-    load_balancer_listener = django.ForeignKey(LoadBalancerListener,
-        null = True,
-        on_delete = django.PROTECT,
-        related_name = "%(class)s_relation",
+    load_balancer_listeners = django.ManyToManyField(LoadBalancerListener,
+        related_name = "%(class)s_relations",
         editable = False
     )
     class Meta(subnet.SubnetModel.Meta):
         verbose_name = "server"
         verbose_name_plural = "servers"
         facade_class = ServerFacade
-        relation = ['domain', 'load_balancer', 'load_balancer_listener']
+        relation = ['domain', 'load_balancer']
         dynamic_fields = ['status']
         ordering = ['name']
         provider_name = 'server'
