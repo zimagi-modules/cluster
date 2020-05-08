@@ -49,6 +49,7 @@ output "public_ip_address" {
 }
 
 resource "aws_lb_target_group_attachment" "gateway" {
-  target_group_arn = var.load_balancer_listener.target_group_arn
+  count = length(var.listeners)
+  target_group_arn = element(var.listeners, count.index).target_group_arn
   target_id = aws_instance.server.id
 }
