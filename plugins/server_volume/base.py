@@ -18,7 +18,7 @@ class BaseProvider(terraform.TerraformPluginProvider):
     def mount_volume(self, instance):
         module = self.command.get_instance(
             self.command._module,
-            self.manager.module_name(__file__)
+            self.manager.index.get_module_name(__file__)
         )
         mount_params = {
             'path': instance.name,
