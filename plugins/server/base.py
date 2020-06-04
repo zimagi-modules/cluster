@@ -95,7 +95,7 @@ class BaseProvider(terraform.TerraformPluginProvider):
         password = sshlib.SSH.create_password()
         module = self.command.get_instance(
             self.command._module,
-            self.manager.module_name(__file__)
+            self.manager.index.get_module_name(__file__)
         )
 
         module.provider.exec_task(
