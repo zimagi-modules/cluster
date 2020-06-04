@@ -8,10 +8,10 @@ provider "aws" {
 resource "aws_route53_zone" "main" {
   name = var.name
   force_destroy = true
-  comment = join(":", ["mcmi", var.name])
+  comment = join(":", ["zimagi", var.name])
 
   tags = {
-    Name = join(":", ["mcmi", var.name])
+    Name = join(":", ["zimagi", var.name])
   }
 }
 output "zone_id" {

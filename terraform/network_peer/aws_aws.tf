@@ -20,7 +20,7 @@ resource "aws_vpc_peering_connection" "network1" {
   peer_region = var.network2.region
 
   tags = {
-    Name = join(":", ["mcmi", var.network1.name, var.network2.name])
+    Name = join(":", ["zimagi", var.network1.name, var.network2.name])
     Side = "Requester"
   }
 }
@@ -31,7 +31,7 @@ resource "aws_vpc_peering_connection_accepter" "network2" {
   auto_accept = true
 
   tags = {
-    Name = join(":", ["mcmi", var.network2.name, var.network1.name])
+    Name = join(":", ["zimagi", var.network2.name, var.network1.name])
     Side = "Accepter"
   }
 }

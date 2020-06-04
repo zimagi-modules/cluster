@@ -25,7 +25,7 @@ resource "aws_instance" "server" {
   }
 
   tags = {
-    Name = join(":", ["mcmi", var.subnet.network.name, var.subnet.name, var.name])
+    Name = join(":", ["zimagi", var.subnet.network.name, var.subnet.name, var.name])
   }
 }
 resource "aws_eip" "server_ip" {
@@ -34,7 +34,7 @@ resource "aws_eip" "server_ip" {
   vpc = true
 
   tags = {
-    Name = join(":", ["mcmi", var.subnet.network.name, var.subnet.name, var.name])
+    Name = join(":", ["zimagi", var.subnet.network.name, var.subnet.name, var.name])
   }
 }
 

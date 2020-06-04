@@ -21,7 +21,7 @@ resource "aws_lb_target_group" "main" {
   }
 
   tags = {
-    Name = join(":", ["mcmi", var.load_balancer.network.name, var.load_balancer.name, var.name])
+    Name = join(":", ["zimagi", var.load_balancer.network.name, var.load_balancer.name, var.name])
   }
 }
 

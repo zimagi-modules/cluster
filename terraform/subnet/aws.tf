@@ -13,7 +13,7 @@ resource "aws_subnet" "network" {
   assign_ipv6_address_on_creation = false
 
   tags = {
-    Name = join(":", ["mcmi", var.network.name, var.name])
+    Name = join(":", ["zimagi", var.network.name, var.name])
   }
 }
 output "subnet_id" {
@@ -25,7 +25,7 @@ resource "aws_eip" "nat" {
   vpc = true
 
   tags = {
-    Name = join(":", ["mcmi", var.network.name, var.name])
+    Name = join(":", ["zimagi", var.network.name, var.name])
   }
 }
 resource "aws_nat_gateway" "nat" {
@@ -34,7 +34,7 @@ resource "aws_nat_gateway" "nat" {
   subnet_id = aws_subnet.network.id
 
   tags = {
-    Name = join(":", ["mcmi", var.network.name, var.name])
+    Name = join(":", ["zimagi", var.network.name, var.name])
   }
 }
 resource "aws_route_table" "nat" {
@@ -46,7 +46,7 @@ resource "aws_route_table" "nat" {
   }
 
   tags = {
-    Name = join(":", ["mcmi", var.network.name, var.name])
+    Name = join(":", ["zimagi", var.network.name, var.name])
   }
 }
 output "nat_id" {

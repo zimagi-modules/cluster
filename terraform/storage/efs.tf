@@ -12,7 +12,7 @@ resource "aws_efs_file_system" "data" {
   encrypted = var.encrypted
 
   tags = {
-    Name = join(":", ["mcmi", var.network.name, var.name])
+    Name = join(":", ["zimagi", var.network.name, var.name])
   }
 }
 output "filesystem_id" {

@@ -41,7 +41,7 @@ resource "aws_s3_bucket" "main" {
 POLICY
 
   tags = {
-    Name = join(":", ["mcmi", var.network.name, var.name])
+    Name = join(":", ["zimagi", var.network.name, var.name])
   }
 }
 
@@ -62,7 +62,7 @@ resource "aws_lb" "main" {
   }
 
   tags = {
-    Name = join(":", ["mcmi", var.network.name, var.name])
+    Name = join(":", ["zimagi", var.network.name, var.name])
   }
 }
 output "lb_id" {
