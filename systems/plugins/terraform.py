@@ -49,7 +49,7 @@ class TerraformWrapper(object):
     def _get_manifest_path(self):
         try:
             name = getattr(self.instance, 'terraform_name', self.instance.provider_type)
-            return self.manager.module_file(
+            return self.manager.index.get_module_file(
                 'terraform',
                 self.provider.terraform_type(),
                 "{}.tf".format(name)
