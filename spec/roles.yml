@@ -1,0 +1,11 @@
+roles:
+    domain-admin: Domain administrator (full privileges over all environment domains and domain records)
+    domain-auditor: Domain auditor (viewing privileges over all environment domains and domain records)
+    network-admin: Network administrator (full privileges over all environment networks and subnets)
+    network-auditor: Network auditor (viewing privileges over all environment networks and subnets)
+    security-admin: Network security administrator (full privileges over environment certificates and firewalls)
+    security-auditor: Network security auditor (viewing privileges over environment certificates and firewalls)
+    server-admin: Server administrator (full privileges over all environment load balancers and servers)
+    server-auditor: Server auditor (viewing privileges over all environment load balancers and servers)
+    storage-admin: Storage administrator (full privileges over all environment storage and mount points)
+    storage-auditor: Storage auditor (viewing privileges over all environment storage and mount points)
