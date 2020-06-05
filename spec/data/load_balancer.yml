@@ -1,0 +1,65 @@
+data:
+    load_balancer:
+        class: LoadBalancer
+        base: network
+        mixins: [ provider, group, domain, subnet_relation, firewall_relation ]
+        roles:
+            edit: [ server_admin ]
+            view: [ server_auditor ]
+        fields:
+            internal:
+                type: "@django.BooleanField"
+                options:
+                    default: false
+        meta:
+            relation: domain
+            provider_name: "load_balancer:load_balancer"
+            command_base: lb
+
+    load_balancer_listener:
+        class: LoadBalancerListener
+        base: load_balancer
+        mixins: [ provider, certificate ]
+        roles:
+            edit: [ server_admin ]
+            view: [ server_auditor ]
+        fields:
+            port:
+                type: "@django.IntegerField"
+                options:
+                    "null": true
+            target_port:
+                type: "@django.IntegerField"
+                options:
+                    "null": true
+            health_check_path:
+                type: "@django.CharField"
+                options:
+                    max_length: 255
+                    default: "/"
+            health_check_interval:
+                type: "@django.IntegerField"
+                options:
+                    default: 30
+            health_check_timeout:
+                type: "@django.IntegerField"
+                options:
+                    default: 10
+            healthy_status:
+                type: "@fields.CSVField"
+                options:
+                    default: "200"
+            healthy_threshold:
+                type: "@django.IntegerField"
+                options:
+                    default: 3
+            unhealthy_threshold:
+                type: "@django.IntegerField"
+                options:
+                    default: 3
+        meta:
+            ordering: [ name ]
+            relation: certificate
+            provider_name: "load_balancer:load_balancer_listener"
+            provider_relation: load_balancer
+            command_base: "lb listener"

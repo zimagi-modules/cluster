@@ -1,0 +1,28 @@
+data:
+    certificate:
+        class: Certificate
+        base: network
+        mixins: [ provider, group, domain ]
+        roles:
+            edit: [ security_admin ]
+            view: [ security_auditor ]
+        fields:
+            private_key:
+                type: "@fields.EncryptedDataField"
+                color: encrypted
+                options:
+                    "null": true
+            certificate:
+                type: "@fields.EncryptedDataField"
+                color: encrypted
+                options:
+                    "null": true
+            chain:
+                type: "@fields.EncryptedDataField"
+                color: encrypted
+                options:
+                    "null": true
+        meta:
+            provider_name: certificate
+            relation: domain
+            command_base: cert

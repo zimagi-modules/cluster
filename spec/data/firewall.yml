@@ -1,0 +1,48 @@
+data:
+    firewall:
+        class: Firewall
+        base: network
+        mixins: [ provider, group ]
+        roles:
+            edit: [ security_admin ]
+            view: [ security_auditor ]
+        meta:
+            provider_name: "network:firewall"
+            provider_relation: network
+
+    firewall_rule:
+        class: FirewallRule
+        base: firewall
+        mixins: [ provider ]
+        roles:
+            edit: [ security_admin ]
+            view: [ security_auditor ]
+        fields:
+            mode:
+                type: "@django.CharField"
+                options:
+                    max_length: 10
+                    default: ingress
+                    choices: [ ingress, egress ]
+            protocol:
+                type: "@django.CharField"
+                options:
+                    max_length: 10
+                    default: tcp
+                    choices: [ tcp, udp, icmp ]
+            from_port:
+                type: "@django.IntegerField"
+                options:
+                    "null": true
+            to_port:
+                type: "@django.IntegerField"
+                options:
+                    "null": true
+            cidrs:
+                type: "@fields.CSVField"
+                options:
+                    "null": true
+        meta:
+            ordering: [ name ]
+            provider_name: "network:firewall_rule"
+            provider_relation: firewall

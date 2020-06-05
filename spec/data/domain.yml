@@ -1,0 +1,82 @@
+data:
+    domain:
+        class: Domain
+        base: environment
+        mixins: [ provider, group ]
+        roles:
+            edit: [ domain_admin ]
+            view: [ domain_auditor ]
+        fields:
+            email:
+                type: "@django.CharField"
+                options:
+                    "null": true
+                    max_length: 255
+            certificate_authority:
+                type: "@django.CharField"
+                options:
+                    "null": true
+                    max_length: 255
+            certificate_updated:
+                type: "@django.DateTimeField"
+                options:
+                    "null": true
+                    editable: False
+            valid_days:
+                type: "@django.IntegerField"
+                options:
+                    default: 60
+            private_key:
+                type: "@fields.EncryptedDataField"
+                color: encrypted
+                options:
+                    "null": true
+            certificate:
+                type: "@fields.EncryptedDataField"
+                color: encrypted
+                options:
+                    "null": true
+            chain:
+                type: "@fields.EncryptedDataField"
+                color: encrypted
+                options:
+                    "null": true
+            fullchain:
+                type: "@fields.EncryptedDataField"
+                color: encrypted
+                options:
+                    "null": true
+        meta:
+            provider_name: "domain:domain"
+
+    domain_record:
+        class: DomainRecord
+        base: domain
+        mixins: [ provider ]
+        roles:
+            edit: [ domain_admin ]
+            view: [ domain_auditor ]
+        fields:
+            type:
+                type: "@django.CharField"
+                options:
+                    max_length: 10
+                    default: A
+                    choices: [ A, AAAA, CAA, CNAME, MX, NAPTR, NS, PTR, SOA, SPF, SRV, TXT ]
+            target:
+                type: "@django.CharField"
+                options:
+                    "null": true
+                    max_length: 255
+            ttl:
+                type: "@django.IntegerField"
+                options:
+                    default: 300
+            values:
+                type: "@fields.EncryptedDataField"
+                color: encrypted
+                options:
+                    default: []
+        meta:
+            provider_name: "domain:domain_record"
+            provider_relation: domain

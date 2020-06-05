@@ -1,0 +1,91 @@
+data:
+    network:
+        class: Network
+        base: environment
+        mixins: [ provider, group ]
+        roles:
+            edit: [ network_admin ]
+            view: [ network_auditor ]
+        fields:
+            cidr:
+                type: "@django.CharField"
+                options:
+                    "null": true
+                    max_length: 128
+        meta:
+            ordering: [ cidr ]
+            provider_name: "network:network"
+
+    subnet:
+        class: Subnet
+        base: network
+        mixins: [ provider, group ]
+        roles:
+            edit: [ network_admin ]
+            view: [ network_auditor ]
+        fields:
+            cidr:
+                type: "@django.CharField"
+                options:
+                    "null": true
+                    max_length: 128
+            use_public_ip:
+                type: "@django.BooleanField"
+                options:
+                    default: true
+            use_nat:
+                type: "@django.BooleanField"
+                options:
+                    default: false
+            nat_subnet:
+                type: "@django.ForeignKey"
+                relation: subnet
+                options:
+                    "null": true
+                    on_delete: "@django.SET_NULL"
+                    related_name: "%(class)s_relation"
+                    editable: false
+        meta:
+            relation: [ nat_subnet ]
+            ordering: [ cidr ]
+            provider_name: "network:subnet"
+            provider_relation: network
+
+    network_peering:
+        class: NetworkPeering
+        base: environment
+        mixins: [ provider, network_relation ]
+        roles:
+            edit: [ network_admin ]
+            view: [ network_auditor ]
+        meta:
+            provider_name: "network_peering:network_peering"
+
+    network_peering_relation:
+        class: NetworkPeeringRelation
+        base: network_peering
+        mixins: [ provider ]
+        roles:
+            edit: [ network_admin ]
+            view: [ network_auditor ]
+        fields:
+            network1:
+                type: "@django.ForeignKey"
+                relation: network
+                options:
+                    "null": true
+                    on_delete: "@django.PROTECT"
+                    related_name: "%(class)s_relation1"
+                    editable: false
+            network2:
+                type: "@django.ForeignKey"
+                relation: network
+                options:
+                    "null": true
+                    on_delete: "@django.PROTECT"
+                    related_name: "%(class)s_relation2"
+                    editable: false
+        meta:
+            relation: [ network1, network2 ]
+            provider_name: "network_peering:network_relation"
+            provider_relation: network_peering

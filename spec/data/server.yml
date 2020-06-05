@@ -1,0 +1,94 @@
+data:
+    server:
+        class: Server
+        base: subnet
+        mixins: [ provider, group, domain, load_balancer, firewall_relation ]
+        roles:
+            edit: [ server_admin ]
+            view: [ server_auditor ]
+        fields:
+            public_ip:
+                type: "@django.CharField"
+                options:
+                    "null": true
+                    max_length: 128
+            private_ip:
+                type: "@django.CharField"
+                options:
+                    "null": true
+                    max_length: 128
+            ssh_port:
+                type: "@django.IntegerField"
+                options:
+                    default: 22
+            user:
+                type: "@django.CharField"
+                options:
+                    "null": true
+                    max_length: 128
+            password:
+                type: "@fields.EncryptedCharField"
+                options:
+                    "null": true
+                    max_length: 1096
+            private_key:
+                type: "@fields.EncryptedDataField"
+                options:
+                    "null": true
+            domain_name:
+                type: "@django.CharField"
+                options:
+                    "null": true
+                    max_length: 128
+            load_balancer_listeners:
+                type: "@django.ManyToManyField"
+                relation: load_balancer_listener
+                options:
+                    related_name: "%(class)s_relations"
+                    editable: false
+        meta:
+            ordering: [ name ]
+            relation: [ domain, load_balancer ]
+            dynamic_fields: [ status ]
+            provider_name: server
+
+    server_volume:
+        class: ServerVolume
+        base: server
+        mixins: [ provider ]
+        roles:
+            edit: [ server_admin ]
+            view: [ server_auditor ]
+        fields:
+            location:
+                type: "@django.CharField"
+                options:
+                    max_length: 256
+            type:
+                type: "@django.CharField"
+                options:
+                    default: ext4
+                    max_length: 128
+            owner:
+                type: "@django.CharField"
+                options:
+                    default: root
+                    max_length: 128
+            group:
+                type: "@django.CharField"
+                options:
+                    default: root
+                    max_length: 128
+            mode:
+                type: "@django.CharField"
+                options:
+                    default: "0755"
+                    max_length: 25
+            options:
+                type: "@fields.CSVField"
+                options:
+                    "null": true
+        meta:
+            ordering: [ name ]
+            scope_process: post
+            provider_name: server_volume

@@ -1,0 +1,40 @@
+data:
+    storage:
+        class: Storage
+        base: network
+        mixins: [ provider, group ]
+        roles:
+            edit: [ storage_admin ]
+            view: [ storage_auditor ]
+        meta:
+            ordering: [ name ]
+            provider_name: "storage:storage"
+
+    storage_mount:
+        class: StorageMount
+        base: subnet
+        mixins: [ provider, storage, firewall_relation ]
+        id_fields: [ name, subnet_id, storage_id ]
+        roles:
+            edit: [ storage_admin ]
+            view: [ storage_auditor ]
+        fields:
+            remote_host:
+                type: "@django.CharField"
+                options:
+                    "null": true
+                    max_length: 128
+            remote_path:
+                type: "@django.CharField"
+                options:
+                    "null": true
+                    max_length: 256
+            mount_options:
+                type: "@django.TextField"
+                options:
+                    "null": true
+        meta:
+            ordering: [ name ]
+            scope: [ storage, subnet ]
+            provider_name: "storage:mount"
+            provider_relation: storage
