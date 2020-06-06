@@ -1,34 +1,12 @@
 from django.conf import settings
 
-from systems.command.base import command_set
-from systems.command.factory import resource, router
-from systems.command.types import server
+from systems.command.index import Command
 from utility.temp import temp_dir
 
 import subprocess
 
 
-class RotateCommand(
-    server.ServerActionCommand
-):
-    def parse(self):
-        self.parse_server_search(True)
-
-    def exec(self):
-        def rotate_server(server):
-            self.data("Rotating SSH keypair for", str(server))
-            server.provider.rotate_password()
-            server.provider.rotate_key()
-            server.save()
-
-        self.run_list(self.server_instances, rotate_server)
-
-
-class SSHCommand(
-    server.ServerActionCommand
-):
-    def parse(self):
-        self.parse_server_name()
+class Ssh(Command('server.ssh')):
 
     def exec(self):
         server = self.server
@@ -73,26 +51,3 @@ class SSHCommand(
             ssh_command.append("{}@{}".format(user, ip))
 
             subprocess.call(" ".join(ssh_command), shell = True)
-
-
-class Command(server.ServerRouterCommand):
-
-    def get_subcommands(self):
-        server_volume_name = 'server_volume'
-
-        return command_set(
-            resource.ResourceCommandSet(
-                server.ServerActionCommand, self.name,
-                provider_name = self.name,
-                save_multiple = True
-            ),
-            ('rotate', RotateCommand),
-            ('ssh', SSHCommand),
-            ('volume', router.Router(
-                server.ServerRouterCommand,
-                resource.ResourceCommandSet(
-                    server.ServerActionCommand, server_volume_name,
-                    provider_name = server_volume_name,
-                )
-            ))
-        )
