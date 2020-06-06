@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from .data import DataProviderState, DataPluginProvider
+from plugins import data
 from utility.terraform import Terraform
 
 import os
@@ -58,7 +58,7 @@ class TerraformWrapper(object):
             return None
 
 
-class TerraformState(DataProviderState):
+class TerraformState(data.DataProviderState):
 
     @property
     def variables(self):
@@ -72,7 +72,19 @@ class TerraformState(DataProviderState):
         return variables
 
 
-class TerraformPluginProvider(DataPluginProvider):
+class BasePlugin(data.BasePlugin):
+
+    @classmethod
+    def generate(cls, plugin_class, generator):
+        super().generate(plugin_class, generator)
+
+        def terraform_type(self):
+            if 'manifest' in generator.spec:
+                return generator.spec['manifest']
+            return generator.spec['data']
+
+        plugin.terraform_type = terraform_type
+
 
     def provider_state(self):
         return TerraformState
