@@ -1,0 +1,22 @@
+command:
+    server:
+        resource: server
+        base: server
+        priority: 86
+
+        rotate:
+            base: server
+            priority: 1
+            parse:
+                server_search: true
+
+        ssh:
+            base: server
+            priority: 5
+            parse:
+                server_name: false
+
+        volume:
+            resource: server_volume
+            base: server
+            priority: 10

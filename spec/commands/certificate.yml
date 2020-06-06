@@ -1,0 +1,5 @@
+command:
+    cert:
+        resource: certificate
+        base: certificate
+        priority: 72

@@ -1,0 +1,10 @@
+command:
+    lb:
+        resource: load_balancer
+        base: load_balancer
+        priority: 84
+
+        listener:
+            resource: load_balancer_listener
+            base: load_balancer
+            priority: 1

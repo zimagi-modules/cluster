@@ -1,0 +1,10 @@
+command:
+    firewall:
+        resource: firewall
+        base: firewall
+        priority: 78
+
+        rule:
+            resource: firewall_rule
+            base: firewall
+            priority: 1

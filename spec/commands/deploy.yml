@@ -1,0 +1,24 @@
+command:
+    deploy:
+        base: server
+        priority: 100
+        parameters:
+            destination:
+                parser: variable
+                type: str
+                default: null
+                optional: "--dest"
+                help: "environment runtime host destination"
+                value_label: "HOST"
+
+            destination_name:
+                parser: variable
+                type: str
+                default: "@settings.DEFAULT_HOST_NAME"
+                optional: "--dest-name"
+                help: "destination environment runtime host name"
+                value_label: "NAME"
+        parse:
+            server_search: false
+            destination:
+            destination_name:

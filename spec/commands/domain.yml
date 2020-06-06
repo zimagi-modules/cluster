@@ -1,0 +1,10 @@
+command:
+    domain:
+        resource: domain
+        base: domain
+        priority: 70
+
+        record:
+            resource: domain_record
+            base: domain
+            priority: 1
