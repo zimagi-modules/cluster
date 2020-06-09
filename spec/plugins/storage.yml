@@ -1,0 +1,57 @@
+plugin:
+    storage:
+        base: meta
+        subtypes:
+            storage:
+                base: terraform
+                manifest: storage
+                data: storage
+            mount:
+                base: terraform
+                manifest: storage_mount
+                data: mount
+                requirement:
+                    remote_host:
+                        type: str
+                        default: null
+                        help: "Remote host to connect storage mount"
+                option:
+                    remote_path:
+                        type: str
+                        default: "/"
+                        help: "Remote path to mount locally"
+                        config_name: internal_remote_path
+                    mount_options:
+                        type: str
+                        default: "nfs4 rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 0 0"
+                        help: "Mount options"
+                        config_name: manual_mount_options
+        providers:
+            efs:
+                storage:
+                    mixins: [ aws_service ]
+                    option:
+                        performance_mode:
+                            type: str
+                            default: "generalPurpose"
+                            help: "AWS EFS performance mode (can also be: maxIO)"
+                            config_name: aws_efs_perf_mode
+                        throughput_mode:
+                            type: str
+                            default: "bursting"
+                            help: "AWS EFS throughput mode (can also be: provisioned)"
+                            config_name: aws_efs_tp_mode
+                        provisioned_throughput:
+                            type: int
+                            default: null
+                            help: "AWS EFS throughput in MiB/s"
+                            config_name: aws_efs_prov_tp
+                        encrypted:
+                            type: bool
+                            default: false
+                            help: "AWS EFS encrypted filesystem?"
+                            config_name: aws_efs_encrypted
+                mount:
+                    mixins: [ aws_service ]
+                    option:
+                        remote_path: null

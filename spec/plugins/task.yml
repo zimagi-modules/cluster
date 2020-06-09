@@ -1,0 +1,37 @@
+plugin:
+    task:
+        providers:
+            ansible:
+                mixins: [ cli_task, ssh_task ]
+                requirement:
+                    playbooks: []
+                option:
+                    variables: {}
+                    lock: false
+                    directory: null
+            remote_command:
+                mixins: [ cli_task, ssh_task ]
+                requirement:
+                    command: null
+                option:
+                    options: {}
+                    sudo: false
+                    lock: false
+            remote_script:
+                mixins: [ cli_task, ssh_task ]
+                requirement:
+                    script: null
+                option:
+                    args: []
+                    options: {}
+                    sudo: false
+                    lock: false
+            upload:
+                mixins: [ cli_task, ssh_task ]
+                requirement:
+                    file: null
+                    remote_path: null
+                option:
+                    owner: null
+                    group: null
+                    mode: "644"

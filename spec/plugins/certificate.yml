@@ -1,0 +1,16 @@
+plugin:
+    certificate:
+        base: terraform
+        manifest: certificate
+        data: certificate
+        providers:
+            aws:
+                mixins: [ aws_service ]
+
+    certificate_authority:
+        interface:
+            request:
+            renew:
+            revoke:
+        providers:
+            letsencrypt:

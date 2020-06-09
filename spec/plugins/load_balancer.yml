@@ -1,0 +1,37 @@
+plugin:
+    load_balancer:
+        base: meta
+        subtypes:
+            load_balancer:
+                base: terraform
+                manifest: load_balancer
+                data: load_balancer
+            load_balancer_listener:
+                base: terraform
+                manifest: load_balancer_listener
+                data: load_balancer_listener
+        providers:
+            aws_application:
+                load_balancer:
+                    mixins: [ aws_service ]
+                    option:
+                        idle_timeout:
+                            type: int
+                            default: 60
+                            help: "Idle timeout (secs)"
+                load_balancer_listener:
+                    mixins: [ aws_service ]
+                    option:
+                        target_protocol:
+                            type: str
+                            default: "http"
+                            help: "Target protocol (http or https)"
+                        ssl_policy:
+                            type: str
+                            default: "ELBSecurityPolicy-2016-08"
+                            help: "SSL policy definition"
+            aws_network:
+                load_balancer:
+                    mixins: [ aws_service ]
+                load_balancer_listener:
+                    mixins: [ aws_service ]

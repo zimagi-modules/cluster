@@ -1,0 +1,93 @@
+plugin:
+    network:
+        base: meta
+        subtypes:
+            network:
+                base: terraform
+                manifest: network
+                data: network
+                store_lock: "terraform-network-provider"
+                option:
+                    cidr_base:
+                        type: str
+                        default: "10/8"
+                        help: "Network IPv4 root CIDR address (not used if 'cidr' option specified)"
+                    cidr_prefix:
+                        type: int
+                        default: 16
+                        help: "Network IPv4 CIDR address prefix size (not used if 'cidr' option specified)"
+            subnet:
+                base: terraform
+                manifest: subnet
+                data: subnet
+                store_lock: "terraform-network-provider"
+                option:
+                    cidr_prefix:
+                        type: int
+                        default: 24
+                        help: "Subnet IPv4 CIDR address prefix size (not used if 'cidr' option specified)"
+            firewall:
+                base: terraform
+                manifest: firewall
+                data: firewall
+            firewall_rule:
+                base: terraform
+                manifest: firewall_rule
+                data: firewall_rule
+                option:
+                    self_only:
+                        type: bool
+                        default: false
+                        help: "Only allow access from other infrastructure resources attached to this firewall"
+                    source_firewall:
+                        type: str
+                        default: null
+                        help: "Only allow access from other infrastructure resources attached to another firewall"
+        providers:
+            aws:
+                network:
+                    mixins: [ aws_service ]
+                    option:
+                        tenancy:
+                            type: str
+                            default: default
+                            help: "AWS VPC instance tenancy (default | dedicated)"
+                            config_name: aws_vpc_tenancy
+                        dns_support:
+                            type: bool
+                            default: true
+                            help: "AWS VPC DNS support"
+                            config_name: aws_vpc_dns_support
+                        dns_hostnames:
+                            type: bool
+                            default: false
+                            help: "AWS VPC DNS hostname assignment"
+                            config_name: aws_vpc_dns_hostnames
+                subnet:
+                    mixins: [ aws_service ]
+                    option:
+                        zone:
+                            type: str
+                            default: null
+                            help: "AWS availability zone (default random)"
+                            config_name: aws_zone
+                        zone_suffix:
+                            type: str
+                            default: null
+                            help: "AWS availability zone suffix (appended to region)"
+                            config_name: aws_zone_suffix
+                firewall:
+                    mixins: [ aws_service ]
+                firewall_rule:
+                    mixins: [ aws_service ]
+
+    network_peering:
+        base: meta
+        subtypes:
+            network_peering:
+                base: data
+                data: network_peering
+            network_relation:
+                base: terraform
+                manifest: network_peer
+                data: network_relation
