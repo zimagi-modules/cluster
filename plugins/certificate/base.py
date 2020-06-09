@@ -1,14 +1,7 @@
-from systems.plugins import terraform
+from systems.plugins.index import BasePlugin
 
 
-class BaseProvider(terraform.TerraformPluginProvider):
-
-    def terraform_type(self):
-        return 'certificate'
-
-    @property
-    def facade(self):
-        return self.command._certificate
+class BaseProvider(BasePlugin('certificate')):
 
     def initialize_terraform(self, instance, created):
         if instance.domain:

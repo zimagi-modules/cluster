@@ -1,7 +1,6 @@
 from django.conf import settings
 
-from .base import BaseProvider
-from .mixins import cli, ssh
+from systems.plugins.index import BaseProvider
 from utility.runtime import Runtime
 from utility.temp import temp_dir
 from utility.data import clean_dict, ensure_list
@@ -106,31 +105,15 @@ class AnsibleInventory(object):
         return "\n".join(data)
 
 
-class Provider(
-    cli.CLITaskMixin,
-    ssh.SSHTaskMixin,
-    BaseProvider
-):
+class Provider(BaseProvider('task', 'ansible')):
+
     thread_lock = threading.Semaphore(settings.ANSIBLE_MAX_PROCESSES)
 
-
-    def get_fields(self):
-        return {
-            'env': {},
-            'servers': '<required>,...',
-            'filter': 'AND',
-            'playbooks': '<required>,...',
-            'variables': {},
-            'lock': False,
-            'directory': None
-        }
 
     def execute(self, results, params):
         with temp_dir() as temp:
             env = self._env_vars(params)
-            playbooks = []
-            lock = self.config.get('lock', False)
-            directory = self.config.get('directory', None)
+            directory = self.field_directory
             project_dir = self.get_module_path() if not directory else self.get_path(directory)
 
             ansible_config = self.merge_config(directory,
@@ -157,28 +140,24 @@ class Provider(
             if Runtime.debug():
                 ansible_cmd.append('-vvvv')
 
-            if 'playbooks' in self.config:
-                playbooks = ensure_list(self.config['playbooks'])
-                command = ansible_cmd + playbooks
+            playbooks = ensure_list(self.field_playbooks)
+            command = ansible_cmd + playbooks
 
-                if lock:
-                    params = {}
-                else:
-                    params.pop('servers', None)
-                    params.pop('filter', None)
-
-                if 'variables' in self.config:
-                    for key, value in self.config['variables'].items():
-                        if key not in params:
-                            params[key] = value
-
-                if params:
-                    command.extend([
-                        "--extra-vars",
-                        "@{}".format(temp.save(json.dumps(params), extension = 'json'))
-                    ])
+            if self.field_lock:
+                params = {}
             else:
-                self.command.error("Ansible task requires 'playbooks' list configuration")
+                params.pop('servers', None)
+                params.pop('filter', None)
+
+            for key, value in self.field_variables.items():
+                if key not in params:
+                    params[key] = value
+
+            if params:
+                command.extend([
+                    "--extra-vars",
+                    "@{}".format(temp.save(json.dumps(params), extension = 'json'))
+                ])
 
             env["ANSIBLE_CONFIG"] = temp.save(ansible_config, extension = 'cfg')
             with self.thread_lock:

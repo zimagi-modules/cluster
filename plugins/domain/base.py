@@ -1,18 +1,11 @@
 from django.conf import settings
 
-from systems.plugins import meta, terraform
+from systems.plugins.index import BasePlugin
 
 import datetime
 
 
-class DomainProvider(terraform.TerraformPluginProvider):
-
-    def terraform_type(self):
-        return 'domain'
-
-    @property
-    def facade(self):
-        return self.command._domain
+class DomainProvider(BasePlugin('domain.domain')):
 
     def get_certificate_authority(self, instance):
         if instance.certificate_authority:
@@ -44,20 +37,3 @@ class DomainProvider(terraform.TerraformPluginProvider):
                 ca.revoke()
 
         super().finalize_terraform(instance)
-
-
-class DomainRecordProvider(terraform.TerraformPluginProvider):
-
-    def terraform_type(self):
-        return 'domain_record'
-
-    @property
-    def facade(self):
-        return self.command._domain_record
-
-
-class BaseProvider(meta.MetaPluginProvider):
-
-    def register_types(self):
-        self.set('domain', DomainProvider)
-        self.set('domain_record', DomainRecordProvider)

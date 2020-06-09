@@ -2,7 +2,7 @@ from django.conf import settings
 
 from data.network.models import Network
 from data.subnet.models import Subnet
-from systems.plugins import meta, terraform
+from systems.plugins.index import BasePlugin
 from utility.data import ensure_list
 
 import netaddr
@@ -98,21 +98,7 @@ class SubnetMixin(object):
         return SubnetAddressMap()
 
 
-class NetworkProvider(NetworkMixin, terraform.TerraformPluginProvider):
-
-    def provider_config(self, type = None):
-        self.option(str, 'cidr_base', '10/8', help = 'Network IPv4 root CIDR address (not used if "cidr" option specified)')
-        self.option(int, 'cidr_prefix', 16, help = 'Network IPv4 CIDR address prefix size (not used if "cidr" option specified)')
-
-    def terraform_type(self):
-        return 'network'
-
-    def store_lock_id(self):
-        return 'terraform-network-provider'
-
-    @property
-    def facade(self):
-        return self.command._network
+class NetworkProvider(NetworkMixin, BasePlugin('network.network')):
 
     def initialize_terraform(self, instance, created):
         if not instance.cidr:
@@ -122,20 +108,7 @@ class NetworkProvider(NetworkMixin, terraform.TerraformPluginProvider):
             self.command.error("No available network cidr matches. Try another cidr")
 
 
-class SubnetProvider(SubnetMixin, terraform.TerraformPluginProvider):
-
-    def provider_config(self, type = None):
-        self.option(int, 'cidr_prefix', 24, help = 'Subnet IPv4 CIDR address prefix size (not used if "cidr" option specified)')
-
-    def terraform_type(self):
-        return 'subnet'
-
-    def store_lock_id(self):
-        return 'terraform-network-provider'
-
-    @property
-    def facade(self):
-        return self.command._subnet
+class SubnetProvider(SubnetMixin, BasePlugin('network.subnet')):
 
     def initialize_terraform(self, instance, created):
         self.config['cidr_base'] = instance.network.cidr
@@ -147,31 +120,13 @@ class SubnetProvider(SubnetMixin, terraform.TerraformPluginProvider):
             self.command.error("No available subnet cidr matches. Try another cidr")
 
 
-class FirewallProvider(terraform.TerraformPluginProvider):
-
-    def terraform_type(self):
-        return 'firewall'
-
-    @property
-    def facade(self):
-        return self.command._firewall
+class FirewallProvider(BasePlugin('network.firewall')):
 
     def get_firewall_id(self):
         return self.instance.id
 
 
-class FirewallRuleProvider(NetworkMixin, terraform.TerraformPluginProvider):
-
-    def provider_config(self, type = None):
-        self.option(bool, 'self_only', False, help = 'Only allow access from other infrastructure resources attached to this firewall')
-        self.option(str, 'source_firewall', None, help = 'Only allow access from other infrastructure resources attached to another firewall')
-
-    def terraform_type(self):
-        return 'firewall_rule'
-
-    @property
-    def facade(self):
-        return self.command._firewall_rule
+class FirewallRuleProvider(NetworkMixin, BasePlugin('network.firewall_rule')):
 
     def initialize_terraform(self, instance, created):
         instance.config['rule_type'] = 'cidr'
@@ -203,12 +158,3 @@ class FirewallRuleProvider(NetworkMixin, terraform.TerraformPluginProvider):
 
         elif not instance.config['self_only'] and not instance.config['source_firewall']:
             instance.cidrs = ['0.0.0.0/0']
-
-
-class BaseProvider(meta.MetaPluginProvider):
-
-    def register_types(self):
-        self.set('network', NetworkProvider)
-        self.set('subnet', SubnetProvider)
-        self.set('firewall', FirewallProvider)
-        self.set('firewall_rule', FirewallRuleProvider)

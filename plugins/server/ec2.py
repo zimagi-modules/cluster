@@ -1,22 +1,10 @@
-from utility.cloud.aws import AWSServiceMixin
-from .base import BaseProvider, SSHAccessError
+from systems.plugins.index import BaseProvider
+from .base import SSHAccessError
 
 import random
 
 
-class Provider(AWSServiceMixin, BaseProvider):
-
-    def provider_config(self, type = None):
-        self.option(str, 'image', 'ami-0d2505740b82f7948', help = 'AWS image name', config_name = 'aws_ec2_image') # Ubuntu 18.04LTS hvm:ebs-ssd us-east-1
-        self.option(str, 'machine', 't2.small', help = 'AWS instance type', config_name = 'aws_ec2_type')
-        self.option(str, 'tenancy', 'default', help = 'AWS instance tenancy (default | dedicated)', config_name = 'aws_ec2_tenancy')
-        self.option(bool, 'monitoring', False, help = 'AWS monitoring enabled?', config_name = 'aws_ec2_monitoring')
-        self.option(str, 'user', 'ubuntu', help = 'Server SSH user', config_name = 'aws_ec2_user')
-
-        self.option(bool, 'ebs_optimized', False, help = 'AWS EBS obtimized server?', config_name = 'aws_ec2_ebs_optimized')
-        self.option(str, 'ebs_type', 'gp2', help = 'AWS data drive EBS type', config_name = 'aws_ec2_ebs_type')
-        self.option(int, 'ebs_size', 10, help = 'AWS data drive EBS volume size (GB)', config_name = 'aws_ec2_ebs_size')
-        self.option(int, 'ebs_iops', None, help = 'AWS data drive EBS provisioned IOPS', config_name = 'aws_ec2_ebs_size')
+class Provider(BaseProvider('server', 'ec2')):
 
     def add_credentials(self, config):
         self.aws_credentials(config)

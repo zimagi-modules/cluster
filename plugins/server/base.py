@@ -3,7 +3,7 @@ from io import StringIO
 from django.conf import settings
 from django.core.management.base import CommandError
 
-from systems.plugins import terraform
+from systems.plugins.index import BasePlugin
 from utility import ssh as sshlib
 
 import threading
@@ -15,14 +15,7 @@ class SSHAccessError(CommandError):
     pass
 
 
-class BaseProvider(terraform.TerraformPluginProvider):
-
-    def terraform_type(self):
-        return 'server'
-
-    @property
-    def facade(self):
-        return self.command._server
+class BaseProvider(BasePlugin('server')):
 
     def prepare_instance(self, instance, created):
         if not self.check_ssh(instance = instance):

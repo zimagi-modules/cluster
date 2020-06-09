@@ -1,14 +1,10 @@
 from data.network_peering_relation.models import NetworkPeeringRelation
-from systems.plugins import meta, data, terraform
+from systems.plugins.index import BasePlugin
 
 import itertools
 
 
-class NetworkPeeringProvider(data.DataPluginProvider):
-
-    @property
-    def facade(self):
-        return self.command._network_peering
+class NetworkPeeringProvider(BasePlugin('network_peering.network_peering')):
 
     def store_related(self, instance, created, test):
         relation_facade = NetworkPeeringRelation.facade
@@ -53,15 +49,7 @@ class NetworkPeeringProvider(data.DataPluginProvider):
         )
 
 
-class NetworkRelationProvider(terraform.TerraformPluginProvider):
-
-    def terraform_type(self):
-        return 'network_peer'
-
-    @property
-    def facade(self):
-        return self.command._network_relation
-
+class NetworkRelationProvider(BasePlugin('network_peering.network_relation')):
 
     def get_terraform_name(self, instance):
         return "{}_{}".format(
@@ -86,10 +74,3 @@ class NetworkRelationProvider(terraform.TerraformPluginProvider):
         instance.network1.provider.add_credentials(instance.config)
         instance.network2.provider.add_credentials(instance.config)
         super().finalize_instance(instance)
-
-
-class BaseProvider(meta.MetaPluginProvider):
-
-    def register_types(self):
-        self.set('network_peering', NetworkPeeringProvider)
-        self.set('network_relation', NetworkRelationProvider)

@@ -1,15 +1,8 @@
-from systems.plugins import meta, terraform
+from systems.plugins.index import BasePlugin
 from utility.data import ensure_list
 
 
-class LoadBalancerProvider(terraform.TerraformPluginProvider):
-
-    def terraform_type(self):
-        return 'load_balancer'
-
-    @property
-    def facade(self):
-        return self.command._load_balancer
+class LoadBalancerProvider(BasePlugin('load_balancer.load_balancer')):
 
     def prepare_instance(self, instance, created):
         super().prepare_instance(instance, created)
@@ -66,22 +59,8 @@ class LoadBalancerProvider(terraform.TerraformPluginProvider):
                 record.provider.delete()
 
 
-class LoadBalancerListenerProvider(terraform.TerraformPluginProvider):
-
-    def terraform_type(self):
-        return 'load_balancer_listener'
-
-    @property
-    def facade(self):
-        return self.command._load_balancer_listener
+class LoadBalancerListenerProvider(BasePlugin('load_balancer.load_balancer_listener')):
 
     def initialize_terraform(self, instance, created):
         super().initialize_terraform(instance, created)
         instance.healthy_status = ensure_list(instance.healthy_status)
-
-
-class BaseProvider(meta.MetaPluginProvider):
-
-    def register_types(self):
-        self.set('load_balancer', LoadBalancerProvider)
-        self.set('load_balancer_listener', LoadBalancerListenerProvider)

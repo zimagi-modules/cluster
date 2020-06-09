@@ -1,14 +1,7 @@
-from systems.plugins import terraform
+from systems.plugins.index import BasePlugin
 
 
-class BaseProvider(terraform.TerraformPluginProvider):
-
-    def terraform_type(self):
-        return 'server_volume'
-
-    @property
-    def facade(self):
-        return self.command._server_volume
+class BaseProvider(BasePlugin('server_volume')):
 
     def store_related(self, instance, created, test):
         super().store_related(instance, created, test)

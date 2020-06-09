@@ -1,35 +1,14 @@
-from .base import BaseProvider
-from .mixins import cli, ssh
+from systems.plugins.index import BaseProvider
 
 
-class Provider(
-    cli.CLITaskMixin,
-    ssh.SSHTaskMixin,
-    BaseProvider
-):
-    def get_fields(self):
-        return {
-            'command': '<required>',
-            'env': {},
-            'servers': '<required>,...',
-            'filter': 'AND',
-            'sudo': False,
-            'lock': False,
-            'options': {}
-        }
+class Provider(BaseProvider('task', 'remote_command')):
 
     def execute(self, results, params):
-        if 'command' in self.config:
-            command = self.config['command']
-        else:
-            self.command.error("Remote command task provider must have a 'command' property specified")
-
         env = self._env_vars(params)
-        sudo = self.config.get('sudo', False)
-        lock = self.config.get('lock', False)
-        options = self._merge_options(self.config.get('options', {}), params, lock)
+        options = self._merge_options(self.field_options, params, self.field_lock)
 
-        command = self._interpolate(command, options)
+        command = self._interpolate(self.field_command, options)
+        sudo = self.field_sudo
         if sudo:
             command = 'sudo ' + command[0]
         else:

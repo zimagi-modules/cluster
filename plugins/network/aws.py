@@ -1,15 +1,7 @@
-from utility.cloud.aws import AWSServiceMixin
-from .base import *
+from systems.plugins.index import BaseProvider
 
 
-class AWSNetworkProvider(AWSServiceMixin, NetworkProvider):
-
-    def provider_config(self, type = None):
-        super().provider_config(type)
-        self.option(str, 'region', 'us-east-1', help = 'AWS region name', config_name = 'aws_region')
-        self.option(str, 'tenancy', 'default', help = 'AWS VPC instance tenancy (default | dedicated)', config_name = 'aws_vpc_tenancy')
-        self.option(bool, 'dns_support', True, help = 'AWS VPC DNS support', config_name = 'aws_vpc_dns_support')
-        self.option(bool, 'dns_hostnames', False, help = 'AWS VPC DNS hostname assignment', config_name = 'aws_vpc_dns_hostnames')
+class NetworkProvider(BaseProvider('network.network', 'aws')):
 
     def add_credentials(self, config):
         self.aws_credentials(config)
@@ -18,12 +10,7 @@ class AWSNetworkProvider(AWSServiceMixin, NetworkProvider):
         self.clean_aws_credentials(config)
 
 
-class AWSSubnetProvider(AWSServiceMixin, SubnetProvider):
-
-    def provider_config(self, type = None):
-        super().provider_config(type)
-        self.option(str, 'zone', None, help = 'AWS availability zone (default random)', config_name = 'aws_zone')
-        self.option(str, 'zone_suffix', None, help = 'AWS availability zone suffix (appended to region)', config_name = 'aws_zone_suffix')
+class SubnetProvider(BaseProvider('network.subnet', 'aws')):
 
     def add_credentials(self, config):
         self.aws_credentials(config)
@@ -41,7 +28,7 @@ class AWSSubnetProvider(AWSServiceMixin, SubnetProvider):
         instance.variables['use_nat_route_table'] = True if instance.nat_subnet else False
 
 
-class AWSFirewallProvider(AWSServiceMixin, FirewallProvider):
+class FirewallProvider(BaseProvider('network.firewall', 'aws')):
 
     def add_credentials(self, config):
         self.aws_credentials(config)
@@ -53,20 +40,10 @@ class AWSFirewallProvider(AWSServiceMixin, FirewallProvider):
         return self.instance.variables['security_group_id']
 
 
-class AWSFirewallRuleProvider(AWSServiceMixin, FirewallRuleProvider):
+class FirewallRuleProvider(BaseProvider('network.firewall_rule', 'aws')):
 
     def add_credentials(self, config):
         self.aws_credentials(config)
 
     def remove_credentials(self, config):
         self.clean_aws_credentials(config)
-
-
-class Provider(BaseProvider):
-
-    def register_types(self):
-        super().register_types()
-        self.set('network', AWSNetworkProvider)
-        self.set('subnet', AWSSubnetProvider)
-        self.set('firewall', AWSFirewallProvider)
-        self.set('firewall_rule', AWSFirewallRuleProvider)

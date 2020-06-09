@@ -1,8 +1,7 @@
-from utility.cloud.aws import AWSServiceMixin
-from .base import BaseProvider
+from systems.plugins.index import BaseProvider
 
 
-class Provider(AWSServiceMixin, BaseProvider):
+class Provider(BaseProvider('certificate', 'aws')):
 
     def add_credentials(self, config):
         self.aws_credentials(config)

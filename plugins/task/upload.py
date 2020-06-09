@@ -1,46 +1,26 @@
-from .base import BaseProvider
-from .mixins import cli, ssh
+from systems.plugins.index import BaseProvider
 
 import os
 
 
-class Provider(
-    cli.CLITaskMixin,
-    ssh.SSHTaskMixin,
-    BaseProvider
-):
-    def get_fields(self):
-        return {
-            'file': '<required>',
-            'remote_path': '<required>',
-            'servers': '<required>,...',
-            'filter': 'AND',
-            'owner': None,
-            'group': None,
-            'mode': '644'
-        }
+class Provider(BaseProvider('task', 'upload')):
 
     def execute(self, results, params):
-        if 'file' in self.config:
-            file_path = self.get_path(self.config['file'])
-        else:
-            self.command.error("Upload task provider must have a 'file' property specified that links to an existing file")
+        mode = self.field_mode
+        owner = self.field_owner
+        group = self.field_group
+        remote_path = self.field_remote_path
+        file_path = self.get_path(self.field_file)
 
         if not os.path.exists(file_path):
             self.command.error("Upload task provider file {} does not exist".format(file_path))
 
-        if 'remote_path' not in self.config:
-            self.command.error("Upload task provider must have a 'remote_path' property specified that links to an existing file")
-
-        if 'mode' not in self.config:
-            self.config['mode'] = 0o644
-
         def exec_server(server):
             ssh = server.provider.ssh()
-            ssh.upload(file_path, self.config['remote_path'],
-                mode = self.config['mode'],
-                owner = self.config.get('owner', None),
-                group = self.config.get('group', None)
+            ssh.upload(file_path, remote_path,
+                mode = mode,
+                owner = owner,
+                group = group
             )
 
         self.command.run_list(

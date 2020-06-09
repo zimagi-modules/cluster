@@ -1,8 +1,7 @@
-from utility.cloud.aws import AWSServiceMixin
-from .base import *
+from systems.plugins.index import BaseProvider
 
 
-class AWSNetworkLoadBalancerProvider(AWSServiceMixin, LoadBalancerProvider):
+class LoadBalancerProvider(BaseProvider('load_balancer.load_balancer', 'aws_network')):
 
     def add_credentials(self, config):
         self.aws_credentials(config)
@@ -18,18 +17,10 @@ class AWSNetworkLoadBalancerProvider(AWSServiceMixin, LoadBalancerProvider):
         instance.config['security_groups'] = self.get_security_groups(relations['firewalls'], instance.firewalls)
 
 
-class AWSNetworkLoadBalancerListenerProvider(AWSServiceMixin, LoadBalancerListenerProvider):
+class LoadBalancerListenerProvider(BaseProvider('load_balancer.load_balancer_listener', 'aws_network')):
 
     def add_credentials(self, config):
         self.aws_credentials(config)
 
     def remove_credentials(self, config):
         self.clean_aws_credentials(config)
-
-
-class Provider(BaseProvider):
-
-    def register_types(self):
-        super().register_types()
-        self.set('load_balancer', AWSNetworkLoadBalancerProvider)
-        self.set('load_balancer_listener', AWSNetworkLoadBalancerListenerProvider)

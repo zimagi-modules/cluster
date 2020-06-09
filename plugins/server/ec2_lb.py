@@ -1,7 +1,7 @@
-from plugins.server import ec2
+from systems.plugins.index import BaseProvider
 
 
-class Provider(ec2.Provider):
+class Provider(BaseProvider('server', 'ec2_lb')):
 
     def initialize_terraform(self, instance, created):
         super().initialize_terraform(instance, created)

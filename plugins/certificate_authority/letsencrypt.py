@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from .base import BaseProvider
+from systems.plugins.index import BaseProvider
 from utility.temp import temp_dir
 
 import datetime
@@ -8,7 +8,7 @@ import os
 import pathlib
 
 
-class Provider(BaseProvider):
+class Provider(BaseProvider('certificate_authority', 'letsencrypt')):
 
     @property
     def root_directory(self):
