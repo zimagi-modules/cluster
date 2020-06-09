@@ -1,11 +1,13 @@
+from systems.plugins.index import ProviderMixin
 
-class SSHTaskMixin(object):
+
+class SSHTaskMixin(ProviderMixin('ssh_task')):
 
     def _ssh_servers(self, params):
         return self.command.search_instances(
             self.manager.get_facade_index()['server'],
-            queries = params.get('servers', self.config.get('servers', [])),
-            joiner = params.get('filter', self.config.get('filter', 'AND')).upper(),
+            queries = params.get('servers', self.field_servers),
+            joiner = params.get('filter', self.field_filter).upper(),
             error_on_empty = False
         )
 

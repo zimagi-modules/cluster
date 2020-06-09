@@ -1,8 +1,10 @@
+from systems.plugins.index import ProviderMixin
+
 import os
 import boto3
 
 
-class AWSServiceMixin(object):
+class AWSServiceMixin(ProviderMixin('aws_service')):
 
     def aws_credentials(self, config):
         try:
