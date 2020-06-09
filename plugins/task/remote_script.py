@@ -17,7 +17,7 @@ class Provider(BaseProvider('task', 'remote_script')):
 
         env = self._env_vars(params)
         options = self._merge_options(self.field_options, params, self.field_lock)
-        args = ensure_list(self.field_args, []))
+        args = ensure_list(self.field_args, [])
         sudo = self.field_sudo
 
         def exec_server(server):
