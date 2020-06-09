@@ -75,8 +75,8 @@ class TerraformState(data.DataProviderState):
 class BasePlugin(data.BasePlugin):
 
     @classmethod
-    def generate(cls, plugin_class, generator):
-        super().generate(plugin_class, generator)
+    def generate(cls, plugin, generator):
+        super().generate(plugin, generator)
 
         def terraform_type(self):
             if 'manifest' in generator.spec:
