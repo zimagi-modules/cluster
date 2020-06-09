@@ -12,6 +12,11 @@ plugin_mixins:
     ssh_task:
         class: SSHTaskMixin
         requirement:
-            servers: []
+            servers:
+                type: list
+                help: "SSH server names"
         option:
-            filter: AND
+            filter:
+                type: str
+                default: AND
+                help: "Server filter conditional"

@@ -4,34 +4,80 @@ plugin:
             ansible:
                 mixins: [ cli_task, ssh_task ]
                 requirement:
-                    playbooks: []
+                    playbooks:
+                        type: list
+                        help: "Ansible playbook names"
                 option:
-                    variables: {}
-                    lock: false
-                    directory: null
+                    variables:
+                        type: dict
+                        default: {}
+                        help: "Ansible variables to pass to playbooks"
+                    lock:
+                        type: bool
+                        default: false
+                        help: "Lock task configuration options (can not be overridden with paramaters)"
+                    directory:
+                        type: str
+                        help: "Ansible directory containing playbooks"
             remote_command:
                 mixins: [ cli_task, ssh_task ]
                 requirement:
-                    command: null
+                    command:
+                        type: str
+                        help: "Command string"
                 option:
-                    options: {}
-                    sudo: false
-                    lock: false
+                    options:
+                        type: dict
+                        default: {}
+                        help: "Command interpolation variables"
+                    sudo:
+                        type: bool
+                        default: false
+                        help: "Run command with sudo permissions"
+                    lock:
+                        type: bool
+                        default: false
+                        help: "Lock task configuration options (can not be overridden with paramaters)"
             remote_script:
                 mixins: [ cli_task, ssh_task ]
                 requirement:
-                    script: null
+                    script:
+                        type: str
+                        help: "Script file name"
                 option:
-                    args: []
-                    options: {}
-                    sudo: false
-                    lock: false
+                    args:
+                        type: list
+                        default: []
+                        help: "Script arguments"
+                    options:
+                        type: dict
+                        default: {}
+                        help: "Command interpolation variables"
+                    sudo:
+                        type: bool
+                        default: false
+                        help: "Run script with sudo permissions"
+                    lock:
+                        type: bool
+                        default: false
+                        help: "Lock task configuration options (can not be overridden with paramaters)"
             upload:
                 mixins: [ cli_task, ssh_task ]
                 requirement:
-                    file: null
-                    remote_path: null
+                    file:
+                        type: str
+                        help: "Local file path"
+                    remote_path:
+                        type: str
+                        help: "Remote file path"
                 option:
-                    owner: null
-                    group: null
-                    mode: "644"
+                    owner:
+                        type: str
+                        help: "File owner on remote machine"
+                    group:
+                        type: str
+                        help: "File group on remote machine"
+                    mode:
+                        type: str
+                        default: "644"
+                        help: "File mode on remote machine"

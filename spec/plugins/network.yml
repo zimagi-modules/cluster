@@ -41,7 +41,6 @@ plugin:
                         help: "Only allow access from other infrastructure resources attached to this firewall"
                     source_firewall:
                         type: str
-                        default: null
                         help: "Only allow access from other infrastructure resources attached to another firewall"
         providers:
             aws:
@@ -68,12 +67,10 @@ plugin:
                     option:
                         zone:
                             type: str
-                            default: null
                             help: "AWS availability zone (default random)"
                             config_name: aws_zone
                         zone_suffix:
                             type: str
-                            default: null
                             help: "AWS availability zone suffix (appended to region)"
                             config_name: aws_zone_suffix
                 firewall:

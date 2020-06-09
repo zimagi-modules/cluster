@@ -8,15 +8,12 @@ plugin:
                 requirement:
                     public_ip:
                         type: str
-                        default: null
                         help: "Public IP of server"
                     private_ip:
                         type: str
-                        default: null
                         help: "Private IP of server"
                     password:
                         type: str
-                        default: null
                         help: "Password of server user"
                 option:
                     user:
@@ -29,7 +26,6 @@ plugin:
                 requirement:
                     image:
                         type: str
-                        default: null
                         help: "AWS image name"
                         config_name: aws_ec2_image
                 option:
@@ -70,7 +66,6 @@ plugin:
                         config_name: aws_ec2_ebs_size
                     ebs_iops:
                         type: int
-                        default: null
                         help: "AWS data drive EBS provisioned IOPS"
                         config_name: aws_ec2_ebs_iops
             ec2_lb:
@@ -101,6 +96,5 @@ plugin:
                         config_name: aws_ec2_ebs_size
                     ebs_iops:
                         type: int
-                        default: null
                         help: "AWS data drive EBS provisioned IOPS"
                         config_name: aws_ec2_ebs_iops
