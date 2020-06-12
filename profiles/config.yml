@@ -16,3 +16,6 @@ config:
   storage_firewalls:
     - internet
     - nfs
+
+group:
+  core:
