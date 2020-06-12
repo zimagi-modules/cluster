@@ -1,6 +1,7 @@
 command:
     server:
         resource: server
+        base_name: server
         base: server
         priority: 86
 

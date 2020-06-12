@@ -1,10 +1,12 @@
 command:
     storage:
         resource: storage
+        base_name: storage
         base: storage
         priority: 80
 
     mount:
         resource: storage_mount
+        base_name: mount
         base: storage
         priority: 82

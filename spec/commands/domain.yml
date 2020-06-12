@@ -1,10 +1,12 @@
 command:
     domain:
         resource: domain
+        base_name: domain
         base: domain
         priority: 70
 
         record:
             resource: domain_record
+            base_name: domain_record
             base: domain
             priority: 1
