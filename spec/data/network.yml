@@ -89,3 +89,4 @@ data:
             relation: [ network1, network2 ]
             provider_name: "network_peering:network_relation"
             provider_relation: network_peering
+            command_base: false
