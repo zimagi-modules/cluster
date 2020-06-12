@@ -39,3 +39,4 @@ data:
             scope: [ storage, subnet ]
             provider_name: "storage:mount"
             provider_relation: storage
+            command_base: mount
