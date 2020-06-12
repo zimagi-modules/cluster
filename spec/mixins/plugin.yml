@@ -1,7 +1,6 @@
 plugin_mixins:
     aws_service:
         class: AWSServiceMixin
-        credentials: true
         option:
             region:
                 type: str

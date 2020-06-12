@@ -12,26 +12,30 @@ plugin:
                 data: load_balancer_listener
         providers:
             aws_application:
-                load_balancer:
-                    mixins: [ aws_service ]
-                    option:
-                        idle_timeout:
-                            type: int
-                            default: 60
-                            help: "Idle timeout (secs)"
-                load_balancer_listener:
-                    mixins: [ aws_service ]
-                    option:
-                        target_protocol:
-                            type: str
-                            default: "http"
-                            help: "Target protocol (http or https)"
-                        ssl_policy:
-                            type: str
-                            default: "ELBSecurityPolicy-2016-08"
-                            help: "SSL policy definition"
+                base: meta
+                subtypes:
+                    load_balancer:
+                        mixins: [ aws_service ]
+                        option:
+                            idle_timeout:
+                                type: int
+                                default: 60
+                                help: "Idle timeout (secs)"
+                    load_balancer_listener:
+                        mixins: [ aws_service ]
+                        option:
+                            target_protocol:
+                                type: str
+                                default: "http"
+                                help: "Target protocol (http or https)"
+                            ssl_policy:
+                                type: str
+                                default: "ELBSecurityPolicy-2016-08"
+                                help: "SSL policy definition"
             aws_network:
-                load_balancer:
-                    mixins: [ aws_service ]
-                load_balancer_listener:
-                    mixins: [ aws_service ]
+                base: meta
+                subtypes:
+                    load_balancer:
+                        mixins: [ aws_service ]
+                    load_balancer_listener:
+                        mixins: [ aws_service ]

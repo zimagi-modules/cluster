@@ -27,31 +27,33 @@ plugin:
                         config_name: manual_mount_options
         providers:
             efs:
-                storage:
-                    mixins: [ aws_service ]
-                    option:
-                        performance_mode:
-                            type: str
-                            default: "generalPurpose"
-                            help: "AWS EFS performance mode (can also be: maxIO)"
-                            config_name: aws_efs_perf_mode
-                        throughput_mode:
-                            type: str
-                            default: "bursting"
-                            help: "AWS EFS throughput mode (can also be: provisioned)"
-                            config_name: aws_efs_tp_mode
-                        provisioned_throughput:
-                            type: int
-                            help: "AWS EFS throughput in MiB/s"
-                            config_name: aws_efs_prov_tp
-                        encrypted:
-                            type: bool
-                            default: false
-                            help: "AWS EFS encrypted filesystem?"
-                            config_name: aws_efs_encrypted
-                mount:
-                    mixins: [ aws_service ]
-                    option:
-                        remote_path:
-                            type: str
-                            help: "Remote filepath for storage mount access"
+                base: meta
+                subtypes:
+                    storage:
+                        mixins: [ aws_service ]
+                        option:
+                            performance_mode:
+                                type: str
+                                default: "generalPurpose"
+                                help: "AWS EFS performance mode (can also be: maxIO)"
+                                config_name: aws_efs_perf_mode
+                            throughput_mode:
+                                type: str
+                                default: "bursting"
+                                help: "AWS EFS throughput mode (can also be: provisioned)"
+                                config_name: aws_efs_tp_mode
+                            provisioned_throughput:
+                                type: int
+                                help: "AWS EFS throughput in MiB/s"
+                                config_name: aws_efs_prov_tp
+                            encrypted:
+                                type: bool
+                                default: false
+                                help: "AWS EFS encrypted filesystem?"
+                                config_name: aws_efs_encrypted
+                    mount:
+                        mixins: [ aws_service ]
+                        option:
+                            remote_path:
+                                type: str
+                                help: "Remote filepath for storage mount access"

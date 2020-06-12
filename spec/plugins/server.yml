@@ -61,7 +61,7 @@ plugin:
                         config_name: aws_ec2_ebs_type
                     ebs_size:
                         type: int
-                        default: "gp2"
+                        default: 10
                         help: "AWS data drive EBS volume size (GB)"
                         config_name: aws_ec2_ebs_size
                     ebs_iops:
