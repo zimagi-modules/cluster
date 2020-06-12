@@ -21,5 +21,6 @@ command:
 
         volume:
             resource: server_volume
+            base_name: server_volume
             base: server
             priority: 10

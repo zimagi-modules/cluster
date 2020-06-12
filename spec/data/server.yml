@@ -92,3 +92,4 @@ data:
             ordering: [ name ]
             scope_process: post
             provider_name: server_volume
+            command_base: volume
