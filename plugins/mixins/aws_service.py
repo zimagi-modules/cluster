@@ -6,6 +6,20 @@ import boto3
 
 class AWSServiceMixin(ProviderMixin('aws_service')):
 
+    @classmethod
+    def generate(cls, plugin, generator):
+        super().generate(plugin, generator)
+
+        def add_credentials(self, config):
+            self.aws_credentials(config)
+
+        def remove_credentials(self, config):
+            self.clean_aws_credentials(config)
+
+        plugin.add_credentials = add_credentials
+        plugin.remove_credentials = remove_credentials
+
+
     def aws_credentials(self, config):
         try:
             config['access_key'] = self.command.get_config('aws_access_key', required = True).strip()

@@ -6,12 +6,6 @@ import random
 
 class Provider(BaseProvider('server', 'ec2')):
 
-    def add_credentials(self, config):
-        self.aws_credentials(config)
-
-    def remove_credentials(self, config):
-        self.clean_aws_credentials(config)
-
     def initialize_terraform(self, instance, created):
         relations = self.command.get_relations(instance.facade)
 

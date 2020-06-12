@@ -2,7 +2,7 @@ from systems.plugins.index import BasePlugin
 from utility.data import ensure_list
 
 
-class LoadBalancerProvider(BasePlugin('load_balancer.load_balancer')):
+class LoadBalancerBaseProvider(BasePlugin('load_balancer.load_balancer')):
 
     def prepare_instance(self, instance, created):
         super().prepare_instance(instance, created)
@@ -59,7 +59,7 @@ class LoadBalancerProvider(BasePlugin('load_balancer.load_balancer')):
                 record.provider.delete()
 
 
-class LoadBalancerListenerProvider(BasePlugin('load_balancer.load_balancer_listener')):
+class LoadBalancerListenerBaseProvider(BasePlugin('load_balancer.load_balancer_listener')):
 
     def initialize_terraform(self, instance, created):
         super().initialize_terraform(instance, created)

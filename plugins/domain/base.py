@@ -5,7 +5,7 @@ from systems.plugins.index import BasePlugin
 import datetime
 
 
-class DomainProvider(BasePlugin('domain.domain')):
+class DomainBaseProvider(BasePlugin('domain.domain')):
 
     def get_certificate_authority(self, instance):
         if instance.certificate_authority:

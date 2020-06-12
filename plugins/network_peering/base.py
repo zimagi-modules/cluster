@@ -4,7 +4,7 @@ from systems.plugins.index import BasePlugin
 import itertools
 
 
-class NetworkPeeringProvider(BasePlugin('network_peering.network_peering')):
+class NetworkPeeringBaseProvider(BasePlugin('network_peering.network_peering')):
 
     def store_related(self, instance, created, test):
         relation_facade = NetworkPeeringRelation.facade
@@ -49,7 +49,7 @@ class NetworkPeeringProvider(BasePlugin('network_peering.network_peering')):
         )
 
 
-class NetworkRelationProvider(BasePlugin('network_peering.network_relation')):
+class NetworkRelationBaseProvider(BasePlugin('network_peering.network_relation')):
 
     def get_terraform_name(self, instance):
         return "{}_{}".format(

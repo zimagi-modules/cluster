@@ -1,22 +1,7 @@
 from systems.plugins.index import BaseProvider
 
 
-class StorageProvider(BaseProvider('storage.storage', 'efs')):
-
-    def add_credentials(self, config):
-        self.aws_credentials(config)
-
-    def remove_credentials(self, config):
-        self.clean_aws_credentials(config)
-
-
 class MountProvider(BaseProvider('storage.mount', 'efs')):
-
-    def add_credentials(self, config):
-        self.aws_credentials(config)
-
-    def remove_credentials(self, config):
-        self.clean_aws_credentials(config)
 
     def initialize_terraform(self, instance, created):
         relations = self.command.get_relations(instance.facade)
