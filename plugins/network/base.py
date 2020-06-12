@@ -98,7 +98,7 @@ class SubnetMixin(object):
         return SubnetAddressMap()
 
 
-class NetworkProvider(NetworkMixin, BasePlugin('network.network')):
+class NetworkBaseProvider(NetworkMixin, BasePlugin('network.network')):
 
     def initialize_terraform(self, instance, created):
         if not instance.cidr:
@@ -108,7 +108,7 @@ class NetworkProvider(NetworkMixin, BasePlugin('network.network')):
             self.command.error("No available network cidr matches. Try another cidr")
 
 
-class SubnetProvider(SubnetMixin, BasePlugin('network.subnet')):
+class SubnetBaseProvider(SubnetMixin, BasePlugin('network.subnet')):
 
     def initialize_terraform(self, instance, created):
         self.config['cidr_base'] = instance.network.cidr
@@ -120,13 +120,13 @@ class SubnetProvider(SubnetMixin, BasePlugin('network.subnet')):
             self.command.error("No available subnet cidr matches. Try another cidr")
 
 
-class FirewallProvider(BasePlugin('network.firewall')):
+class FirewallBaseProvider(BasePlugin('network.firewall')):
 
     def get_firewall_id(self):
         return self.instance.id
 
 
-class FirewallRuleProvider(NetworkMixin, BasePlugin('network.firewall_rule')):
+class FirewallRuleBaseProvider(NetworkMixin, BasePlugin('network.firewall_rule')):
 
     def initialize_terraform(self, instance, created):
         instance.config['rule_type'] = 'cidr'
