@@ -4,6 +4,8 @@ command:
         base_name: server
         base: server
         priority: 86
+        options:
+            save_multiple: true
 
         rotate:
             base: server
