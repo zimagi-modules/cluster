@@ -83,15 +83,12 @@ class BasePlugin(data.BasePlugin):
                 return generator.spec['manifest']
             return generator.spec['data']
 
-        plugin.terraform_type = terraform_type
+        if not getattr(plugin, 'terraform_type', None):
+            plugin.terraform_type = terraform_type
 
 
     def provider_state(self):
         return TerraformState
-
-    def terraform_type(self):
-        # Override in subclass
-        return None
 
 
     def add_credentials(self, config):
