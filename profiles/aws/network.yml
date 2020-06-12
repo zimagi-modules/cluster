@@ -1,9 +1,6 @@
 parents:
   - aws/config
 
-group:
-  core:
-
 network:
   aws-us-east-1:
     when_in: "@aws_networks"
@@ -209,31 +206,3 @@ firewall:
         protocol: udp
         from_port: 2049
         to_port: 2049
-
-subnet:
-  nat-a:
-    when_in: "@aws_nat_subnets"
-    network: "@aws_networks"
-    cidr_prefix: 28
-    zone_suffix: a
-    use_public_ip: true
-    use_nat: true
-    groups: "@network_groups"
-
-  nat-b:
-    when_in: "@aws_nat_subnets"
-    network: "@aws_networks"
-    cidr_prefix: 28
-    zone_suffix: b
-    use_public_ip: true
-    use_nat: true
-    groups: "@network_groups"
-
-  nat-c:
-    when_in: "@aws_nat_subnets"
-    network: "@aws_networks"
-    cidr_prefix: 28
-    zone_suffix: c
-    use_public_ip: true
-    use_nat: true
-    groups: "@network_groups"
