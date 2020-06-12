@@ -17,7 +17,7 @@ class ProfileComponent(profile.BaseProfileComponent):
         return self.get_names(instance.networks)
 
     def destroy(self, name, networks):
-        self.exec('network peering rm',
+        self.exec('network peering remove',
             network_peering_name = name,
             force = True
         )

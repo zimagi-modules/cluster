@@ -108,7 +108,7 @@ class ProfileComponent(profile.BaseProfileComponent):
 
         def process_network(network):
             def process_subnet(subnet):
-                self.exec('server rm',
+                self.exec('server remove',
                     server_name = name,
                     network_name = network,
                     subnet_name = subnet,

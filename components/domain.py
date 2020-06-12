@@ -47,7 +47,7 @@ class ProfileComponent(profile.BaseProfileComponent):
         return variables
 
     def destroy(self, name, config):
-        self.exec('domain rm',
+        self.exec('domain remove',
             domain_name = name,
             force = True
         )

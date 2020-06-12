@@ -41,7 +41,7 @@ class ProfileComponent(profile.BaseProfileComponent):
         networks = self.pop_values('network', config)
 
         def process_network(network):
-            self.exec('subnet rm',
+            self.exec('subnet remove',
                 subnet_name = name,
                 network_name = network,
                 force = True

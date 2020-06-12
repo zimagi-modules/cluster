@@ -30,7 +30,7 @@ class ProfileComponent(profile.BaseProfileComponent):
         }
 
     def destroy(self, name, config):
-        self.exec('network rm',
+        self.exec('network remove',
             network_name = name,
             force = True
         )

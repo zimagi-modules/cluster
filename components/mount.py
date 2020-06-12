@@ -58,7 +58,7 @@ class ProfileComponent(profile.BaseProfileComponent):
         def process_storage(storage):
             def process_network(network):
                 def process_subnet(subnet):
-                    self.exec('mount rm',
+                    self.exec('mount remove',
                         mount_name = name,
                         storage_name = storage,
                         network_name = network,

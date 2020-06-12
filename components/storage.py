@@ -39,7 +39,7 @@ class ProfileComponent(profile.BaseProfileComponent):
         networks = self.pop_values('network', config)
 
         def process_network(network):
-            self.exec('storage rm',
+            self.exec('storage remove',
                 storage_name = name,
                 network_name = network,
                 force = True

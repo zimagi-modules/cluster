@@ -86,7 +86,7 @@ class ProfileComponent(profile.BaseProfileComponent):
         networks = self.pop_values('network', config)
 
         def process_network(network):
-            self.exec('lb rm',
+            self.exec('lb remove',
                 load_balancer_name = name,
                 network_name = network,
                 force = True
