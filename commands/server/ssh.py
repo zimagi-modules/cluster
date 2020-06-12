@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from systems.command.index import Command
+from systems.commands.index import Command
 from utility.temp import temp_dir
 
 import subprocess

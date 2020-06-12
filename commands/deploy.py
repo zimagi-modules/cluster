@@ -1,4 +1,4 @@
-from systems.command.index import Command
+from systems.commands.index import Command
 
 
 class Deploy(Command('deploy')):
