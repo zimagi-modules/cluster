@@ -76,6 +76,9 @@ plugin:
                                 config_name: aws_zone_suffix
                     firewall:
                         mixins: [ aws_service ]
+                        related_values:
+                            resource_id:
+                                field: security_group_id
                     firewall_rule:
                         mixins: [ aws_service ]
 
