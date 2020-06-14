@@ -13,6 +13,9 @@ resource "aws_efs_mount_target" "data" {
 output "mount_id" {
   value = aws_efs_mount_target.data.id
 }
+output "mount_path" {
+  value = "/"
+}
 output "mount_ip" {
   value = aws_efs_mount_target.data.ip_address
 }
