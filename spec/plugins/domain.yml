@@ -12,7 +12,6 @@ plugin:
                 data: domain_record
         providers:
             route53:
-                base: meta
                 subtypes:
                     domain:
                         mixins: [ aws_service ]

@@ -44,7 +44,6 @@ plugin:
                         help: "Only allow access from other infrastructure resources attached to another firewall"
         providers:
             aws:
-                base: meta
                 subtypes:
                     network:
                         mixins: [ aws_service ]

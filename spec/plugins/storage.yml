@@ -27,7 +27,6 @@ plugin:
                         config_name: manual_mount_options
         providers:
             efs:
-                base: meta
                 subtypes:
                     storage:
                         mixins: [ aws_service ]
