@@ -11,18 +11,29 @@ plugin:
                 manifest: load_balancer_listener
                 data: load_balancer_listener
         providers:
-            aws_application:
-                base: meta
+            aws_network:
                 subtypes:
                     load_balancer:
                         mixins: [ aws_service ]
+                        related_values:
+                            subnet_ids:
+                                field: subnets
+                                lookup: subnet_id
+                            security_groups:
+                                field: firewalls
+                                lookup: security_group_id
+                    load_balancer_listener:
+                        mixins: [ aws_service ]
+            aws_application:
+                base: aws_network
+                subtypes:
+                    load_balancer:
                         option:
                             idle_timeout:
                                 type: int
                                 default: 60
                                 help: "Idle timeout (secs)"
                     load_balancer_listener:
-                        mixins: [ aws_service ]
                         option:
                             target_protocol:
                                 type: str
@@ -32,10 +43,3 @@ plugin:
                                 type: str
                                 default: "ELBSecurityPolicy-2016-08"
                                 help: "SSL policy definition"
-            aws_network:
-                base: meta
-                subtypes:
-                    load_balancer:
-                        mixins: [ aws_service ]
-                    load_balancer_listener:
-                        mixins: [ aws_service ]
