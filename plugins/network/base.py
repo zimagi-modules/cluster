@@ -106,7 +106,7 @@ class SubnetBaseProvider(BasePlugin('network.subnet')):
             self.command.error("No available subnet cidr matches. Try another cidr")
 
 
-class FirewallRuleBaseProvider(NetworkMixin, BasePlugin('network.firewall_rule')):
+class FirewallRuleBaseProvider(BasePlugin('network.firewall_rule')):
 
     def initialize_terraform(self, instance, created):
         instance.config['rule_type'] = 'cidr'
@@ -134,7 +134,8 @@ class FirewallRuleBaseProvider(NetworkMixin, BasePlugin('network.firewall_rule')
             instance.cidrs = []
 
         elif instance.cidrs:
-            instance.cidrs = [str(self.address.parse_cidr(x.strip())) for x in ensure_list(instance.cidrs)]
+            address = NetworkAddressMap(self.command)
+            instance.cidrs = [ str(address.parse_cidr(x.strip())) for x in ensure_list(instance.cidrs) ]
 
         elif not instance.config['self_only'] and not instance.config['source_firewall']:
             instance.cidrs = ['0.0.0.0/0']
