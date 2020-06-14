@@ -11,9 +11,3 @@ class SubnetProvider(BaseProvider('network.subnet', 'aws')):
             )
         super().initialize_terraform(instance, created)
         instance.variables['use_nat_route_table'] = True if instance.nat_subnet else False
-
-
-class FirewallProvider(BaseProvider('network.firewall', 'aws')):
-
-    def get_firewall_id(self):
-        return self.instance.variables['security_group_id']
