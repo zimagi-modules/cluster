@@ -1,7 +1,5 @@
 from django.conf import settings
 
-from data.network.models import Network
-from data.subnet.models import Subnet
 from systems.plugins.index import BasePlugin
 from utility.data import ensure_list
 
@@ -14,9 +12,10 @@ import time
 
 class AddressMap(object):
 
-    def __init__(self):
+    def __init__(self, command):
         self.cidr_index = {}
         self.thread_lock = threading.Lock()
+        self.command = command
 
 
     def cidr(self, config):
@@ -67,64 +66,44 @@ class AddressMap(object):
 
 class NetworkAddressMap(AddressMap):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, command):
+        super().__init__(command)
 
         with self.thread_lock:
-            for network in Network.facade.all():
+            for network in self.command._network.all():
                 self.cidr_index[network.cidr] = True
 
 
 class SubnetAddressMap(AddressMap):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, command):
+        super().__init__(command)
 
         with self.thread_lock:
-            for subnet in Subnet.facade.all():
+            for subnet in self.command._subnet.all():
                 self.cidr_index[subnet.cidr] = True
 
 
-class NetworkMixin(object):
-
-    @property
-    def address(self):
-        return NetworkAddressMap()
-
-class SubnetMixin(object):
-
-    @property
-    def address(self):
-        return SubnetAddressMap()
-
-
-class NetworkBaseProvider(NetworkMixin, BasePlugin('network.network')):
+class NetworkBaseProvider(BasePlugin('network.network')):
 
     def initialize_terraform(self, instance, created):
         if not instance.cidr:
-            instance.cidr = self.address.cidr(self.config)
+            instance.cidr = NetworkAddressMap(self.command).cidr(self.config)
 
         if not instance.cidr:
             self.command.error("No available network cidr matches. Try another cidr")
 
 
-class SubnetBaseProvider(SubnetMixin, BasePlugin('network.subnet')):
+class SubnetBaseProvider(BasePlugin('network.subnet')):
 
     def initialize_terraform(self, instance, created):
         self.config['cidr_base'] = instance.network.cidr
 
         if not instance.cidr:
-            instance.cidr = self.address.cidr(self.config)
+            instance.cidr = SubnetAddressMap(self.command).cidr(self.config)
 
         if not instance.cidr:
             self.command.error("No available subnet cidr matches. Try another cidr")
-
-
-
-class FirewallBaseProvider(BasePlugin('network.firewall')):
-
-    def get_firewall_id(self):
-        return self.instance.id
 
 
 class FirewallRuleBaseProvider(NetworkMixin, BasePlugin('network.firewall_rule')):
@@ -143,7 +122,7 @@ class FirewallRuleBaseProvider(NetworkMixin, BasePlugin('network.firewall_rule')
                 firewall = self.command._firewall.retrieve(instance.config['source_firewall'])
                 if firewall:
                     firewall.initialize(self.command)
-                    instance.config['source_firewall_id'] = firewall.get_firewall_id()
+                    instance.config['source_firewall_id'] = firewall.config['resource_id']
                     break
                 time.sleep(2)
                 tries -= 2
