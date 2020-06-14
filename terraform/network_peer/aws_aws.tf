@@ -14,7 +14,7 @@ provider "aws" {
 }
 
 resource "aws_vpc_peering_connection" "network1" {
-  provider = "aws.network1"
+  provider = aws.network1
   vpc_id = var.network1.vpc_id
   peer_vpc_id = var.network2.vpc_id
   peer_region = var.network2.region
@@ -26,7 +26,7 @@ resource "aws_vpc_peering_connection" "network1" {
 }
 
 resource "aws_vpc_peering_connection_accepter" "network2" {
-  provider = "aws.network2"
+  provider = aws.network2
   vpc_peering_connection_id = aws_vpc_peering_connection.network1.id
   auto_accept = true
 
