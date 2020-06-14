@@ -10,4 +10,3 @@ class SubnetProvider(BaseProvider('network.subnet', 'aws')):
                 instance.config['zone_suffix']
             )
         super().initialize_terraform(instance, created)
-        instance.variables['use_nat_route_table'] = True if instance.nat_subnet else False
