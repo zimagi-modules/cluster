@@ -1,4 +1,5 @@
 from systems.plugins.index import ProviderMixin
+from utility.data import ensure_list
 
 import os
 import boto3
@@ -41,7 +42,7 @@ class AWSServiceMixin(ProviderMixin('aws_service')):
         os.environ.pop('AWS_SECRET_ACCESS_KEY', None)
 
 
-    def _init_session(self):
+    def _init_aws_session(self):
         if not getattr(self, 'session', None):
             config = self.aws_credentials({})
             self.session = boto3.Session(
@@ -50,40 +51,13 @@ class AWSServiceMixin(ProviderMixin('aws_service')):
             )
 
     def ec2(self, network):
-        self._init_session()
+        self._init_aws_session()
         return self.session.client('ec2',
             region_name = network.config['region']
         )
 
     def efs(self, network):
-        self._init_session()
+        self._init_aws_session()
         return self.session.client('efs',
             region_name = network.config['region']
         )
-
-
-    def get_subnets(self, names, network):
-        subnet_ids = []
-
-        if names:
-            subnets = self.command.get_instances(self.command._subnet, names = names)
-            for subnet in subnets:
-                subnet_ids.append(subnet.variables['subnet_id'])
-        else:
-            for subnet in network.subnet_relation.all():
-                subnet_ids.append(subnet.variables['subnet_id'])
-
-        return subnet_ids
-
-    def get_security_groups(self, names, firewalls):
-        sgroups = []
-
-        if names:
-            firewalls = self.command.get_instances(self.command._firewall, names = names)
-            for firewall in firewalls:
-                sgroups.append(firewall.variables['security_group_id'])
-        else:
-            for firewall in firewalls.all():
-                sgroups.append(firewall.variables['security_group_id'])
-
-        return sgroups
