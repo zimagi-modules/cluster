@@ -1,4 +1,3 @@
-from data.network_peering_relation.models import NetworkPeeringRelation
 from systems.plugins.index import BasePlugin
 
 import itertools
@@ -7,7 +6,7 @@ import itertools
 class NetworkPeeringBaseProvider(BasePlugin('network_peering.network_peering')):
 
     def store_related(self, instance, created, test):
-        relation_facade = NetworkPeeringRelation.facade
+        relation_facade = self.command._network_peering_relation
         relations = self.command.get_relations(instance.facade)
 
         if relations['networks']:
@@ -35,7 +34,6 @@ class NetworkPeeringBaseProvider(BasePlugin('network_peering.network_peering')):
 
 
     def finalize_instance(self, instance):
-        relation_facade = NetworkPeeringRelation.facade
 
         def remove_relation(relation):
             relation.initialize(self.command)
@@ -44,7 +42,7 @@ class NetworkPeeringBaseProvider(BasePlugin('network_peering.network_peering')):
             relation.provider.delete()
 
         self.command.run_list(
-            relation_facade.query(network_peering_id = instance.id),
+            self.command._network_peering_relation.query(network_peering_id = instance.id),
             remove_relation
         )
 
