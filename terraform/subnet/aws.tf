@@ -68,7 +68,7 @@ resource "aws_route_table_association" "public" {
   route_table_id = var.network.route_table_id
 }
 resource "aws_route_table_association" "private" {
-  count = var.use_nat_route_table && !var.use_public_ip ? 1 : 0
+  count = var.nat_subnet != null && !var.use_public_ip ? 1 : 0
   subnet_id = aws_subnet.network.id
   route_table_id = var.nat_subnet != null ? var.nat_subnet.nat_route_table_id : null
 }
