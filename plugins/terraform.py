@@ -2,6 +2,7 @@ from django.conf import settings
 
 from plugins import data
 from utility.terraform import Terraform
+from utility.runtime import Runtime
 
 import os
 import json
@@ -28,6 +29,11 @@ class TerraformWrapper(object):
             manifest_path = self._get_manifest_path()
             if manifest_path:
                 variables = self.provider.get_variables(self.instance)
+                if Runtime.debug():
+                    self.provider.command.warning("{}: {}".format(
+                        self.instance.name,
+                        json.dumps(variables, indent = 2)
+                    ))
                 self.provider.command.data('variables', json.dumps(variables, indent=2))
                 self.terraform.plan(manifest_path, variables, self.instance.state_config)
 
@@ -36,6 +42,11 @@ class TerraformWrapper(object):
             manifest_path = self._get_manifest_path()
             if manifest_path:
                 variables = self.provider.get_variables(self.instance)
+                if Runtime.debug():
+                    self.provider.command.warning("{}: {}".format(
+                        self.instance.name,
+                        json.dumps(variables, indent = 2)
+                    ))
                 self.instance.state_config = self.terraform.apply(manifest_path, variables, self.instance.state_config)
 
     def destroy(self):
@@ -43,6 +54,11 @@ class TerraformWrapper(object):
             manifest_path = self._get_manifest_path()
             if manifest_path:
                 variables = self.provider.get_variables(self.instance)
+                if Runtime.debug():
+                    self.provider.command.warning("{}: {}".format(
+                        self.instance.name,
+                        json.dumps(variables, indent = 2)
+                    ))
                 self.terraform.destroy(manifest_path, variables, self.instance.state_config)
 
 
