@@ -89,4 +89,4 @@ plugin:
             network_relation:
                 base: terraform
                 manifest: network_peer
-                data: network_relation
+                data: network_peering_relation
