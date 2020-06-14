@@ -68,6 +68,13 @@ plugin:
                         type: int
                         help: "AWS data drive EBS provisioned IOPS"
                         config_name: aws_ec2_ebs_iops
+                related_values:
+                    security_groups:
+                        field: firewalls
+                        lookup: security_group_id
+                output_map:
+                    public_ip_address: public_ip
+                    private_ip_address: private_ip
             ec2_lb:
                 base: ec2
 
