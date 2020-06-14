@@ -3,6 +3,7 @@ from utility.data import ensure_list
 
 import os
 import boto3
+import random
 
 
 class AWSServiceMixin(ProviderMixin('aws_service')):
@@ -61,3 +62,34 @@ class AWSServiceMixin(ProviderMixin('aws_service')):
         return self.session.client('efs',
             region_name = network.config['region']
         )
+
+
+    def get_aws_ec2_keynames(self, network, ec2 = None):
+        if not ec2:
+            ec2 = self.ec2(network)
+
+        key_names = []
+        keypairs = ec2.describe_key_pairs()
+        for keypair in keypairs['KeyPairs']:
+            key_names.append(keypair['KeyName'])
+
+        return key_names
+
+    def create_aws_ec2_keypair(self, network, ec2 = None):
+        if not ec2:
+            ec2 = self.ec2(network)
+
+        key_names = self.get_aws_ec2_keynames(network, ec2)
+        while True:
+            key_name = "zimagi_{}".format(random.randint(1, 1000001))
+            if key_name not in key_names:
+                break
+
+        keypair = ec2.create_key_pair(KeyName = key_name)
+        return (key_name, keypair['KeyMaterial'])
+
+    def delete_aws_ec2_keypair(self, network, key_name, ec2 = None):
+        if not ec2:
+            ec2 = self.ec2(network)
+
+        return ec2.delete_key_pair(KeyName = key_name)
