@@ -122,7 +122,7 @@ class FirewallRuleBaseProvider(BasePlugin('network.firewall_rule')):
                 firewall = self.command._firewall.retrieve(instance.config['source_firewall'])
                 if firewall:
                     firewall.initialize(self.command)
-                    instance.config['source_firewall_id'] = firewall.config['resource_id']
+                    instance.config['source_firewall_id'] = firewall.variables['resource_id']
                     break
                 time.sleep(2)
                 tries -= 2
