@@ -12,7 +12,7 @@ resource "aws_instance" "server" {
   tenancy = var.tenancy
   ebs_optimized = var.ebs_optimized
   monitoring = var.monitoring
-  associate_public_ip_address = var.use_public_ip
+  associate_public_ip_address = var.subnet.use_public_ip
 
   key_name = var.key_name
   vpc_security_group_ids = var.security_groups
@@ -29,7 +29,7 @@ resource "aws_instance" "server" {
   }
 }
 resource "aws_eip" "server_ip" {
-  count = var.use_public_ip ? 1 : 0
+  count = var.subnet.use_public_ip ? 1 : 0
   instance = aws_instance.server.id
   vpc = true
 
@@ -45,5 +45,5 @@ output "private_ip_address" {
   value = aws_instance.server.private_ip
 }
 output "public_ip_address" {
-  value = var.use_public_ip ? aws_eip.server_ip.0.public_ip : null
+  value = var.subnet.use_public_ip ? aws_eip.server_ip.0.public_ip : null
 }
