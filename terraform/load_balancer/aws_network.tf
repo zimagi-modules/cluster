@@ -50,7 +50,7 @@ resource "aws_lb" "main" {
   name = var.name
   internal = var.internal
 
-  subnets = var.subnets
+  subnets = var.subnet_ids
   security_groups = var.security_groups
 
   enable_cross_zone_load_balancing = true

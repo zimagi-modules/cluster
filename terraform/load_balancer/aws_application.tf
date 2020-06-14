@@ -43,7 +43,7 @@ resource "aws_lb" "main" {
   internal = var.internal
   idle_timeout = var.idle_timeout
 
-  subnets = var.subnets
+  subnets = var.subnet_ids
   security_groups = var.security_groups
 
   enable_http2 = true
