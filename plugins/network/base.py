@@ -120,6 +120,7 @@ class SubnetBaseProvider(SubnetMixin, BasePlugin('network.subnet')):
             self.command.error("No available subnet cidr matches. Try another cidr")
 
 
+
 class FirewallBaseProvider(BasePlugin('network.firewall')):
 
     def get_firewall_id(self):
@@ -142,7 +143,7 @@ class FirewallRuleBaseProvider(NetworkMixin, BasePlugin('network.firewall_rule')
                 firewall = self.command._firewall.retrieve(instance.config['source_firewall'])
                 if firewall:
                     firewall.initialize(self.command)
-                    instance.config['source_firewall_id'] = firewall.provider.get_firewall_id()
+                    instance.config['source_firewall_id'] = firewall.get_firewall_id()
                     break
                 time.sleep(2)
                 tries -= 2
