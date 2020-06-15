@@ -3,10 +3,6 @@ command_base:
         mixins: [ domain ]
         server_enabled: true
         groups_allowed: [ network-admin, security-admin ]
-    certificate:
-        mixins: [ domain, certificate ]
-        server_enabled: true
-        groups_allowed: [ security-admin ]
     network:
         mixins: [ server, storage, network ]
         server_enabled: true
@@ -16,6 +12,11 @@ command_base:
     firewall:
         base: network
         groups_allowed: [ network-admin, security-admin ]
+    certificate:
+        base: network
+        mixins: [ domain, certificate ]
+        server_enabled: true
+        groups_allowed: [ security-admin ]
     storage:
         mixins: [ storage, network ]
         server_enabled: true
