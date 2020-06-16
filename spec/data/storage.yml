@@ -35,6 +35,10 @@ data:
                 options:
                     "null": true
         meta:
+            unique_together: [
+                [ storage, name ],
+                [ subnet, name ]
+            ]
             ordering: [ name ]
             scope: [ storage, subnet ]
             provider_name: "storage:mount"
