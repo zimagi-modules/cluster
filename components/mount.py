@@ -6,6 +6,10 @@ class ProfileComponent(profile.BaseProfileComponent):
     def priority(self):
         return 5
 
+    def facade_name(self):
+        return 'storage_mount'
+
+
     def run(self, name, config):
         storage_sources = self.pop_values('storage', config)
         networks = self.pop_values('network', config)
