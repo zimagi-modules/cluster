@@ -1,5 +1,6 @@
 from django.conf import settings
 
+from systems.models.index import Model
 from systems.plugins.index import BasePlugin
 from utility.data import ensure_list
 
@@ -70,7 +71,7 @@ class NetworkAddressMap(AddressMap):
         super().__init__(command)
 
         with self.thread_lock:
-            for network in self.command._network.all():
+            for network in Model('network').facade.all():
                 self.cidr_index[network.cidr] = True
 
 
@@ -80,7 +81,7 @@ class SubnetAddressMap(AddressMap):
         super().__init__(command)
 
         with self.thread_lock:
-            for subnet in self.command._subnet.all():
+            for subnet in Model('subnet').facade.all():
                 self.cidr_index[subnet.cidr] = True
 
 
