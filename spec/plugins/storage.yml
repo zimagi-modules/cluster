@@ -9,7 +9,7 @@ plugin:
             mount:
                 base: terraform
                 manifest: storage_mount
-                data: mount
+                data: storage_mount
                 requirement:
                     remote_host:
                         type: str
