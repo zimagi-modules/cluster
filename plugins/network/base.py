@@ -74,8 +74,6 @@ class NetworkAddressMap(AddressMap):
             for network in Model('network').facade.all():
                 self.cidr_index[network.cidr] = True
 
-        self.command.warning(self.cidr_index)
-
 
 class SubnetAddressMap(AddressMap):
 
@@ -85,8 +83,6 @@ class SubnetAddressMap(AddressMap):
         with self.thread_lock:
             for subnet in Model('subnet').facade.all():
                 self.cidr_index[subnet.cidr] = True
-
-        self.command.warning(self.cidr_index)
 
 
 class NetworkBaseProvider(BasePlugin('network.network')):
