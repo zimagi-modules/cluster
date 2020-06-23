@@ -1,3 +1,4 @@
 name: cluster
+
 scripts: scripts/install.sh
 requirements: requirements.txt
