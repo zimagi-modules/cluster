@@ -9,3 +9,7 @@ __pycache__
 
 # Extra files
 *.log
+
+# System files
+.*
+!.gitignore
