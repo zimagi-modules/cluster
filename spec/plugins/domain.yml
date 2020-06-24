@@ -14,6 +14,6 @@ plugin:
             route53:
                 subtypes:
                     domain:
-                        mixins: [ aws_service ]
+                        mixins: [aws_service]
                     domain_record:
-                        mixins: [ aws_service ]
+                        mixins: [aws_service]

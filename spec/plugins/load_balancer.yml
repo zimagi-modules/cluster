@@ -14,7 +14,7 @@ plugin:
             aws_network:
                 subtypes:
                     load_balancer:
-                        mixins: [ aws_service ]
+                        mixins: [aws_service]
                         related_values:
                             subnet_ids:
                                 field: subnets
@@ -23,7 +23,7 @@ plugin:
                                 field: firewalls
                                 lookup: security_group_id
                     load_balancer_listener:
-                        mixins: [ aws_service ]
+                        mixins: [aws_service]
             aws_application:
                 base: aws_network
                 subtypes:

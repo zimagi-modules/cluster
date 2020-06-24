@@ -2,10 +2,10 @@ data:
     certificate:
         class: Certificate
         base: network
-        mixins: [ provider, group, domain ]
+        mixins: [provider, group, domain]
         roles:
-            edit: [ security_admin ]
-            view: [ security_auditor ]
+            edit: [security_admin]
+            view: [security_auditor]
         fields:
             private_key:
                 type: "@fields.EncryptedDataField"

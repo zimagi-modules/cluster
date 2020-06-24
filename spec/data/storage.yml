@@ -2,23 +2,23 @@ data:
     storage:
         class: Storage
         base: network
-        mixins: [ provider, group ]
+        mixins: [provider, group]
         roles:
-            edit: [ storage_admin ]
-            view: [ storage_auditor ]
+            edit: [storage_admin]
+            view: [storage_auditor]
         meta:
             verbose_name_plural: storage
-            ordering: [ name ]
+            ordering: [name]
             provider_name: "storage:storage"
 
     storage_mount:
         class: StorageMount
         base: subnet
-        mixins: [ provider, storage, firewall_relation ]
-        id_fields: [ name, subnet_id, storage_id ]
+        mixins: [provider, storage, firewall_relation]
+        id_fields: [name, subnet_id, storage_id]
         roles:
-            edit: [ storage_admin ]
-            view: [ storage_auditor ]
+            edit: [storage_admin]
+            view: [storage_auditor]
         fields:
             remote_host:
                 type: "@django.CharField"
@@ -35,12 +35,9 @@ data:
                 options:
                     "null": true
         meta:
-            unique_together: [
-                [ storage, name ],
-                [ subnet, name ]
-            ]
-            ordering: [ name ]
-            scope: [ storage, subnet ]
+            unique_together: [[storage, name], [subnet, name]]
+            ordering: [name]
+            scope: [storage, subnet]
             provider_name: "storage:mount"
             provider_relation: storage
             command_base: mount

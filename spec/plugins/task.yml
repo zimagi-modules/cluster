@@ -2,7 +2,7 @@ plugin:
     task:
         providers:
             ansible:
-                mixins: [ cli_task, ssh_task ]
+                mixins: [cli_task, ssh_task]
                 requirement:
                     playbooks:
                         type: list
@@ -20,7 +20,7 @@ plugin:
                         type: str
                         help: "Ansible directory containing playbooks"
             remote_command:
-                mixins: [ cli_task, ssh_task ]
+                mixins: [cli_task, ssh_task]
                 requirement:
                     command:
                         type: str
@@ -39,7 +39,7 @@ plugin:
                         default: false
                         help: "Lock task configuration options (can not be overridden with paramaters)"
             remote_script:
-                mixins: [ cli_task, ssh_task ]
+                mixins: [cli_task, ssh_task]
                 requirement:
                     script:
                         type: str
@@ -62,7 +62,7 @@ plugin:
                         default: false
                         help: "Lock task configuration options (can not be overridden with paramaters)"
             upload:
-                mixins: [ cli_task, ssh_task ]
+                mixins: [cli_task, ssh_task]
                 requirement:
                     file:
                         type: str

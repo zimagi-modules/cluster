@@ -1,34 +1,34 @@
 command_base:
     domain:
-        mixins: [ domain ]
+        mixins: [domain]
         server_enabled: true
-        groups_allowed: [ network-admin, security-admin ]
+        groups_allowed: [network-admin, security-admin]
     network:
-        mixins: [ server, storage, network ]
+        mixins: [server, storage, network]
         server_enabled: true
-        groups_allowed: [ network-admin ]
+        groups_allowed: [network-admin]
     subnet:
         base: network
     firewall:
         base: network
-        groups_allowed: [ network-admin, security-admin ]
+        groups_allowed: [network-admin, security-admin]
     certificate:
         base: network
-        mixins: [ domain, certificate ]
+        mixins: [domain, certificate]
         server_enabled: true
-        groups_allowed: [ security-admin ]
+        groups_allowed: [security-admin]
     storage:
-        mixins: [ storage, network ]
+        mixins: [storage, network]
         server_enabled: true
-        groups_allowed: [ storage-admin ]
+        groups_allowed: [storage-admin]
     mount:
         base: storage
     load_balancer:
         base: network
-        mixins: [ domain, certificate, load_balancer ]
+        mixins: [domain, certificate, load_balancer]
         server_enabled: true
-        groups_allowed: [ server-admin, network-admin ]
+        groups_allowed: [server-admin, network-admin]
     server:
-        mixins: [ domain, load_balancer, network, server ]
+        mixins: [domain, load_balancer, network, server]
         server_enabled: true
-        groups_allowed: [ server-admin ]
+        groups_allowed: [server-admin]

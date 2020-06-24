@@ -29,7 +29,7 @@ plugin:
             efs:
                 subtypes:
                     storage:
-                        mixins: [ aws_service ]
+                        mixins: [aws_service]
                         option:
                             performance_mode:
                                 type: str
@@ -51,7 +51,7 @@ plugin:
                                 help: "AWS EFS encrypted filesystem?"
                                 config_name: aws_efs_encrypted
                     mount:
-                        mixins: [ aws_service ]
+                        mixins: [aws_service]
                         option:
                             remote_path:
                                 type: str

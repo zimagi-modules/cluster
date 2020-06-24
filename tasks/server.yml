@@ -1,19 +1,17 @@
-
 _server: &server
-  roles: server-admin
-
+    roles: server-admin
 
 cli:
-  <<: *server
-  provider: remote_command
-  command: "@command"
-  options:
-    command: env
+    <<: *server
+    provider: remote_command
+    command: "@command"
+    options:
+        command: env
 
 sudo:
-  <<: *server
-  provider: remote_command
-  command: "@command"
-  sudo: true
-  options:
-    command: env
+    <<: *server
+    provider: remote_command
+    command: "@command"
+    sudo: true
+    options:
+        command: env

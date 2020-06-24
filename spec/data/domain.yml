@@ -2,10 +2,10 @@ data:
     domain:
         class: Domain
         base: environment
-        mixins: [ provider, group ]
+        mixins: [provider, group]
         roles:
-            edit: [ domain_admin ]
-            view: [ domain_auditor ]
+            edit: [domain_admin]
+            view: [domain_auditor]
         fields:
             email:
                 type: "@django.CharField"
@@ -52,17 +52,31 @@ data:
     domain_record:
         class: DomainRecord
         base: domain
-        mixins: [ provider ]
+        mixins: [provider]
         roles:
-            edit: [ domain_admin ]
-            view: [ domain_auditor ]
+            edit: [domain_admin]
+            view: [domain_auditor]
         fields:
             type:
                 type: "@django.CharField"
                 options:
                     max_length: 10
                     default: A
-                    choices: [ A, AAAA, CAA, CNAME, MX, NAPTR, NS, PTR, SOA, SPF, SRV, TXT ]
+                    choices:
+                        [
+                            A,
+                            AAAA,
+                            CAA,
+                            CNAME,
+                            MX,
+                            NAPTR,
+                            NS,
+                            PTR,
+                            SOA,
+                            SPF,
+                            SRV,
+                            TXT,
+                        ]
             target:
                 type: "@django.CharField"
                 options:

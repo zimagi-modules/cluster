@@ -2,10 +2,10 @@ data:
     load_balancer:
         class: LoadBalancer
         base: network
-        mixins: [ provider, group, domain, subnet_relation, firewall_relation ]
+        mixins: [provider, group, domain, subnet_relation, firewall_relation]
         roles:
-            edit: [ server_admin ]
-            view: [ server_auditor ]
+            edit: [server_admin]
+            view: [server_auditor]
         fields:
             internal:
                 type: "@django.BooleanField"
@@ -19,10 +19,10 @@ data:
     load_balancer_listener:
         class: LoadBalancerListener
         base: load_balancer
-        mixins: [ provider, certificate ]
+        mixins: [provider, certificate]
         roles:
-            edit: [ server_admin ]
-            view: [ server_auditor ]
+            edit: [server_admin]
+            view: [server_auditor]
         fields:
             port:
                 type: "@django.IntegerField"
@@ -58,7 +58,7 @@ data:
                 options:
                     default: 3
         meta:
-            ordering: [ name ]
+            ordering: [name]
             relation: certificate
             provider_name: "load_balancer:load_balancer_listener"
             provider_relation: load_balancer

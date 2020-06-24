@@ -2,10 +2,10 @@ data:
     firewall:
         class: Firewall
         base: network
-        mixins: [ provider, group ]
+        mixins: [provider, group]
         roles:
-            edit: [ security_admin ]
-            view: [ security_auditor ]
+            edit: [security_admin]
+            view: [security_auditor]
         meta:
             provider_name: "network:firewall"
             provider_relation: network
@@ -13,23 +13,23 @@ data:
     firewall_rule:
         class: FirewallRule
         base: firewall
-        mixins: [ provider ]
+        mixins: [provider]
         roles:
-            edit: [ security_admin ]
-            view: [ security_auditor ]
+            edit: [security_admin]
+            view: [security_auditor]
         fields:
             mode:
                 type: "@django.CharField"
                 options:
                     max_length: 10
                     default: ingress
-                    choices: [ ingress, egress ]
+                    choices: [ingress, egress]
             protocol:
                 type: "@django.CharField"
                 options:
                     max_length: 10
                     default: tcp
-                    choices: [ tcp, udp, icmp ]
+                    choices: [tcp, udp, icmp]
             from_port:
                 type: "@django.IntegerField"
                 options:
@@ -43,6 +43,6 @@ data:
                 options:
                     "null": true
         meta:
-            ordering: [ name ]
+            ordering: [name]
             provider_name: "network:firewall_rule"
             provider_relation: firewall

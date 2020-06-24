@@ -1,3 +1,2 @@
----
 apt_dependencies:
-  - nfs-common
+    - nfs-common

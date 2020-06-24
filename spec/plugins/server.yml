@@ -22,7 +22,7 @@ plugin:
                         help: "Server SSH user"
                         config_name: physical_server_user
             ec2:
-                mixins: [ aws_service ]
+                mixins: [aws_service]
                 requirement:
                     image:
                         type: str
@@ -84,7 +84,7 @@ plugin:
         data: server_volume
         providers:
             aws_ebs:
-                mixins: [ aws_service ]
+                mixins: [aws_service]
                 option:
                     ebs_encrypted:
                         type: bool

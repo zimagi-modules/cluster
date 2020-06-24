@@ -2,71 +2,71 @@ data_base:
     domain:
         class: DomainBase
         base: resource
-        mixins: [ domain ]
-        id_fields: [ name, domain_id ]
+        mixins: [domain]
+        id_fields: [name, domain_id]
         meta:
-            unique_together: [ domain, name ]
+            unique_together: [domain, name]
             scope: domain
 
     network:
         class: NetworkBase
         base: resource
-        mixins: [ network ]
-        id_fields: [ name, network_id ]
+        mixins: [network]
+        id_fields: [name, network_id]
         meta:
-            unique_together: [ network, name ]
+            unique_together: [network, name]
             scope: network
 
     network_peering:
         class: NetworkPeeringBase
         base: resource
-        mixins: [ network_peering ]
-        id_fields: [ name, network_peering_id ]
+        mixins: [network_peering]
+        id_fields: [name, network_peering_id]
         meta:
-            unique_together: [ network_peering, name ]
+            unique_together: [network_peering, name]
             scope: network_peering
 
     subnet:
         class: SubnetBase
         base: resource
-        mixins: [ subnet ]
-        id_fields: [ name, subnet_id ]
+        mixins: [subnet]
+        id_fields: [name, subnet_id]
         meta:
-            unique_together: [ subnet, name ]
+            unique_together: [subnet, name]
             scope: subnet
 
     firewall:
         class: FirewallBase
         base: resource
-        mixins: [ firewall ]
-        id_fields: [ name, firewall_id ]
+        mixins: [firewall]
+        id_fields: [name, firewall_id]
         meta:
-            unique_together: [ firewall, name ]
+            unique_together: [firewall, name]
             scope: firewall
 
     storage:
         class: StorageBase
         base: resource
-        mixins: [ storage ]
-        id_fields: [ name, storage_id ]
+        mixins: [storage]
+        id_fields: [name, storage_id]
         meta:
-            unique_together: [ storage, name ]
+            unique_together: [storage, name]
             scope: storage
 
     load_balancer:
         class: LoadBalancerBase
         base: resource
-        mixins: [ load_balancer ]
-        id_fields: [ name, load_balancer_id ]
+        mixins: [load_balancer]
+        id_fields: [name, load_balancer_id]
         meta:
-            unique_together: [ load_balancer, name ]
+            unique_together: [load_balancer, name]
             scope: load_balancer
 
     server:
         class: ServerBase
         base: resource
-        mixins: [ server ]
-        id_fields: [ name, server_id ]
+        mixins: [server]
+        id_fields: [name, server_id]
         meta:
-            unique_together: [ server, name ]
+            unique_together: [server, name]
             scope: server

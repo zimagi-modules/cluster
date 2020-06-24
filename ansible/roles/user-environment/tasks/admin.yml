@@ -1,32 +1,31 @@
----
 - name: admin | .bashrc
   copy:
-    src: user.bashrc
-    dest: /home/{{ ansible_user }}/.bashrc
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: u=rw,g=r
+      src: user.bashrc
+      dest: /home/{{ ansible_user }}/.bashrc
+      owner: "{{ ansible_user }}"
+      group: "{{ ansible_user }}"
+      mode: u=rw,g=r
 
 - name: admin | .profile
   copy:
-    src: shared.profile
-    dest: /home/{{ ansible_user }}/.profile
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: u=rw,g=r
+      src: shared.profile
+      dest: /home/{{ ansible_user }}/.profile
+      owner: "{{ ansible_user }}"
+      group: "{{ ansible_user }}"
+      mode: u=rw,g=r
 
 - name: admin | .bash_aliases
   copy:
-    src: shared.bash_aliases
-    dest: /home/{{ ansible_user }}/.bash_aliases
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: u=rw,g=r
+      src: shared.bash_aliases
+      dest: /home/{{ ansible_user }}/.bash_aliases
+      owner: "{{ ansible_user }}"
+      group: "{{ ansible_user }}"
+      mode: u=rw,g=r
 
 - name: admin | .vimrc
   copy:
-    src: shared.vimrc
-    dest: /home/{{ ansible_user }}/.vimrc
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: u=rw,g=r
+      src: shared.vimrc
+      dest: /home/{{ ansible_user }}/.vimrc
+      owner: "{{ ansible_user }}"
+      group: "{{ ansible_user }}"
+      mode: u=rw,g=r

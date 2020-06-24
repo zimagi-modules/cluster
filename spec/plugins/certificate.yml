@@ -5,7 +5,7 @@ plugin:
         data: certificate
         providers:
             aws:
-                mixins: [ aws_service ]
+                mixins: [aws_service]
 
     certificate_authority:
         interface:

@@ -2,10 +2,10 @@ data:
     server:
         class: Server
         base: subnet
-        mixins: [ provider, group, domain, load_balancer, firewall_relation ]
+        mixins: [provider, group, domain, load_balancer, firewall_relation]
         roles:
-            edit: [ server_admin ]
-            view: [ server_auditor ]
+            edit: [server_admin]
+            view: [server_auditor]
         fields:
             public_ip:
                 type: "@django.CharField"
@@ -47,18 +47,18 @@ data:
                     related_name: "%(class)s_relations"
                     editable: false
         meta:
-            ordering: [ name ]
-            relation: [ domain, load_balancer ]
-            dynamic_fields: [ status ]
+            ordering: [name]
+            relation: [domain, load_balancer]
+            dynamic_fields: [status]
             provider_name: server
 
     server_volume:
         class: ServerVolume
         base: server
-        mixins: [ provider ]
+        mixins: [provider]
         roles:
-            edit: [ server_admin ]
-            view: [ server_auditor ]
+            edit: [server_admin]
+            view: [server_auditor]
         fields:
             location:
                 type: "@django.CharField"
@@ -89,6 +89,6 @@ data:
                 options:
                     "null": true
         meta:
-            ordering: [ name ]
+            ordering: [name]
             scope_process: post
             provider_name: server_volume

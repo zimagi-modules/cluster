@@ -1,18 +1,16 @@
-
 _ansible: &ansible
-  provider: ansible
-  roles: server-admin
-  directory: ansible
-
+    provider: ansible
+    roles: server-admin
+    directory: ansible
 
 password:
-  <<: *ansible
-  playbooks: password.yml
+    <<: *ansible
+    playbooks: password.yml
 
 mount:
-  <<: *ansible
-  playbooks: mount.yml
+    <<: *ansible
+    playbooks: mount.yml
 
 user-environment:
-  <<: *ansible
-  playbooks: user-environment.yml
+    <<: *ansible
+    playbooks: user-environment.yml
