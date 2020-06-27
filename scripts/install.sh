@@ -8,7 +8,7 @@ apt-get update
 apt-get install -y certbot
 rm -rf /var/lib/apt/lists/*
 
-TERRAFORM_VERSION=0.12.19
+TERRAFORM_VERSION=0.12.28
 
 if [ ! -f /usr/local/bin/terraform ]
 then
@@ -18,7 +18,7 @@ fi
 
 mkdir -p ~/.terraform.d/plugins
 
-TERRAFORM_AWS_VERSION=2.45.0
+TERRAFORM_AWS_VERSION=2.68.0
 
 if ! ls ~/.terraform.d/plugins/terraform-provider-aws_v${TERRAFORM_AWS_VERSION}_* 1>/dev/null 2>&1
 then
