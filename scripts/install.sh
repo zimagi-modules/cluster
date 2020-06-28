@@ -5,7 +5,7 @@
 set -e
 
 apt-get update
-apt-get install -y certbot
+apt-get install -y certbot sshpass
 rm -rf /var/lib/apt/lists/*
 
 TERRAFORM_VERSION=0.12.28
