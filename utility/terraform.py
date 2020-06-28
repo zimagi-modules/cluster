@@ -126,6 +126,7 @@ class Terraform(object):
 
     def destroy(self, manifest_path, variables, state, display_init = False):
         with project_dir(self.lib_type, self.get_project_name(manifest_path, variables)) as project:
+            self.clean_project(project)
             self.check_init(project)
 
             project.copy(manifest_path, 'manifest.tf')
