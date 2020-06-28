@@ -28,7 +28,7 @@ class TerraformWrapper(object):
         if self.provider.terraform_type():
             manifest_path = self._get_manifest_path()
             if manifest_path:
-                variables = self.provider.get_variables(self.instance)
+                variables = self.provider.get_variables(self.instance, True)
                 if Runtime.debug():
                     self.provider.command.warning("{}: {}".format(
                         self.instance.name,
@@ -41,7 +41,7 @@ class TerraformWrapper(object):
         if self.provider.terraform_type():
             manifest_path = self._get_manifest_path()
             if manifest_path:
-                variables = self.provider.get_variables(self.instance)
+                variables = self.provider.get_variables(self.instance, True)
                 if Runtime.debug():
                     self.provider.command.warning("{}: {}".format(
                         self.instance.name,
@@ -53,7 +53,7 @@ class TerraformWrapper(object):
         if self.provider.terraform_type():
             manifest_path = self._get_manifest_path()
             if manifest_path:
-                variables = self.provider.get_variables(self.instance)
+                variables = self.provider.get_variables(self.instance, True)
                 if Runtime.debug():
                     self.provider.command.warning("{}: {}".format(
                         self.instance.name,
