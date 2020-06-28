@@ -13,7 +13,7 @@ class ProfileComponent(profile.BaseProfileComponent):
         subnets = self.pop_values('subnet', config)
         domain = self.pop_value('domain', config)
         load_balancer = self.pop_value('load_balancer', config)
-        load_balancer_listeners = self.pop_value('load_balancer_listeners', config)
+        load_balancer_listeners = self.pop_values('load_balancer_listeners', config)
         groups = self.pop_values('groups', config)
         firewalls = self.pop_values('firewalls', config)
         volumes = self.pop_info('volumes', config)
