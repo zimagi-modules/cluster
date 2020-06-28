@@ -6,3 +6,4 @@
       utility_packages:
           - vim
           - git
+          - sshpass
