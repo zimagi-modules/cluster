@@ -173,14 +173,14 @@ config_store:
         - storagemount_relation
         - groups
 
-    mount_list_fields:
+    storage_mount_list_fields:
         - provider_type
         - remote_host
         - remote_path
         - storage
         - subnet
         - firewalls
-    mount_display_fields:
+    storage_mount_display_fields:
         - id
         - provider_type
         - remote_host
