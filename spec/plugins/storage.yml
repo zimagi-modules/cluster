@@ -53,6 +53,9 @@ plugin:
                     mount:
                         mixins: [aws_service]
                         option:
+                            remote_host:
+                                type: str
+                                help: "Remote host to connect storage mount"
                             remote_path:
                                 type: str
                                 help: "Remote filepath for storage mount access"
