@@ -1,15 +1,12 @@
 - name: mount | check
   command: file -s {{ mount_source }}
   register: disk_check
-  when:
-    - mount_type != "nfs4"
-    - mount_type != "unformatted"
+  when: mount_type != "nfs4"
 
 - name: mount | initialize
   command: mkfs -t {{ mount_type }} {{ mount_source }}
   when:
       - mount_type != "nfs4"
-      - mount_type != "unformatted"
       - "disk_check.stdout | join('') is match(mount_source ~ ': data')"
 
 - name: mount | ensure group
