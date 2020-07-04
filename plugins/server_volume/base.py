@@ -5,7 +5,8 @@ class BaseProvider(BasePlugin('server_volume')):
 
     def store_related(self, instance, created, test):
         super().store_related(instance, created, test)
-        self.mount_volume(instance)
+        if instance.type != 'device':
+            self.mount_volume(instance)
 
 
     def mount_volume(self, instance):
