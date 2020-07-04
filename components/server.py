@@ -59,6 +59,9 @@ class ProfileComponent(profile.BaseProfileComponent):
                     )
                     volume_fields.pop('provider', None)
 
+                    if volume_fields['type'] == 'device':
+                        volume_fields['location'] = volume
+
                     def process_volume_server(index):
                         self.exec('server volume save',
                             server_volume_provider_name = volume_provider,
