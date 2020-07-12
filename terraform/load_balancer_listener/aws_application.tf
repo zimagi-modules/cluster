@@ -49,3 +49,9 @@ output "target_group_id" {
 output "target_group_arn" {
   value = aws_lb_target_group.main.arn
 }
+
+resource "aws_lb_target_group_attachment" "gateway" {
+  count = length(var.servers)
+  target_group_arn = aws_lb_target_group.main.arn
+  target_id = element(var.servers, count.index).instance_id
+}
