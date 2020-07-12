@@ -4,7 +4,7 @@ from systems.commands import profile
 class ProfileComponent(profile.BaseProfileComponent):
 
     def priority(self):
-        return 6
+        return 5
 
     def run(self, name, config):
         provider = self.pop_value('provider', config)
@@ -12,17 +12,12 @@ class ProfileComponent(profile.BaseProfileComponent):
         networks = self.pop_values('network', config)
         subnets = self.pop_values('subnet', config)
         domain = self.pop_value('domain', config)
-        load_balancer = self.pop_value('load_balancer', config)
-        load_balancer_listeners = self.pop_values('load_balancer_listeners', config)
         groups = self.pop_values('groups', config)
         firewalls = self.pop_values('firewalls', config)
         volumes = self.pop_info('volumes', config)
 
         if not provider or not networks or not subnets:
             self.command.error("Server {} requires 'provider', 'network', and 'subnet' fields".format(name))
-
-        if load_balancer and not load_balancer_listeners or not load_balancer and load_balancer_listeners:
-            self.command.error("Server {} requires neither or both of 'load_balancer' and 'load_balancer_listeners' fields".format(name))
 
         if not count:
             count = 1
@@ -36,14 +31,11 @@ class ProfileComponent(profile.BaseProfileComponent):
                     server_fields = self.interpolate(config,
                         provider = provider,
                         network = network,
-                        subnet = subnet,
-                        load_balancer = load_balancer
+                        subnet = subnet
                     ),
                     network_name = network,
                     subnet_name = subnet,
                     domain_name = domain,
-                    load_balancer_name = load_balancer,
-                    load_balancer_listener_names = load_balancer_listeners,
                     group_names = groups,
                     firewall_names = firewalls,
                     remove = True,
@@ -92,12 +84,6 @@ class ProfileComponent(profile.BaseProfileComponent):
             'firewalls': self.get_names(instance.firewalls),
             'volumes': {}
         }
-        if instance.load_balancer:
-            variables['load_balancer'] = instance.load_balancer.name
-
-        if instance.load_balancer_listeners:
-            variables['load_balancer_listeners'] = self.get_names(instance.load_balancer_listeners)
-
         for volume in instance.servervolume_relation.all():
             volume_config = self.get_variables(volume)
             volume_config['provider'] = volume.provider_type
