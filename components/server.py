@@ -4,7 +4,7 @@ from systems.commands import profile
 class ProfileComponent(profile.BaseProfileComponent):
 
     def priority(self):
-        return 5
+        return 6
 
     def run(self, name, config):
         provider = self.pop_value('provider', config)
