@@ -2,7 +2,7 @@ data:
     server:
         class: Server
         base: subnet
-        mixins: [provider, group, domain, load_balancer, firewall_relation]
+        mixins: [provider, group, domain, firewall_relation]
         roles:
             edit: [server_admin]
             view: [server_auditor]
@@ -40,15 +40,9 @@ data:
                 options:
                     "null": true
                     max_length: 128
-            load_balancer_listeners:
-                type: "@django.ManyToManyField"
-                relation: load_balancer_listener
-                options:
-                    related_name: "%(class)s_relations"
-                    editable: false
         meta:
             ordering: [name]
-            relation: [domain, load_balancer]
+            relation: [domain]
             dynamic_fields: [status]
             provider_name: server
 
