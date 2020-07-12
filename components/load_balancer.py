@@ -6,7 +6,7 @@ import copy
 class ProfileComponent(profile.BaseProfileComponent):
 
     def priority(self):
-        return 5
+        return 6
 
     def run(self, name, config):
         networks = self.pop_values('network', config)
