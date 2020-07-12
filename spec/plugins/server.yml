@@ -75,8 +75,6 @@ plugin:
                 output_map:
                     public_ip_address: public_ip
                     private_ip_address: private_ip
-            ec2_lb:
-                base: ec2
 
     server_volume:
         base: terraform
