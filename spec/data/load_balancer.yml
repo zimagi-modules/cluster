@@ -57,9 +57,14 @@ data:
                 type: "@django.IntegerField"
                 options:
                     default: 3
+            server_groups:
+                type: "@fields.CSVField"
+                options:
+                    "null": true
         meta:
             ordering: [name]
             relation: certificate
+            dynamic_fields: [servers]
             provider_name: "load_balancer:load_balancer_listener"
             provider_relation: load_balancer
             command_base: "lb listener"
