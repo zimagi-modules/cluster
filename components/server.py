@@ -67,7 +67,8 @@ class ProfileComponent(profile.BaseProfileComponent):
                     self.run_list(range(1, count + 1), process_volume_server)
 
                 if volumes and self.profile.include_inner('server_volume'):
-                    self.run_list(volumes.keys(), process_volume)
+                    for key in volumes.keys():
+                        process_volume(key)
             self.run_list(subnets, process_subnet)
         self.run_list(networks, process_network)
 
