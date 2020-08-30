@@ -3,5 +3,6 @@ parents:
 
 domain:
     "@root_domain":
-        provider: route53
+        when: "@provision_domain"
+        provider: "@domain_provider"
         email: "@root_domain_email"
