@@ -1,6 +1,0 @@
-command:
-    cert:
-        resource: certificate
-        base_name: certificate
-        base: certificate
-        priority: 72

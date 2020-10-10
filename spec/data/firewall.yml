@@ -1,3 +1,59 @@
+data_mixins:
+    firewall:
+        class: FirewallMixin
+        fields:
+            firewall:
+                type: "@django.ForeignKey"
+                relation: firewall
+                options:
+                    "null": true
+                    on_delete: "@django.PROTECT"
+                    editable: false
+
+    firewall_relation:
+        class: FirewallRelationMixin
+        fields:
+            firewalls:
+                type: "@django.ManyToManyField"
+                relation: firewall
+
+    firewall_rule:
+        class: FirewallRuleMixin
+        fields:
+            firewall_rule:
+                type: "@django.ForeignKey"
+                relation: firewall_rule
+                options:
+                    "null": true
+                    on_delete: "@django.PROTECT"
+                    editable: false
+
+    firewall_rule_relation:
+        class: FirewallRuleRelationMixin
+        fields:
+            firewall_rules:
+                type: "@django.ManyToManyField"
+                relation: firewall_rule
+
+data_base:
+    firewall:
+        class: FirewallBase
+        base: resource
+        mixins: [firewall]
+        id_fields: [name, firewall_id]
+        meta:
+            unique_together: [firewall, name]
+            scope: firewall
+
+    firewall_rule:
+        class: FirewallRuleBase
+        base: resource
+        mixins: [firewall_rule]
+        id_fields: [name, firewall_rule_id]
+        meta:
+            unique_together: [firewall_rule, name]
+            scope: firewall_rule
+
 data:
     firewall:
         class: Firewall
@@ -46,3 +102,34 @@ data:
             ordering: [name]
             provider_name: "network:firewall_rule"
             provider_relation: firewall
+
+command_mixins:
+    firewall:
+        class: FirewallMixin
+        mixins: [network]
+        meta:
+            firewall:
+                data: firewall
+                priority: 2
+            firewall_rule:
+                data: firewall_rule
+                priority: 3
+
+command_base:
+    firewall:
+        base: network
+        mixins: [firewall]
+        groups_allowed: [network-admin, security-admin]
+
+command:
+    firewall:
+        resource: firewall
+        base_name: firewall
+        base: firewall
+        priority: 78
+
+        rule:
+            resource: firewall_rule
+            base_name: firewall_rule
+            base: firewall
+            priority: 1

@@ -1,3 +1,49 @@
+plugin:
+    certificate:
+        base: terraform
+        manifest: certificate
+        data: certificate
+        providers:
+            aws:
+                mixins: [aws_service]
+
+    certificate_authority:
+        interface:
+            request:
+            renew:
+            revoke:
+        providers:
+            letsencrypt:
+
+data_mixins:
+    certificate:
+        class: CertificateMixin
+        fields:
+            certificate:
+                type: "@django.ForeignKey"
+                relation: certificate
+                options:
+                    "null": true
+                    on_delete: "@django.PROTECT"
+                    editable: false
+
+    certificate_relation:
+        class: CertificateRelationMixin
+        fields:
+            certificates:
+                type: "@django.ManyToManyField"
+                relation: certificate
+
+data_base:
+    certificate:
+        class: CertificateBase
+        base: resource
+        mixins: [certificate]
+        id_fields: [name, certificate_id]
+        meta:
+            unique_together: [certificate, name]
+            scope: certificate
+
 data:
     certificate:
         class: Certificate
@@ -26,3 +72,26 @@ data:
             provider_name: certificate
             relation: domain
             command_base: cert
+
+command_mixins:
+    certificate:
+        class: CertificateMixin
+        meta:
+            certificate:
+                data: certificate
+                provider: true
+                priority: 2
+
+command_base:
+    certificate:
+        base: network
+        mixins: [domain, certificate]
+        server_enabled: true
+        groups_allowed: [security-admin]
+
+command:
+    cert:
+        resource: certificate
+        base_name: certificate
+        base: certificate
+        priority: 72

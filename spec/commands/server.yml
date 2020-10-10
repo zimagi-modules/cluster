@@ -1,12 +1,5 @@
 command:
     server:
-        resource: server
-        base_name: server
-        base: server
-        priority: 86
-        options:
-            save_multiple: true
-
         rotate:
             base: server
             priority: 1
@@ -18,9 +11,3 @@ command:
             priority: 5
             parse:
                 server_name: false
-
-        volume:
-            resource: server_volume
-            base_name: server_volume
-            base: server
-            priority: 10

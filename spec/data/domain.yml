@@ -1,3 +1,79 @@
+plugin:
+    domain:
+        base: meta
+        subtypes:
+            domain:
+                base: terraform
+                manifest: domain
+                data: domain
+            domain_record:
+                base: terraform
+                manifest: domain_record
+                data: domain_record
+        providers:
+            route53:
+                subtypes:
+                    domain:
+                        mixins: [aws_service]
+                    domain_record:
+                        mixins: [aws_service]
+
+data_mixins:
+    domain:
+        class: DomainMixin
+        fields:
+            domain:
+                type: "@django.ForeignKey"
+                relation: domain
+                options:
+                    "null": true
+                    on_delete: "@django.PROTECT"
+                    editable: false
+
+    domain_relation:
+        class: DomainRelationMixin
+        fields:
+            domains:
+                type: "@django.ManyToManyField"
+                relation: domain
+
+    domain_record:
+        class: DomainRecordMixin
+        fields:
+            domain_record:
+                type: "@django.ForeignKey"
+                relation: domain_record
+                options:
+                    "null": true
+                    on_delete: "@django.PROTECT"
+                    editable: false
+
+    domain_record_relation:
+        class: DomainRecordRelationMixin
+        fields:
+            domain_records:
+                type: "@django.ManyToManyField"
+                relation: domain_record
+
+data_base:
+    domain:
+        class: DomainBase
+        base: resource
+        mixins: [domain]
+        id_fields: [name, domain_id]
+        meta:
+            unique_together: [domain, name]
+            scope: domain
+
+    domain_record:
+        class: DomainRecordBase
+        base: resource
+        mixins: [domain_record]
+        id_fields: [name, domain_record_id]
+        meta:
+            unique_together: [domain_record, name]
+            scope: domain_record
+
 data:
     domain:
         class: Domain
@@ -94,3 +170,34 @@ data:
         meta:
             provider_name: "domain:domain_record"
             provider_relation: domain
+
+command_mixins:
+    domain:
+        class: DomainMixin
+        meta:
+            domain:
+                data: domain
+                provider: true
+                priority: 1
+            domain_record:
+                data: domain_record
+                priority: 2
+
+command_base:
+    domain:
+        mixins: [domain]
+        server_enabled: true
+        groups_allowed: [network-admin, security-admin]
+
+command:
+    domain:
+        resource: domain
+        base_name: domain
+        base: domain
+        priority: 70
+
+        record:
+            resource: domain_record
+            base_name: domain_record
+            base: domain
+            priority: 1

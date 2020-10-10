@@ -1,3 +1,129 @@
+plugin:
+    storage:
+        base: meta
+        subtypes:
+            storage:
+                base: terraform
+                manifest: storage
+                data: storage
+            mount:
+                base: terraform
+                manifest: storage_mount
+                data: storage_mount
+                requirement:
+                    remote_host:
+                        type: str
+                        help: "Remote host to connect storage mount"
+                option:
+                    remote_path:
+                        type: str
+                        default: "/"
+                        help: "Remote path to mount locally"
+                        config_name: internal_remote_path
+                    mount_options:
+                        type: str
+                        default: "nfs4 rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 0 0"
+                        help: "Mount options"
+                        config_name: manual_mount_options
+        providers:
+            efs:
+                subtypes:
+                    storage:
+                        mixins: [aws_service]
+                        option:
+                            performance_mode:
+                                type: str
+                                default: "generalPurpose"
+                                help: "AWS EFS performance mode (can also be: maxIO)"
+                                config_name: aws_efs_perf_mode
+                            throughput_mode:
+                                type: str
+                                default: "bursting"
+                                help: "AWS EFS throughput mode (can also be: provisioned)"
+                                config_name: aws_efs_tp_mode
+                            provisioned_throughput:
+                                type: int
+                                help: "AWS EFS throughput in MiB/s"
+                                config_name: aws_efs_prov_tp
+                            encrypted:
+                                type: bool
+                                default: false
+                                help: "AWS EFS encrypted filesystem?"
+                                config_name: aws_efs_encrypted
+
+                    mount:
+                        mixins: [aws_service]
+                        option:
+                            remote_host:
+                                type: str
+                                help: "Remote host to connect storage mount"
+                            remote_path:
+                                type: str
+                                help: "Remote filepath for storage mount access"
+                        related_values:
+                            security_groups:
+                                field: firewalls
+                                lookup: security_group_id
+                        output_map:
+                            mount_ip: remote_host
+                            mount_path: remote_path
+
+data_mixins:
+    storage:
+        class: StorageMixin
+        fields:
+            storage:
+                type: "@django.ForeignKey"
+                relation: storage
+                options:
+                    "null": true
+                    on_delete: "@django.PROTECT"
+                    editable: false
+
+    storage_relation:
+        class: StorageRelationMixin
+        fields:
+            storage:
+                type: "@django.ManyToManyField"
+                relation: storage
+
+    storage_mount:
+        class: StorageMountMixin
+        fields:
+            mount:
+                type: "@django.ForeignKey"
+                relation: storage_mount
+                options:
+                    "null": true
+                    on_delete: "@django.PROTECT"
+                    editable: false
+
+    storage_mount_relation:
+        class: StorageMountRelationMixin
+        fields:
+            mounts:
+                type: "@django.ManyToManyField"
+                relation: storage_mount
+
+data_base:
+    storage:
+        class: StorageBase
+        base: resource
+        mixins: [storage]
+        id_fields: [name, storage_id]
+        meta:
+            unique_together: [storage, name]
+            scope: storage
+
+    storage_mount:
+        class: StorageMountBase
+        base: resource
+        mixins: [storage_mount]
+        id_fields: [name, mount_id]
+        meta:
+            unique_together: [mount, name]
+            scope: storage_mount
+
 data:
     storage:
         class: Storage
@@ -41,3 +167,34 @@ data:
             provider_name: "storage:mount"
             provider_relation: storage
             command_base: mount
+
+command_mixins:
+    storage:
+        class: StorageMixin
+        meta:
+            storage:
+                data: storage
+                provider: true
+                priority: 2
+            mount:
+                data: storage_mount
+                priority: 3
+
+command_base:
+    storage:
+        mixins: [storage, network]
+        server_enabled: true
+        groups_allowed: [storage-admin]
+
+command:
+    storage:
+        resource: storage
+        base_name: storage
+        base: storage
+        priority: 80
+
+    mount:
+        resource: storage_mount
+        base_name: mount
+        base: storage
+        priority: 82

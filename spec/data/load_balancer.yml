@@ -1,3 +1,106 @@
+plugin:
+    load_balancer:
+        base: meta
+        subtypes:
+            load_balancer:
+                base: terraform
+                manifest: load_balancer
+                data: load_balancer
+            load_balancer_listener:
+                base: terraform
+                manifest: load_balancer_listener
+                data: load_balancer_listener
+        providers:
+            aws_network:
+                subtypes:
+                    load_balancer:
+                        mixins: [aws_service]
+                        related_values:
+                            subnet_ids:
+                                field: subnets
+                                lookup: subnet_id
+                            security_groups:
+                                field: firewalls
+                                lookup: security_group_id
+                    load_balancer_listener:
+                        mixins: [aws_service]
+
+            aws_application:
+                base: aws_network
+                subtypes:
+                    load_balancer:
+                        option:
+                            idle_timeout:
+                                type: int
+                                default: 60
+                                help: "Idle timeout (secs)"
+                    load_balancer_listener:
+                        option:
+                            target_protocol:
+                                type: str
+                                default: "http"
+                                help: "Target protocol (http or https)"
+                            ssl_policy:
+                                type: str
+                                default: "ELBSecurityPolicy-2016-08"
+                                help: "SSL policy definition"
+
+data_mixins:
+    load_balancer:
+        class: LoadBalancerMixin
+        fields:
+            load_balancer:
+                type: "@django.ForeignKey"
+                relation: load_balancer
+                options:
+                    "null": true
+                    on_delete: "@django.PROTECT"
+                    editable: false
+
+    load_balancer_relation:
+        class: LoadBalancerRelationMixin
+        fields:
+            load_balancers:
+                type: "@django.ManyToManyField"
+                relation: load_balancer
+
+    load_balancer_listener:
+        class: LoadBalancerListenerMixin
+        fields:
+            load_balancer_listener:
+                type: "@django.ForeignKey"
+                relation: load_balancer_listener
+                options:
+                    "null": true
+                    on_delete: "@django.PROTECT"
+                    editable: false
+
+    load_balancer_listener_relation:
+        class: LoadBalancerListenerRelationMixin
+        fields:
+            load_balancer_listeners:
+                type: "@django.ManyToManyField"
+                relation: load_balancer_listener
+
+data_base:
+    load_balancer:
+        class: LoadBalancerBase
+        base: resource
+        mixins: [load_balancer]
+        id_fields: [name, load_balancer_id]
+        meta:
+            unique_together: [load_balancer, name]
+            scope: load_balancer
+
+    load_balancer_listener:
+        class: LoadBalancerListenerBase
+        base: resource
+        mixins: [load_balancer_listener]
+        id_fields: [name, load_balancer_listener_id]
+        meta:
+            unique_together: [load_balancer_listener, name]
+            scope: load_balancer_listener
+
 data:
     load_balancer:
         class: LoadBalancer
@@ -68,3 +171,35 @@ data:
             provider_name: "load_balancer:load_balancer_listener"
             provider_relation: load_balancer
             command_base: "lb listener"
+
+command_mixins:
+    load_balancer:
+        class: LoadBalancerMixin
+        meta:
+            load_balancer:
+                data: load_balancer
+                provider: true
+                priority: 2
+            load_balancer_listener:
+                data: load_balancer_listener
+                priority: 3
+
+command_base:
+    load_balancer:
+        base: network
+        mixins: [domain, certificate, load_balancer]
+        server_enabled: true
+        groups_allowed: [server-admin, network-admin]
+
+command:
+    lb:
+        resource: load_balancer
+        base_name: load_balancer
+        base: load_balancer
+        priority: 84
+
+        listener:
+            resource: load_balancer_listener
+            base_name: load_balancer_listener
+            base: load_balancer
+            priority: 1

@@ -1,3 +1,98 @@
+plugin:
+    network_peering:
+        base: meta
+        subtypes:
+            network_peering:
+                base: data
+                data: network_peering
+            network_relation:
+                base: terraform
+                manifest: network_peer
+                data: network_peering_relation
+
+data_mixins:
+    network:
+        class: NetworkMixin
+        fields:
+            network:
+                type: "@django.ForeignKey"
+                relation: network
+                options:
+                    "null": true
+                    on_delete: "@django.PROTECT"
+                    editable: false
+
+    network_relation:
+        class: NetworkRelationMixin
+        fields:
+            networks:
+                type: "@django.ManyToManyField"
+                relation: network
+
+    network_peering:
+        class: NetworkPeeringMixin
+        fields:
+            network_peering:
+                type: "@django.ForeignKey"
+                relation: network_peering
+                options:
+                    "null": true
+                    on_delete: "@django.PROTECT"
+                    editable: false
+
+    network_peering_relation:
+        class: NetworkPeeringRelationMixin
+        fields:
+            network_peerings:
+                type: "@django.ManyToManyField"
+                relation: network_peering
+
+    subnet:
+        class: SubnetMixin
+        fields:
+            subnet:
+                type: "@django.ForeignKey"
+                relation: subnet
+                options:
+                    "null": true
+                    on_delete: "@django.PROTECT"
+                    editable: false
+
+    subnet_relation:
+        class: SubnetRelationMixin
+        fields:
+            subnets:
+                type: "@django.ManyToManyField"
+                relation: subnet
+
+data_base:
+    network:
+        class: NetworkBase
+        base: resource
+        mixins: [network]
+        id_fields: [name, network_id]
+        meta:
+            unique_together: [network, name]
+            scope: network
+
+    network_peering:
+        class: NetworkPeeringBase
+        base: resource
+        mixins: [network_peering]
+        id_fields: [name, network_peering_id]
+        meta:
+            unique_together: [network_peering, name]
+            scope: network_peering
+
+    subnet:
+        class: SubnetBase
+        base: resource
+        mixins: [subnet]
+        id_fields: [name, subnet_id]
+        meta:
+            unique_together: [subnet, name]
+            scope: subnet
+
 data:
     network:
         class: Network
@@ -15,41 +110,6 @@ data:
         meta:
             ordering: [cidr]
             provider_name: "network:network"
-
-    subnet:
-        class: Subnet
-        base: network
-        mixins: [provider, group]
-        roles:
-            edit: [network_admin]
-            view: [network_auditor]
-        fields:
-            cidr:
-                type: "@django.CharField"
-                options:
-                    "null": true
-                    max_length: 128
-            use_public_ip:
-                type: "@django.BooleanField"
-                options:
-                    default: true
-            use_nat:
-                type: "@django.BooleanField"
-                options:
-                    default: false
-            nat_subnet:
-                type: "@django.ForeignKey"
-                relation: subnet
-                options:
-                    "null": true
-                    on_delete: "@django.SET_NULL"
-                    related_name: "%(class)s_relation"
-                    editable: false
-        meta:
-            relation: [nat_subnet]
-            ordering: [cidr]
-            provider_name: "network:subnet"
-            provider_relation: network
 
     network_peering:
         class: NetworkPeering
@@ -90,3 +150,90 @@ data:
             provider_name: "network_peering:network_relation"
             provider_relation: network_peering
             command_base: false
+
+    subnet:
+        class: Subnet
+        base: network
+        mixins: [provider, group]
+        roles:
+            edit: [network_admin]
+            view: [network_auditor]
+        fields:
+            cidr:
+                type: "@django.CharField"
+                options:
+                    "null": true
+                    max_length: 128
+            use_public_ip:
+                type: "@django.BooleanField"
+                options:
+                    default: true
+            use_nat:
+                type: "@django.BooleanField"
+                options:
+                    default: false
+            nat_subnet:
+                type: "@django.ForeignKey"
+                relation: subnet
+                options:
+                    "null": true
+                    on_delete: "@django.SET_NULL"
+                    related_name: "%(class)s_relation"
+                    editable: false
+        meta:
+            relation: [nat_subnet]
+            ordering: [cidr]
+            provider_name: "network:subnet"
+            provider_relation: network
+
+command_mixins:
+    network:
+        class: NetworkMixin
+        meta:
+            network:
+                data: network
+                provider: true
+                priority: 1
+            network_peering:
+                data: network_peering
+                provider: true
+                priority: 2
+            network_relation:
+                data: network_peering_relation
+                priority: 3
+            subnet:
+                data: subnet
+                priority: 2
+        parameters:
+            nat_subnet_name:
+                parser: variable
+                type: str
+                default: null
+                optional: false
+                help: "NAT subnet name"
+                value_label: NAME
+
+command_base:
+    network:
+        mixins: [server, storage, network]
+        server_enabled: true
+        groups_allowed: [network-admin]
+
+command:
+    network:
+        resource: network
+        base_name: network
+        base: network
+        priority: 74
+
+        peering:
+            resource: network_peering
+            base_name: network_peering
+            base: network
+            priority: 1
+
+    subnet:
+        resource: subnet
+        base_name: subnet
+        base: network
+        priority: 76

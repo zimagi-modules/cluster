@@ -80,14 +80,3 @@ plugin:
                             security_group_id: [variables, resource_id]
                     firewall_rule:
                         mixins: [aws_service]
-
-    network_peering:
-        base: meta
-        subtypes:
-            network_peering:
-                base: data
-                data: network_peering
-            network_relation:
-                base: terraform
-                manifest: network_peer
-                data: network_peering_relation

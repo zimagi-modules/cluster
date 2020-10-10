@@ -1,3 +1,166 @@
+plugin:
+    server:
+        base: terraform
+        manifest: server
+        data: server
+        providers:
+            physical:
+                requirement:
+                    public_ip:
+                        type: str
+                        help: "Public IP of server"
+                    private_ip:
+                        type: str
+                        help: "Private IP of server"
+                    password:
+                        type: str
+                        help: "Password of server user"
+                option:
+                    user:
+                        type: str
+                        default: "admin"
+                        help: "Server SSH user"
+                        config_name: physical_server_user
+
+            ec2:
+                mixins: [aws_service]
+                requirement:
+                    image:
+                        type: str
+                        help: "AWS image name"
+                        config_name: aws_ec2_image
+                option:
+                    machine:
+                        type: str
+                        default: "t2.small"
+                        help: "AWS instance type"
+                        config_name: aws_ec2_type
+                    tenancy:
+                        type: str
+                        default: "default"
+                        help: "AWS instance tenancy (default | dedicated)"
+                        config_name: aws_ec2_tenancy
+                    monitoring:
+                        type: bool
+                        default: false
+                        help: "AWS monitoring enabled?"
+                        config_name: aws_ec2_monitoring
+                    user:
+                        type: str
+                        default: "ubuntu"
+                        help: "Server SSH user"
+                        config_name: aws_ec2_user
+                    ebs_optimized:
+                        type: bool
+                        default: false
+                        help: "AWS EBS obtimized server?"
+                        config_name: aws_ec2_ebs_optimized
+                    ebs_type:
+                        type: str
+                        default: "gp2"
+                        help: "AWS data drive EBS type"
+                        config_name: aws_ec2_ebs_type
+                    ebs_size:
+                        type: int
+                        default: 10
+                        help: "AWS data drive EBS volume size (GB)"
+                        config_name: aws_ec2_ebs_size
+                    ebs_iops:
+                        type: int
+                        help: "AWS data drive EBS provisioned IOPS"
+                        config_name: aws_ec2_ebs_iops
+                related_values:
+                    security_groups:
+                        field: firewalls
+                        lookup: security_group_id
+                output_map:
+                    public_ip_address: public_ip
+                    private_ip_address: private_ip
+
+    server_volume:
+        base: terraform
+        manifest: server_volume
+        data: server_volume
+        providers:
+            aws_ebs:
+                mixins: [aws_service]
+                option:
+                    ebs_encrypted:
+                        type: bool
+                        default: false
+                        help: "AWS EBS encrypted volume?"
+                        config_name: aws_ec2_ebs_encrypted
+                    ebs_type:
+                        type: str
+                        default: "gp2"
+                        help: "AWS data drive EBS type"
+                        config_name: aws_ec2_ebs_type
+                    ebs_size:
+                        type: int
+                        default: 10
+                        help: "AWS data drive EBS volume size (GB)"
+                        config_name: aws_ec2_ebs_size
+                    ebs_iops:
+                        type: int
+                        help: "AWS data drive EBS provisioned IOPS"
+                        config_name: aws_ec2_ebs_iops
+
+data_mixins:
+    server:
+        class: ServerMixin
+        fields:
+            server:
+                type: "@django.ForeignKey"
+                relation: server
+                options:
+                    "null": true
+                    on_delete: "@django.PROTECT"
+                    editable: false
+
+    server_relation:
+        class: ServerRelationMixin
+        fields:
+            servers:
+                type: "@django.ManyToManyField"
+                relation: server
+
+    server_volume:
+        class: ServerVolumeMixin
+        fields:
+            volume:
+                type: "@django.ForeignKey"
+                relation: server_volume
+                options:
+                    "null": true
+                    on_delete: "@django.PROTECT"
+                    editable: false
+
+    server_volume_relation:
+        class: ServerVolumeRelationMixin
+        fields:
+            volumes:
+                type: "@django.ManyToManyField"
+                relation: server_volume
+
+data_base:
+    server:
+        class: ServerBase
+        base: resource
+        mixins: [server]
+        id_fields: [name, server_id]
+        meta:
+            unique_together: [server, name]
+            scope: server
+
+    server_volume:
+        class: ServerBase
+        base: resource
+        mixins: [server_volume]
+        id_fields: [name, volume_id]
+        meta:
+            unique_together: [volume, name]
+            scope: server_volume
+
 data:
     server:
         class: Server
@@ -86,3 +249,37 @@ data:
             ordering: [name]
             scope_process: post
             provider_name: server_volume
+
+command_mixins:
+    server:
+        class: ServerMixin
+        meta:
+            server:
+                data: server
+                provider: true
+                priority: 3
+            server_volume:
+                data: server_volume
+                provider: true
+                priority: 4
+
+command_base:
+    server:
+        mixins: [domain, load_balancer, network, server]
+        server_enabled: true
+        groups_allowed: [server-admin]
+
+command:
+    server:
+        resource: server
+        base_name: server
+        base: server
+        priority: 86
+        options:
+            save_multiple: true
+
+        volume:
+            resource: server_volume
+            base_name: server_volume
+            base: server
+            priority: 10
