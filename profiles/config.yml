@@ -2,7 +2,7 @@ config:
     provision_domain: true
     root_domain: example.com
     root_domain_email: test@example.com
-    domain_provider: route53
+    domain_provider: null
 
     primary_timezone: America/New_York
 
