@@ -1,0 +1,94 @@
+plugin:
+    database:
+        base: terraform
+        manifest: database
+        data: database
+
+data_mixins:
+    database:
+        class: DatabaseMixin
+        fields:
+            database:
+                type: "@django.ForeignKey"
+                relation: database
+                options:
+                    "null": true
+                    on_delete: "@django.PROTECT"
+                    editable: false
+
+    database_relation:
+        class: DatabaseRelationMixin
+        fields:
+            databases:
+                type: "@django.ManyToManyField"
+                relation: database
+
+data_base:
+    database:
+        class: DatabaseBase
+        base: resource
+        mixins: [database]
+        id_fields: [name, database_id]
+        meta:
+            unique_together: [database, name]
+            scope: database
+
+data:
+    database:
+        class: Database
+        base: network
+        mixins: [provider, group, domain, subnet_relation, firewall_relation]
+        roles:
+            edit: [database_admin]
+            view: [database_auditor]
+        fields:
+            host:
+                type: "@django.CharField"
+                options:
+                    max_length: 256
+            port:
+                type: "@django.IntegerField"
+            database_name:
+                type: "@django.CharField"
+                options:
+                    max_length: 256
+            user_name:
+                type: "@django.CharField"
+                options:
+                    max_length: 256
+            user_password:
+                type: "@fields.EncryptedCharField"
+                color: encrypted
+                options:
+                    max_length: 256
+            log_level:
+                type: "@django.CharField"
+                options:
+                    "null": true
+                    max_length: 50
+        meta:
+            provider_name: database
+            relation: domain
+
+command_mixins:
+    database:
+        class: DatabaseMixin
+        meta:
+            database:
+                data: database
+                provider: true
+                priority: 2
+
+command_base:
+    database:
+        base: network
+        mixins: [domain, database, firewall]
+        server_enabled: true
+        groups_allowed: [database-admin]
+
+command:
+    database:
+        resource: database
+        base_name: database
+        base: database
+        priority: 72
