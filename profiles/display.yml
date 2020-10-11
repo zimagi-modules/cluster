@@ -270,3 +270,34 @@ config_store:
         - load_balancer_listener
         - firewalls
         - groups
+
+    database_list_fields:
+        - provider_type
+        - host
+        - port
+        - database_name
+        - user_name
+        - user_password
+        - network
+        - subnets
+        - domain
+        - firewalls
+        - groups
+    database_display_fields:
+        - id
+        - provider_type
+        - host
+        - port
+        - database_name
+        - user_name
+        - user_password
+        - log_level
+        - config
+        - variables
+        - created
+        - updated
+        - network
+        - subnets
+        - domain
+        - firewalls
+        - groups
