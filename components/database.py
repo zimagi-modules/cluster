@@ -4,7 +4,7 @@ from systems.commands import profile
 class ProfileComponent(profile.BaseProfileComponent):
 
     def priority(self):
-        return 7
+        return 5
 
     def run(self, name, config):
         networks = self.pop_values('network', config)
