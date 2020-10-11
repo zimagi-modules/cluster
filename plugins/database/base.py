@@ -14,7 +14,7 @@ class BaseProvider(BasePlugin('database')):
     def update_domain_reference(self, instance):
         if instance.domain and instance.host:
             domain_target = "{}.{}".format(
-                instance.domain_name if instance.domain_name else instance.name,
+                instance.name,
                 instance.domain.name
             )
             domain_name = "{}-{}".format(domain_target, instance.host)
@@ -41,7 +41,7 @@ class BaseProvider(BasePlugin('database')):
     def remove_domain_reference(self, instance):
         if instance.domain and instance.host:
             domain_target = "{}.{}".format(
-                instance.domain_name if instance.domain_name else instance.name,
+                instance.name,
                 instance.domain.name
             )
             domain_name = "{}-{}".format(domain_target, instance.host)
