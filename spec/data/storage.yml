@@ -140,7 +140,7 @@ command_mixins:
 
 command_base:
     storage:
-        mixins: [storage, network]
+        mixins: [storage, network, firewall]
         server_enabled: true
         groups_allowed: [storage-admin]
 
