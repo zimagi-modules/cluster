@@ -1,6 +1,6 @@
 command:
     deploy:
-        base: server
+        base: environment
         priority: 100
         parameters:
             destination:
@@ -19,6 +19,5 @@ command:
                 help: "destination environment runtime host name"
                 value_label: "NAME"
         parse:
-            server_search: false
             destination:
             destination_name:
