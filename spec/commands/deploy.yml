@@ -7,7 +7,7 @@ command:
                 parser: variable
                 type: str
                 default: null
-                optional: "--dest"
+                optional: false
                 help: "environment runtime host destination"
                 value_label: "HOST"
 
