@@ -91,6 +91,7 @@ data:
         roles:
             edit: [server_admin]
             view: [server_auditor]
+        api: false
         fields:
             public_ip:
                 type: "@django.CharField"
@@ -138,6 +139,7 @@ data:
         roles:
             edit: [server_admin]
             view: [server_auditor]
+        api: false
         fields:
             location:
                 type: "@django.CharField"

@@ -41,6 +41,7 @@ data:
         roles:
             edit: [database_admin]
             view: [database_auditor]
+        api: false
         fields:
             host:
                 type: "@django.CharField"

@@ -75,6 +75,7 @@ data:
         roles:
             edit: [domain_admin]
             view: [domain_auditor]
+        api: false
         fields:
             email:
                 type: "@django.CharField"
@@ -125,6 +126,7 @@ data:
         roles:
             edit: [domain_admin]
             view: [domain_auditor]
+        api: false
         fields:
             type:
                 type: "@django.CharField"

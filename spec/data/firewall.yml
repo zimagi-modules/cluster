@@ -62,6 +62,7 @@ data:
         roles:
             edit: [security_admin]
             view: [security_auditor]
+        api: false
         meta:
             provider_name: "network:firewall"
             provider_relation: network
@@ -73,6 +74,7 @@ data:
         roles:
             edit: [security_admin]
             view: [security_auditor]
+        api: false
         fields:
             mode:
                 type: "@django.CharField"

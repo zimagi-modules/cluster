@@ -75,6 +75,7 @@ data:
         roles:
             edit: [server_admin]
             view: [server_auditor]
+        api: false
         fields:
             internal:
                 type: "@django.BooleanField"
@@ -92,6 +93,7 @@ data:
         roles:
             edit: [server_admin]
             view: [server_auditor]
+        api: false
         fields:
             port:
                 type: "@django.IntegerField"

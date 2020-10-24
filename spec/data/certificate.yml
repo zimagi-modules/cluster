@@ -49,6 +49,7 @@ data:
         roles:
             edit: [security_admin]
             view: [security_auditor]
+        api: false
         fields:
             private_key:
                 type: "@fields.EncryptedDataField"

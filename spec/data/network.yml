@@ -101,6 +101,7 @@ data:
         roles:
             edit: [network_admin]
             view: [network_auditor]
+        api: false
         fields:
             cidr:
                 type: "@django.CharField"
@@ -118,6 +119,7 @@ data:
         roles:
             edit: [network_admin]
             view: [network_auditor]
+        api: false
         meta:
             provider_name: "network_peering:network_peering"
 
@@ -128,6 +130,7 @@ data:
         roles:
             edit: [network_admin]
             view: [network_auditor]
+        api: false
         fields:
             network1:
                 type: "@django.ForeignKey"
@@ -158,6 +161,7 @@ data:
         roles:
             edit: [network_admin]
             view: [network_auditor]
+        api: false
         fields:
             cidr:
                 type: "@django.CharField"
