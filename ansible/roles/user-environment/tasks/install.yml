@@ -8,3 +8,4 @@
           - vim
           - git
           - sshpass
+          - python3-pip
