@@ -5,10 +5,10 @@
 set -e
 
 apt-get update
-apt-get install -y certbot sshpass
+apt-get install -y certbot sshpass openssh-server
 rm -rf /var/lib/apt/lists/*
 
-TERRAFORM_VERSION=0.12.28
+TERRAFORM_VERSION=1.0.1
 
 if [ ! -f /usr/local/bin/terraform ]
 then
