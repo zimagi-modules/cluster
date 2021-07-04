@@ -46,3 +46,9 @@ class Server(Model('server')):
 
     def ping(self):
         return self.provider.ping()
+
+    def start(self):
+        return self.provider.start()
+
+    def stop(self):
+        return self.provider.stop()
