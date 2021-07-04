@@ -148,3 +148,12 @@ class BaseProvider(BasePlugin('server')):
             timeout = 1,
             silent = True
         )
+
+
+    def start(self):
+        # Override in subclass
+        pass
+
+    def stop(self):
+        # Override in subclass
+        pass
