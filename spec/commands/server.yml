@@ -6,8 +6,20 @@ command:
             parse:
                 server_search: true
 
+        start:
+            base: server
+            priority: 10
+            parse:
+                server_search: true
+
+        stop:
+            base: server
+            priority: 11
+            parse:
+                server_search: true
+
         ssh:
             base: server
-            priority: 5
+            priority: 100
             parse:
                 server_name: false
