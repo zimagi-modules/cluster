@@ -9,15 +9,5 @@ config:
     network_cidr_base: 10.0.0.0/8
     network_cidr_prefix: 16
     network_dns_support: True
-    network_groups: core
-
-    core_firewall_groups: core
 
     ssh_port: 22
-
-    storage_firewalls:
-        - internet
-        - nfs
-
-group:
-    core:
