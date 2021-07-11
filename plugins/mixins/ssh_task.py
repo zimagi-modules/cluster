@@ -6,7 +6,7 @@ class SSHTaskMixin(ProviderMixin('ssh_task')):
     def _ssh_servers(self, params):
         return self.command.search_instances(
             self.manager.index.get_facade_index()['server'],
-            queries = params.get('servers', self.field_servers),
+            queries = params.get('servers', self._interpolate(self.field_servers, params)),
             joiner = params.get('filter', self.field_filter).upper(),
             error_on_empty = False
         )
