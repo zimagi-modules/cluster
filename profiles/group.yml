@@ -1,0 +1,5 @@
+parents:
+    - config
+
+group:
+    "@network_group":
