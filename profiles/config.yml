@@ -1,13 +1,20 @@
 config:
+    # Group
+    network_group: core
+
+    # Domain
     provision_domain: true
-    root_domain: example.com
-    root_domain_email: test@example.com
+    root_domain: example.com # (required)
+    root_domain_email: test@example.com # (required)
     domain_provider: null
 
+    # Date and Time
     primary_timezone: America/New_York
 
+    # Network
     network_cidr_base: 10.0.0.0/8
     network_cidr_prefix: 16
     network_dns_support: True
 
+    # Server
     ssh_port: 22
