@@ -70,7 +70,7 @@ data_base:
 data:
     domain:
         class: Domain
-        base: environment
+        base: resource
         mixins: [provider, group]
         roles:
             edit: [domain_admin]

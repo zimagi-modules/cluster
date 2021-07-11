@@ -96,7 +96,7 @@ data_base:
 data:
     network:
         class: Network
-        base: environment
+        base: resource
         mixins: [provider, group]
         roles:
             edit: [network_admin]
@@ -114,7 +114,7 @@ data:
 
     network_peering:
         class: NetworkPeering
-        base: environment
+        base: resource
         mixins: [provider, network_relation]
         roles:
             edit: [network_admin]
