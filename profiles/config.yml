@@ -16,5 +16,7 @@ config:
     network_cidr_prefix: 16
     network_dns_support: True
 
+    network_prefix: "core-"
+
     # Server
     ssh_port: 22
